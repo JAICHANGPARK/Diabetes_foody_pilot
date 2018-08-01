@@ -38,7 +38,7 @@
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/save2"
+            android:id="@+id/add"
             style="@style/ClickableImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,34 +94,27 @@
             android:textColor="@color/black"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/floating_search_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_height="100dp"
+            app:floatingSearch_searchBarMarginLeft="16dp"
+            app:floatingSearch_searchBarMarginTop="16dp"
+            app:floatingSearch_searchBarMarginRight="16dp"
+            app:floatingSearch_searchHint="Search..."
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            app:floatingSearch_showSearchKey="false"
+            app:floatingSearch_leftActionMode="showHamburger"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"/>
 
-            <TextView
-                android:id="@+id/gluecose_value_text_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/noto_sans"
-                android:gravity="end"
-                android:text="74"
-                android:textColor="@color/black"
-                android:textSize="74sp" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_margin="8dp"
+            android:id="@+id/bottom_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/noto_sans"
-                android:gravity="start"
-                android:text="mm/dL"
-                android:textColor="@color/secondary_text"
-                android:textSize="24sp" />
+        </android.support.v7.widget.RecyclerView>
 
-        </LinearLayout>
 
         <Button
             android:id="@+id/glucose_button"

@@ -4,26 +4,26 @@ import io.realm.RealmObject;
 
 public class FoodItem extends RealmObject {
 
-    String foodNumber;
-    String foodGroup;
-    String foodName;
-    String foodAmount;
-    String foodKcal;
-    String foodCarbo;
-    String foodProtein;
-    String foodFat;
-    String foodSugar;
-    String foodNatrium;
-    String foodCholest;
-    String foodFatty;
-    String foodTransFatty;
+    private String foodNumber;
+    private String foodGroup;
+    private String foodName;
+    private String foodAmount;
+    private String foodKcal;
+    private String foodCarbo;
+    private String foodProtein;
+    private String foodFat;
+    private String foodSugar;
+    private String foodNatrium;
+    private String foodCholest;
+    private String foodFatty;
+    private String foodTransFatty;
 
     public FoodItem() {
     }
 
     public FoodItem(String foodNumber, String foodGroup, String foodName, String foodAmount, String foodKcal, String foodCarbo,
-                    String foodProtein, String foodFat, String foodSugar, String foodNatrium, String foodCholest,
-                    String foodFatty, String foodTransFatty) {
+                    String foodProtein, String foodFat, String foodSugar, String foodNatrium, String foodCholest, String foodFatty,
+                    String foodTransFatty) {
         this.foodNumber = foodNumber;
         this.foodGroup = foodGroup;
         this.foodName = foodName;
@@ -37,6 +37,18 @@ public class FoodItem extends RealmObject {
         this.foodCholest = foodCholest;
         this.foodFatty = foodFatty;
         this.foodTransFatty = foodTransFatty;
+    }
+
+    public FoodItem(String foodNumber, String foodGroup, String foodName, String foodAmount) {
+        this.foodNumber = foodNumber;
+        this.foodGroup = foodGroup;
+        this.foodName = foodName;
+        this.foodAmount = foodAmount;
+    }
+
+    public FoodItem(String foodNumber, String foodName) {
+        this.foodNumber = foodNumber;
+        this.foodName = foodName;
     }
 
     public String getFoodNumber() {

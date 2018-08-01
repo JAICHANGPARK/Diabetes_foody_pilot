@@ -22,11 +22,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelper;
+import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
+import com.dreamwalker.diabetesfoodypilot.model.Suggestions;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
 import com.dreamwalker.diabetesfoodypilot.remote.Common;
 import com.dreamwalker.diabetesfoodypilot.remote.IMenuRequest;
@@ -37,6 +42,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,7 +66,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
 
+    @BindView(R.id.floating_search_view)
+    FloatingSearchView floatingSearchView;
+
+    @BindView(R.id.add)
+    ImageView addItemButton;
+
+
     BottomSheetBehavior bottomSheetBehavior;
+
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +84,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setBottomSheetBehavior();
+
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
 
         service = Common.getMenuRequest();
 
@@ -90,6 +109,63 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         addItemToCart();
+
+        RealmResults<FoodItem> results = realm.where(FoodItem.class).findAll();
+
+        Log.e(TAG, "onCreate: " + results.size());
+
+//        for (int i = 0 ; i < results.size(); i++){
+//            Log.e(TAG, "onCreate: " + results.get(i).getFoodName() );
+//        }
+
+
+        floatingSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
+            @Override
+            public void onSearchTextChanged(String oldQuery, String newQuery) {
+                List<Suggestions> foodName = new ArrayList<>();
+                Log.e(TAG, ": oldQuery --> " + oldQuery + " new Query --> " + newQuery);
+                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).contains("foodName", newQuery).findAll();
+                //floatingSearchView.swapSuggestions();
+                //RealmResults<FoodItem> result1 = realm.where(FoodItem.class).like("foodName", newQuery, Case.INSENSITIVE).findAllSortedAsync("foodName", Sort.ASCENDING);
+                if (result1.size() != 0) {
+                    for (FoodItem item : result1){
+                        foodName.add(new Suggestions(item.getFoodName()));
+                    }
+                }
+
+                floatingSearchView.swapSuggestions(foodName);
+
+
+                //floatingSearchView.swapSuggestions(foodName);
+
+            }
+        });
+
+
+        floatingSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
+               // Log.e(TAG, "onSuggestionClicked: ");
+                Log.e(TAG, "onSuggestionClicked: " + searchSuggestion.getBody());
+
+            }
+
+            @Override
+            public void onSearchAction(String currentQuery) {
+                Log.e(TAG, "onSearchAction: " + currentQuery);
+                List<String> foodName = new ArrayList<>();
+                //floatingSearchView.swapSuggestions();
+//                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).like("foodName", currentQuery, Case.INSENSITIVE).findAllSortedAsync("foodName", Sort.ASCENDING);
+                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).contains("foodName", currentQuery).findAll();
+                if (result1.size() != 0) {
+                    for (FoodItem item : result1){
+                        Log.e(TAG, "onSearchAction: " + item.getFoodName());
+                        foodName.add(item.getFoodName());
+                    }
+                }
+
+            }
+        });
 
     }
 
@@ -173,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         int width = dm.widthPixels;
 
         int height = dm.heightPixels;
-        Log.e(TAG, "fadClicked: " + height );
+        Log.e(TAG, "fadClicked: " + height);
 
 
         //bottomSheetBehavior.setPeekHeight(60);
@@ -195,8 +271,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         a.recycle();
         return resId;
     }
-
-
 
 
 }

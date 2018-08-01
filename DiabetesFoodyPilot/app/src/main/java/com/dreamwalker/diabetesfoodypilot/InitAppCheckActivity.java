@@ -1,8 +1,10 @@
 package com.dreamwalker.diabetesfoodypilot;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +61,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
         service = Common.getAppcheck();
         dbService = Common.getFoodDatabase();
-
+        realm = Realm.getDefaultInstance();
 
         foodsList = new ArrayList<>();
 
@@ -110,6 +112,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                         @Override
                                         public void execute(Realm realm) {
                                             realm.deleteAll();
+
                                             FoodItem foodItem = realm.createObject(FoodItem.class);
 
                                             for (Food f : foodsList) {
@@ -153,6 +156,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                 }
                             });
                         }
+
                     } else {
 
                         textView.setText("서버로부터 데이터베이스 다운로드 중..");
@@ -168,51 +172,109 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                 Log.e(TAG, "onResponse: " + foodsList.size());
                                 long end = System.currentTimeMillis();
 
-                                Log.e(TAG, "onResponse: first Phase --> " + (end - start) / 1000.0);
 
-                                realm = Realm.getDefaultInstance();
+                                Log.e(TAG, "onResponse: first Phase --> " + (end - start) / 1000.0);
+//                                for (Food f : foodsList){
+//                                    Log.e(TAG, "onResponse: " + f.getFoodName() );
+//                                }
 
                                 long startTwo = System.currentTimeMillis();
-                                realm.executeTransactionAsync(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-                                        realm.deleteAll();
+//                                for (int i = 0; i < foodsList.size(); i++) {
+//                                    realm.beginTransaction();
+//                                    FoodItem foodItem = realm.createObject(FoodItem.class);
+//                                    foodItem.setFoodNumber(foodsList.get(i).getFoodNumber());
+//                                    foodItem.setFoodGroup(foodsList.get(i).getFoodGroup());
+//                                    foodItem.setFoodName(foodsList.get(i).getFoodName());
+//                                    foodItem.setFoodAmount(foodsList.get(i).getFoodAmount());
+//                                    foodItem.setFoodKcal(foodsList.get(i).getFoodKcal());
+//                                    foodItem.setFoodCarbo(foodsList.get(i).getFoodCarbo());
+//                                    foodItem.setFoodProtein(foodsList.get(i).getFoodProtein());
+//                                    foodItem.setFoodFat(foodsList.get(i).getFoodFat());
+//                                    foodItem.setFoodSugar(foodsList.get(i).getFoodSugar());
+//                                    foodItem.setFoodNatrium(foodsList.get(i).getFoodNatrium());
+//                                    foodItem.setFoodCholest(foodsList.get(i).getFoodCholest());
+//                                    foodItem.setFoodFatty(foodsList.get(i).getFoodFatty());
+//                                    foodItem.setFoodTransFatty(foodsList.get(i).getFoodTransFatty());
+//                                    realm.commitTransaction();
+//                                }
 
-                                        FoodItem foodItem = realm.createObject(FoodItem.class);
+//                                for (Food f : foodsList) {
+//                                    Log.e(TAG, "execute: " + "called" + f.getFoodNumber()  + " | " + f.getFoodKcal());
+//                                    foodItem.setFoodNumber(f.getFoodNumber());
+//                                    foodItem.setFoodGroup(f.getFoodGroup());
+//                                    foodItem.setFoodName(f.getFoodName());
+//                                    foodItem.setFoodAmount(f.getFoodAmount());
+//                                    foodItem.setFoodKcal(f.getFoodKcal());
+//                                    foodItem.setFoodCarbo(f.getFoodCarbo());
+//                                    foodItem.setFoodProtein(f.getFoodProtein());
+//                                    foodItem.setFoodFat(f.getFoodFat());
+//                                    foodItem.setFoodSugar(f.getFoodSugar());
+//                                    foodItem.setFoodNatrium(f.getFoodNatrium());
+//                                    foodItem.setFoodCholest(f.getFoodCholest());
+//                                    foodItem.setFoodFatty(f.getFoodFatty());
+//                                    foodItem.setFoodTransFatty(f.getFoodTransFatty());
+//                                }
 
-                                        for (Food f : foodsList) {
-                                            foodItem.setFoodNumber(f.getFoodNumber());
-                                            foodItem.setFoodGroup(f.getFoodGroup());
-                                            foodItem.setFoodName(f.getFoodName());
-                                            foodItem.setFoodAmount(f.getFoodAmount());
-                                            foodItem.setFoodKcal(f.getFoodKcal());
-                                            foodItem.setFoodCarbo(f.getFoodCarbo());
-                                            foodItem.setFoodProtein(f.getFoodProtein());
-                                            foodItem.setFoodFat(f.getFoodFat());
-                                            foodItem.setFoodSugar(f.getFoodSugar());
-                                            foodItem.setFoodNatrium(f.getFoodNatrium());
-                                            foodItem.setFoodCholest(f.getFoodCholest());
-                                            foodItem.setFoodFatty(f.getFoodFatty());
-                                            foodItem.setFoodTransFatty(f.getFoodTransFatty());
-                                        }
-                                    }
-                                }, new Realm.Transaction.OnSuccess() {
-                                    @Override
-                                    public void onSuccess() {
-                                        long endTwo = System.currentTimeMillis();
-                                        Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
-                                        Paper.book().write("food_version_code", fetchVersionCode);
-                                        textView.setText("다운로드 및 저장 완료");
-                                        Log.e(TAG, "onSuccess: " + "저장 완료 ");
-                                        startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
-                                        finish();
-                                    }
-                                }, new Realm.Transaction.OnError() {
-                                    @Override
-                                    public void onError(Throwable error) {
-                                        Log.e(TAG, "onError: ");
-                                    }
-                                });
+
+//                                for (int i = 0; i < foodsList.size(); i++){
+//                                    int index = i;
+//                                    String foodNumber = foodsList.get(i).getFoodNumber();
+//                                    String foodGroup = foodsList.get(i).getFoodGroup();
+//                                    String foodName = foodsList.get(i).getFoodName();
+//                                    String foodAmount = foodsList.get(i).getFoodAmount();
+//                                    String foodKcal = foodsList.get(i).getFoodKcal();
+//                                    String foodCarbo = foodsList.get(i).getFoodCarbo();
+//                                    String foodProtein = foodsList.get(i).getFoodProtein();
+//                                    String foodFat = foodsList.get(i).getFoodFat() ;
+//                                    String foodSugar = foodsList.get(i).getFoodSugar();
+//                                    String foodNatrium = foodsList.get(i).getFoodNatrium();
+//                                    String foodCholest = foodsList.get(i).getFoodCholest();
+//                                    String foodFatty = foodsList.get(i).getFoodFatty();
+//                                    String foodTransFatty = foodsList.get(i).getFoodTransFatty();
+//
+//
+//                                    realm.executeTransactionAsync(new Realm.Transaction() {
+//                                        @Override
+//                                        public void execute(Realm realm) {
+//                                            //realm.deleteAll();
+//                                            FoodItem foodItem = realm.createObject(FoodItem.class);
+//                                            foodItem.setFoodNumber(foodNumber);
+//                                            foodItem.setFoodGroup(foodGroup);
+//                                            foodItem.setFoodName(foodName);
+//                                            foodItem.setFoodAmount(foodAmount);
+//                                            foodItem.setFoodKcal(foodKcal);
+//                                            foodItem.setFoodCarbo(foodCarbo);
+//                                            foodItem.setFoodProtein(foodProtein);
+//                                            foodItem.setFoodFat(foodFat);
+//                                            foodItem.setFoodSugar(foodSugar);
+//                                            foodItem.setFoodNatrium(foodNatrium);
+//                                            foodItem.setFoodCholest(foodCholest);
+//                                            foodItem.setFoodFatty(foodFatty);
+//                                            foodItem.setFoodTransFatty(foodTransFatty);
+//
+//
+//                                        }
+//                                    }, new Realm.Transaction.OnSuccess() {
+//                                        @Override
+//                                        public void onSuccess() {
+//                                            Log.e(TAG, "onSuccess: "  + index );
+////                                            long endTwo = System.currentTimeMillis();
+////                                            Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
+////                                            Paper.book().write("food_version_code", fetchVersionCode);
+////                                            textView.setText("다운로드 및 저장 완료");
+////                                            Log.e(TAG, "onSuccess: " + "저장 완료 ");
+////                                            startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
+////                                            finish();
+//                                        }
+//                                    }, new Realm.Transaction.OnError() {
+//                                        @Override
+//                                        public void onError(Throwable error) {
+//                                            Log.e(TAG, "onError: ");
+//                                        }
+//                                    });
+//                                }
+
+                                new BackgroundTask().execute();
                             }
 
                             @Override
@@ -240,7 +302,94 @@ public class InitAppCheckActivity extends AppCompatActivity {
             builder.show();
 
         }
+    }
+
+    // TODO: 2018-02-27 저장했을 경우와 저장 안했을 경우를 생각해야함
+    class BackgroundTask extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog progressDialog;
+        int index = 0;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(InitAppCheckActivity.this);
+            //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressDialog.setMessage("파일 저장중...");
+            progressDialog.setCancelable(false);
+            progressDialog.setMax(100);
+            progressDialog.show();
+
+            super.onPreExecute();
+
+        }
 
 
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            realm = Realm.getDefaultInstance();
+            for (int i = 0; i < foodsList.size(); i++) {
+                index = i;
+                String foodNumber = foodsList.get(i).getFoodNumber();
+                String foodGroup = foodsList.get(i).getFoodGroup();
+                String foodName = foodsList.get(i).getFoodName();
+                String foodAmount = foodsList.get(i).getFoodAmount();
+                String foodKcal = foodsList.get(i).getFoodKcal();
+                String foodCarbo = foodsList.get(i).getFoodCarbo();
+                String foodProtein = foodsList.get(i).getFoodProtein();
+                String foodFat = foodsList.get(i).getFoodFat();
+                String foodSugar = foodsList.get(i).getFoodSugar();
+                String foodNatrium = foodsList.get(i).getFoodNatrium();
+                String foodCholest = foodsList.get(i).getFoodCholest();
+                String foodFatty = foodsList.get(i).getFoodFatty();
+                String foodTransFatty = foodsList.get(i).getFoodTransFatty();
+
+                realm.executeTransaction(realm -> {
+                    FoodItem foodItem = realm.createObject(FoodItem.class);
+                    foodItem.setFoodNumber(foodNumber);
+                    foodItem.setFoodGroup(foodGroup);
+                    foodItem.setFoodName(foodName);
+                    foodItem.setFoodAmount(foodAmount);
+                    foodItem.setFoodKcal(foodKcal);
+                    foodItem.setFoodCarbo(foodCarbo);
+                    foodItem.setFoodProtein(foodProtein);
+                    foodItem.setFoodFat(foodFat);
+                    foodItem.setFoodSugar(foodSugar);
+                    foodItem.setFoodNatrium(foodNatrium);
+                    foodItem.setFoodCholest(foodCholest);
+                    foodItem.setFoodFatty(foodFatty);
+                    foodItem.setFoodTransFatty(foodTransFatty);
+                });
+                progressDialog.setProgress((int) (100 * i / foodsList.size()));
+
+                //Log.e(TAG, "doInBackground: " + i );
+
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+            Toast.makeText(InitAppCheckActivity.this, "저장완료", Toast.LENGTH_SHORT).show();
+            long endTwo = System.currentTimeMillis();
+            //Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
+            Paper.book().write("food_version_code", fetchVersionCode);
+            textView.setText("다운로드 및 저장 완료");
+            Log.e(TAG, "onSuccess: " + "저장 완료 ");
+            startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
+            finish();
+            //finish();
+            super.onPostExecute(aVoid);
+        }
     }
 }

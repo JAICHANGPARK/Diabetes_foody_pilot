@@ -2,19 +2,19 @@ package com.dreamwalker.diabetesfoodypilot.model;
 
 public class Food {
 
-    String foodNumber;
-    String foodGroup;
-    String foodName;
-    String foodAmount;
-    String foodKcal;
-    String foodCarbo;
-    String foodProtein;
-    String foodFat;
-    String foodSugar;
-    String foodNatrium;
-    String foodCholest;
-    String foodFatty;
-    String foodTransFatty;
+    private String foodNumber;
+    private String foodGroup;
+    private String foodName;
+    private String foodAmount;
+    private String foodKcal;
+    private String foodCarbo;
+    private String foodProtein;
+    private String foodFat;
+    private String foodSugar;
+    private String foodNatrium;
+    private String foodCholest;
+    private String foodFatty;
+    private String foodTransFatty;
 
     public Food() {
     }
