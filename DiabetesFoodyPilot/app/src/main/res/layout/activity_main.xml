@@ -69,12 +69,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title"
-            android:layout_margin="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="80dp"
             android:scrollbars="vertical" />
     </RelativeLayout>
 
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -84,45 +87,60 @@
         app:behavior_peekHeight="60dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/noto_sans"
-            android:padding="16dp"
-            android:text="Search"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
-        <com.arlib.floatingsearchview.FloatingSearchView
-            android:id="@+id/floating_search_view"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:floatingSearch_searchBarMarginLeft="16dp"
-            app:floatingSearch_searchBarMarginTop="16dp"
-            app:floatingSearch_searchBarMarginRight="16dp"
-            app:floatingSearch_searchHint="Search..."
-            app:floatingSearch_suggestionsListAnimDuration="250"
-            app:floatingSearch_showSearchKey="false"
-            app:floatingSearch_leftActionMode="showHamburger"
-            app:floatingSearch_close_search_on_keyboard_dismiss="true"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/noto_sans"
+                android:padding="16dp"
+                android:text="Search"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
-        <android.support.v7.widget.RecyclerView
-            android:layout_margin="8dp"
-            android:id="@+id/bottom_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.arlib.floatingsearchview.FloatingSearchView
+                    android:id="@+id/floating_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    app:floatingSearch_close_search_on_keyboard_dismiss="true"
+                    app:floatingSearch_leftActionMode="showHamburger"
+                    app:floatingSearch_searchBarMarginLeft="16dp"
+                    app:floatingSearch_searchBarMarginRight="16dp"
+                    app:floatingSearch_searchBarMarginTop="16dp"
+                    app:floatingSearch_searchHint="Search..."
+                    app:floatingSearch_showSearchKey="false"
+                    app:floatingSearch_suggestionsListAnimDuration="250" />
 
-        </android.support.v7.widget.RecyclerView>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/bottom_recycler_view"
+
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="100dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
 
-        <Button
-            android:id="@+id/glucose_button"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:text="CHECK" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <!--<Button-->
+        <!--android:id="@+id/glucose_button"-->
+        <!--style="?android:attr/borderlessButtonStyle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/colorAccent"-->
+        <!--android:text="CHECK" />-->
 
         <!--<TextView-->
         <!--android:layout_width="match_parent"-->
@@ -140,7 +158,7 @@
         <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
         <!--android:text="Modal bottom sheets are alternatives to menus, or simple dialogs, and can display deep-linked content from another app. They appear above other UI elements and must be dismissed in order to interact with the underlying content. When a modal bottom sheet slides into the screen, the rest of the screen dims, giving focus to the bottom sheet." />-->
 
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

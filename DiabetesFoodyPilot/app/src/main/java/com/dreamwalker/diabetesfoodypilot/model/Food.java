@@ -24,6 +24,16 @@ public class Food {
         this.foodName = foodName;
     }
 
+    public Food(String foodGroup, String foodName, String foodAmount, String foodKcal, String foodCarbo, String foodProtein, String foodFat) {
+        this.foodGroup = foodGroup;
+        this.foodName = foodName;
+        this.foodAmount = foodAmount;
+        this.foodKcal = foodKcal;
+        this.foodCarbo = foodCarbo;
+        this.foodProtein = foodProtein;
+        this.foodFat = foodFat;
+    }
+
     public Food(String foodNumber, String foodGroup, String foodName,
                 String foodAmount, String foodKcal, String foodCarbo,
                 String foodProtein, String foodFat, String foodSugar,
