@@ -230,13 +230,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                         foodName.add(item.getFoodName());
                     }
                 }
-
                 searchList.addAll(result1);
                 searchAdapter.notifyDataSetChanged();
-
             }
         });
-
     }
 
     private void setBottomSheetBehavior() {

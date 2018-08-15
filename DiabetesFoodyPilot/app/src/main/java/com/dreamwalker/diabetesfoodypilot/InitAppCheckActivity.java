@@ -13,9 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
+import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.AppVersion;
-import com.dreamwalker.diabetesfoodypilot.model.Food;
+import com.dreamwalker.diabetesfoodypilot.model.MixedFood;
 import com.dreamwalker.diabetesfoodypilot.remote.Common;
 import com.dreamwalker.diabetesfoodypilot.remote.IAppCheck;
 import com.dreamwalker.diabetesfoodypilot.remote.IDatabaseRequest;
@@ -33,7 +33,7 @@ import retrofit2.Response;
 public class InitAppCheckActivity extends AppCompatActivity {
 
     private static final String TAG = "InitAppCheckActivity";
-    private static final String FOOD_FETCH_V2_URL = "food_fetch_total_v2.php";
+    private static final String FOOD_FETCH_V2_URL = "mix_food_v1.php";
     IAppCheck service;
 
     IDatabaseRequest dbService;
@@ -41,7 +41,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
     String versionFoodCode;
     String fetchVersionCode;
 
-    ArrayList<Food> foodsList;
+    ArrayList<MixedFood> foodsList;
 
     Realm realm;
 
@@ -93,15 +93,16 @@ public class InitAppCheckActivity extends AppCompatActivity {
                             Intent intent = new Intent(InitAppCheckActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
+
                         } else {
 
                             textView.setText("서버로부터 데이터베이스 다운로드 중..");
 
                             Log.e(TAG, "onResponse: 버전 업그레이드 된 경우   ");
                             // TODO: 2018-08-01 버전 업그레이드 된 경우
-                            dbService.fetchTotalFood(FOOD_FETCH_V2_URL).enqueue(new Callback<ArrayList<Food>>() {
+                            dbService.fetchTotalFood(FOOD_FETCH_V2_URL).enqueue(new Callback<ArrayList<MixedFood>>() {
                                 @Override
-                                public void onResponse(Call<ArrayList<Food>> call, Response<ArrayList<Food>> response) {
+                                public void onResponse(Call<ArrayList<MixedFood>> call, Response<ArrayList<MixedFood>> response) {
                                     foodsList.clear();
                                     foodsList.addAll(response.body());
                                     Log.e(TAG, "onResponse: " + foodsList.size());
@@ -113,22 +114,39 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                         public void execute(Realm realm) {
                                             realm.deleteAll();
 
-                                            FoodItem foodItem = realm.createObject(FoodItem.class);
+                                            MixedFoodItem foodItem = realm.createObject(MixedFoodItem.class);
 
-                                            for (Food f : foodsList) {
-                                                foodItem.setFoodNumber(f.getFoodNumber());
-                                                foodItem.setFoodGroup(f.getFoodGroup());
+                                            for (MixedFood f : foodsList) {
+                                                foodItem.setFoodClass(f.getFoodClass());
                                                 foodItem.setFoodName(f.getFoodName());
                                                 foodItem.setFoodAmount(f.getFoodAmount());
-                                                foodItem.setFoodKcal(f.getFoodKcal());
-                                                foodItem.setFoodCarbo(f.getFoodCarbo());
-                                                foodItem.setFoodProtein(f.getFoodProtein());
-                                                foodItem.setFoodFat(f.getFoodFat());
-                                                foodItem.setFoodSugar(f.getFoodSugar());
-                                                foodItem.setFoodNatrium(f.getFoodNatrium());
-                                                foodItem.setFoodCholest(f.getFoodCholest());
-                                                foodItem.setFoodFatty(f.getFoodFatty());
-                                                foodItem.setFoodTransFatty(f.getFoodTransFatty());
+                                                foodItem.setFoodGroup1(f.getFoodGroup1());
+                                                foodItem.setFoodGroup2(f.getFoodGroup2());
+                                                foodItem.setFoodGroup3(f.getFoodGroup3());
+                                                foodItem.setFoodGroup4(f.getFoodGroup4());
+                                                foodItem.setFoodGroup5(f.getFoodGroup5());
+                                                foodItem.setFoodGroup6(f.getFoodGroup6());
+                                                foodItem.setTotalExchange(f.getTotalExchange());
+
+                                                foodItem.setKcal(f.getKcal());
+                                                foodItem.setCarbo(f.getCarbo());
+                                                foodItem.setFatt(f.getFatt());
+                                                foodItem.setProt(f.getProt());
+                                                foodItem.setFiber(f.getFiber());
+
+//                                                foodItem.setFoodNumber(f.getFoodNumber());
+//                                                foodItem.setFoodGroup(f.getFoodGroup());
+//                                                foodItem.setFoodName(f.getFoodName());
+//                                                foodItem.setFoodAmount(f.getFoodAmount());
+//                                                foodItem.setFoodKcal(f.getFoodKcal());
+//                                                foodItem.setFoodCarbo(f.getFoodCarbo());
+//                                                foodItem.setFoodProtein(f.getFoodProtein());
+//                                                foodItem.setFoodFat(f.getFoodFat());
+//                                                foodItem.setFoodSugar(f.getFoodSugar());
+//                                                foodItem.setFoodNatrium(f.getFoodNatrium());
+//                                                foodItem.setFoodCholest(f.getFoodCholest());
+//                                                foodItem.setFoodFatty(f.getFoodFatty());
+//                                                foodItem.setFoodTransFatty(f.getFoodTransFatty());
                                             }
                                         }
                                     }, new Realm.Transaction.OnSuccess() {
@@ -149,7 +167,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                 }
 
                                 @Override
-                                public void onFailure(Call<ArrayList<Food>> call, Throwable t) {
+                                public void onFailure(Call<ArrayList<MixedFood>> call, Throwable t) {
 
                                     Toast.makeText(InitAppCheckActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
 
@@ -163,9 +181,9 @@ public class InitAppCheckActivity extends AppCompatActivity {
                         Log.e(TAG, "onResponse: 처음 사용자  처리 합니다 ");
                         // TODO: 2018-08-01 처음 사용자 
                         long start = System.currentTimeMillis();
-                        dbService.fetchTotalFood(FOOD_FETCH_V2_URL).enqueue(new Callback<ArrayList<Food>>() {
+                        dbService.fetchTotalFood(FOOD_FETCH_V2_URL).enqueue(new Callback<ArrayList<MixedFood>>() {
                             @Override
-                            public void onResponse(Call<ArrayList<Food>> call, Response<ArrayList<Food>> response) {
+                            public void onResponse(Call<ArrayList<MixedFood>> call, Response<ArrayList<MixedFood>> response) {
 
                                 foodsList.clear();
                                 foodsList.addAll(response.body());
@@ -278,7 +296,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(Call<ArrayList<Food>> call, Throwable t) {
+                            public void onFailure(Call<ArrayList<MixedFood>> call, Throwable t) {
                                 Toast.makeText(InitAppCheckActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -331,65 +349,92 @@ public class InitAppCheckActivity extends AppCompatActivity {
             realm = Realm.getDefaultInstance();
             for (int i = 0; i < foodsList.size(); i++) {
                 index = i;
-                String foodNumber = foodsList.get(i).getFoodNumber();
-                String foodGroup = foodsList.get(i).getFoodGroup();
+
+                String foodClass = foodsList.get(i).getFoodClass();
                 String foodName = foodsList.get(i).getFoodName();
                 String foodAmount = foodsList.get(i).getFoodAmount();
-                String foodKcal = foodsList.get(i).getFoodKcal();
-                String foodCarbo = foodsList.get(i).getFoodCarbo();
-                String foodProtein = foodsList.get(i).getFoodProtein();
-                String foodFat = foodsList.get(i).getFoodFat();
-                String foodSugar = foodsList.get(i).getFoodSugar();
-                String foodNatrium = foodsList.get(i).getFoodNatrium();
-                String foodCholest = foodsList.get(i).getFoodCholest();
-                String foodFatty = foodsList.get(i).getFoodFatty();
-                String foodTransFatty = foodsList.get(i).getFoodTransFatty();
+                String foodGroup1 = foodsList.get(i).getFoodGroup1();
+                String foodGroup2 = foodsList.get(i).getFoodGroup2();
+                String foodGroup3 = foodsList.get(i).getFoodGroup3();
+                String foodGroup4 = foodsList.get(i).getFoodGroup4();
+                String foodGroup5 = foodsList.get(i).getFoodGroup5();
+                String foodGroup6 = foodsList.get(i).getFoodGroup6();
+                String totalExchange = foodsList.get(i).getTotalExchange();
+                String kcal = foodsList.get(i).getKcal();
+                String carbo = foodsList.get(i).getCarbo();
+                String fatt = foodsList.get(i).getFatt();
+                String prot = foodsList.get(i).getProt();
+                String fiber = foodsList.get(i).getFiber();
+
+
+//                String foodNumber = foodsList.get(i).getFoodNumber();
+//                String foodGroup = foodsList.get(i).getFoodGroup();
+//                String foodName = foodsList.get(i).getFoodName();
+//                String foodAmount = foodsList.get(i).getFoodAmount();
+//                String foodKcal = foodsList.get(i).getFoodKcal();
+//                String foodCarbo = foodsList.get(i).getFoodCarbo();
+//                String foodProtein = foodsList.get(i).getFoodProtein();
+//                String foodFat = foodsList.get(i).getFoodFat();
+//                String foodSugar = foodsList.get(i).getFoodSugar();
+//                String foodNatrium = foodsList.get(i).getFoodNatrium();
+//                String foodCholest = foodsList.get(i).getFoodCholest();
+//                String foodFatty = foodsList.get(i).getFoodFatty();
+//                String foodTransFatty = foodsList.get(i).getFoodTransFatty();
 
                 realm.executeTransaction(realm -> {
-                    FoodItem foodItem = realm.createObject(FoodItem.class);
-                    foodItem.setFoodNumber(foodNumber);
-                    foodItem.setFoodGroup(foodGroup);
+                    MixedFoodItem foodItem = realm.createObject(MixedFoodItem.class);
+                    foodItem.setFoodClass(foodClass);
                     foodItem.setFoodName(foodName);
                     foodItem.setFoodAmount(foodAmount);
-                    foodItem.setFoodKcal(foodKcal);
-                    foodItem.setFoodCarbo(foodCarbo);
-                    foodItem.setFoodProtein(foodProtein);
-                    foodItem.setFoodFat(foodFat);
-                    foodItem.setFoodSugar(foodSugar);
-                    foodItem.setFoodNatrium(foodNatrium);
-                    foodItem.setFoodCholest(foodCholest);
-                    foodItem.setFoodFatty(foodFatty);
-                    foodItem.setFoodTransFatty(foodTransFatty);
+                    foodItem.setFoodGroup1(foodGroup1);
+                    foodItem.setFoodGroup2(foodGroup2);
+                    foodItem.setFoodGroup3(foodGroup3);
+                    foodItem.setFoodGroup4(foodGroup4);
+                    foodItem.setFoodGroup5(foodGroup5);
+                    foodItem.setFoodGroup6(foodGroup6);
+
+                    foodItem.setTotalExchange(totalExchange);
+
+                    foodItem.setKcal(kcal);
+                    foodItem.setCarbo(carbo);
+                    foodItem.setFatt(fatt);
+                    foodItem.setProt(prot);
+                    foodItem.setFiber(fiber);
+
+//                    foodItem.setFoodNumber(foodNumber);
+//                    foodItem.setFoodGroup(foodGroup);
+//                    foodItem.setFoodName(foodName);
+//                    foodItem.setFoodAmount(foodAmount);
+//                    foodItem.setFoodKcal(foodKcal);
+//                    foodItem.setFoodCarbo(foodCarbo);
+//                    foodItem.setFoodProtein(foodProtein);
+//                    foodItem.setFoodFat(foodFat);
+//                    foodItem.setFoodSugar(foodSugar);
+//                    foodItem.setFoodNatrium(foodNatrium);
+//                    foodItem.setFoodCholest(foodCholest);
+//                    foodItem.setFoodFatty(foodFatty);
+//                    foodItem.setFoodTransFatty(foodTransFatty);
                 });
                 progressDialog.setProgress((int) (100 * i / foodsList.size()));
-
                 //Log.e(TAG, "doInBackground: " + i );
-
             }
-
             return null;
-
         }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
 
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            progressDialog.dismiss();
-            Toast.makeText(InitAppCheckActivity.this, "저장완료", Toast.LENGTH_SHORT).show();
-            long endTwo = System.currentTimeMillis();
-            //Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
-            Paper.book().write("food_version_code", fetchVersionCode);
-            textView.setText("다운로드 및 저장 완료");
-            Log.e(TAG, "onSuccess: " + "저장 완료 ");
-            startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
-            finish();
-            //finish();
-            super.onPostExecute(aVoid);
+            @Override
+            protected void onPostExecute (Void aVoid){
+                progressDialog.dismiss();
+                Toast.makeText(InitAppCheckActivity.this, "저장완료", Toast.LENGTH_SHORT).show();
+                long endTwo = System.currentTimeMillis();
+                //Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
+                Paper.book().write("food_version_code", fetchVersionCode);
+                textView.setText("다운로드 및 저장 완료");
+                Log.e(TAG, "onSuccess: " + "저장 완료 ");
+                startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
+                finish();
+                //finish();
+                super.onPostExecute(aVoid);
+            }
         }
     }
-}
