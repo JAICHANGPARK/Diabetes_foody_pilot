@@ -1,44 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:layout_margin="4dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="4dp"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="식품이름"
-                android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/text_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="식품군" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,47 +24,131 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/text_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제공량"
+                    android:text="식품이름"
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/text_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="열량" />
+                    android:text="식품군" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="제공량"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="열량" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="제공량"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/text_kcal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="열량" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/text_amount"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="제공량"
-                    android:textColor="@color/black" />
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_kcal"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="탄수화물"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="단백질" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="지방" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="열량" />
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_carbo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="탄수화물"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/text_protein"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="단백질" />
+
+                    <TextView
+                        android:id="@+id/text_fat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="지방" />
+
+                </LinearLayout>
 
 
             </LinearLayout>
 
-        </LinearLayout>
 
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -95,53 +157,121 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/text_total_exchange_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="탄수화물"
+                    android:text="총 교환단위"
                     android:textColor="@color/black" />
 
                 <TextView
+                    android:id="@+id/text_total_exchange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="단백질" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="지방" />
+                    android:text="총 교환단위" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/text_carbo"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="탄수화물"
-                    android:textColor="@color/black" />
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_protein"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="곡류군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="어육류군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="채소군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="과일군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="우유군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="지방군"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="단백질" />
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/text_fat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="지방" />
+                    <TextView
+                        android:id="@+id/text_group1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="곡류군"
+                        android:textColor="@color/black" />
 
+                    <TextView
+                        android:id="@+id/text_group2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="어육류군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/text_group3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="채소군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/text_group4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="과일군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/text_group5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="우유군"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/text_group6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="지방군"
+                        android:textColor="@color/black" />
+                </LinearLayout>
             </LinearLayout>
-
 
         </LinearLayout>
-
 
     </LinearLayout>
 

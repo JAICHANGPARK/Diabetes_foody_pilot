@@ -33,6 +33,7 @@ import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapter;
+import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
 import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     IMenuRequest service;
 
     SearchAdapter searchAdapter;
-
+    SearchAdapterV2 searchAdapterV2;
     ArrayList<FoodItem> searchList = new ArrayList<>();
     ArrayList<MixedFoodItem> searchListV2 = new ArrayList<>();
 
@@ -137,28 +138,29 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //        recyclerView.setAdapter(mAdapter);
 
         searchAdapter = new SearchAdapter(this, searchList);
+        searchAdapterV2 = new SearchAdapterV2(this, searchListV2);
         //bottomRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
         bottomRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
         bottomRecyclerView.setItemAnimator(new DefaultItemAnimator());
         // bottomRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         // bottomRecyclerView.setHasFixedSize(true);
         //bottomRecyclerView.setNestedScrollingEnabled(true);
-        bottomRecyclerView.setAdapter(searchAdapter);
+        bottomRecyclerView.setAdapter(searchAdapterV2);
 
 
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
-        addItemToCart();
+        //addItemToCart();
 
         fetchFromRealm();
-
+        setFloatingSearchView();
 
 //        for (int i = 0 ; i < results.size(); i++){
 //            Log.e(TAG, "onCreate: " + results.get(i).getFoodName() );
 //        }
 
-        setFloatingSearchView();
+
 
 
     }
@@ -250,15 +252,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                 List<String> foodName = new ArrayList<>();
                 //floatingSearchView.swapSuggestions();
 //                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).like("foodName", currentQuery, Case.INSENSITIVE).findAllSortedAsync("foodName", Sort.ASCENDING);
-                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).contains("foodName", currentQuery).findAll();
+//                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).contains("foodName", currentQuery).findAll();
+                RealmResults<MixedFoodItem> result1 = realm.where(MixedFoodItem.class).contains("foodName", currentQuery).findAll();
                 if (result1.size() != 0) {
-                    for (FoodItem item : result1) {
+                    for (MixedFoodItem item : result1) {
                         Log.e(TAG, "onSearchAction: " + item.getFoodName());
                         foodName.add(item.getFoodName());
                     }
                 }
-                searchList.addAll(result1);
-                searchAdapter.notifyDataSetChanged();
+                searchListV2.addAll(result1);
+                //searchAdapter.notifyDataSetChanged();
+                searchAdapterV2.notifyDataSetChanged();
             }
         });
     }
@@ -291,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         });
     }
 
+    @Deprecated
     private void addItemToCart() {
 
         service.getMenuList(URL_API).enqueue(new Callback<List<TestModel>>() {
@@ -308,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         });
     }
 
-    // TODO: 2018-08-15 리사이클러뷰 삭제 시 처리  
+    // TODO: 2018-08-15 리사이클러뷰 삭제 시 처리
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
 
