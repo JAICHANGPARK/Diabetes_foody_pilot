@@ -214,6 +214,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         floatingSearchView.setOnQueryChangeListener((oldQuery, newQuery) -> {
 
+            searchListV2.clear();
+            searchAdapterV2.notifyDataSetChanged();
+
             List<Suggestions> foodName = new ArrayList<>();
             Log.e(TAG, ": oldQuery --> " + oldQuery + " new Query --> " + newQuery);
             RealmResults<MixedFoodItem> result1 = realm.where(MixedFoodItem.class).contains("foodName", newQuery).findAll();
@@ -241,14 +244,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 // Log.e(TAG, "onSuggestionClicked: ");
+                searchListV2.clear();
+                searchAdapterV2.notifyDataSetChanged();
                 Log.e(TAG, "onSuggestionClicked: " + searchSuggestion.getBody());
-
+                RealmResults<MixedFoodItem> result1 = realm.where(MixedFoodItem.class).contains("foodName", searchSuggestion.getBody()).findAll();
+                searchListV2.addAll(result1);
+                //searchAdapter.notifyDataSetChanged();
+                searchAdapterV2.notifyDataSetChanged();
+                floatingSearchView.setSearchFocused(false);
             }
 
             @Override
             public void onSearchAction(String currentQuery) {
                 Log.e(TAG, "onSearchAction: " + currentQuery);
-                searchList.clear();
+                searchListV2.clear();
                 List<String> foodName = new ArrayList<>();
                 //floatingSearchView.swapSuggestions();
 //                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).like("foodName", currentQuery, Case.INSENSITIVE).findAllSortedAsync("foodName", Sort.ASCENDING);
@@ -260,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                         foodName.add(item.getFoodName());
                     }
                 }
+
                 searchListV2.addAll(result1);
                 //searchAdapter.notifyDataSetChanged();
                 searchAdapterV2.notifyDataSetChanged();
