@@ -31,6 +31,7 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV2;
+import com.dreamwalker.diabetesfoodypilot.adapter.OnItemClickListrner;
 import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapterV2;
@@ -55,7 +56,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener {
+public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener,
+        OnItemClickListrner{
 
     private static final String TAG = "MainActivity";
 
@@ -128,14 +130,21 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         mAdapter = new CartListAdapter(this, cartList);
 
         setInitData();
-        adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapterV2);
+        initRecyclerView();
+        initBottomRecyclerView();
+        fetchFromRealm();
+        setFloatingSearchView();
+
 //        recyclerView.setAdapter(mAdapter);
+        //addItemToCart();
+//        for (int i = 0 ; i < results.size(); i++){
+//            Log.e(TAG, "onCreate: " + results.get(i).getFoodName() );
+//        }
+
+    }
+
+    private void initBottomRecyclerView(){
 
         searchAdapter = new SearchAdapter(this, searchList);
         searchAdapterV2 = new SearchAdapterV2(this, searchListV2);
@@ -147,22 +156,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         //bottomRecyclerView.setNestedScrollingEnabled(true);
         bottomRecyclerView.setAdapter(searchAdapterV2);
 
+    }
 
+    private void initRecyclerView(){
+        adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        recyclerView.setAdapter(adapterV2);
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-
-        //addItemToCart();
-
-        fetchFromRealm();
-        setFloatingSearchView();
-
-//        for (int i = 0 ; i < results.size(); i++){
-//            Log.e(TAG, "onCreate: " + results.get(i).getFoodName() );
-//        }
-
-
-
-
+        adapterV2.setOnItemClickListrner(this);
     }
 
     private void bindViews() {
@@ -185,8 +190,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         results = realm.where(MixedFoodItem.class).findAll();
         Log.e(TAG, "onCreate: " + results.size());
     }
-
-
 
     private void setInitData() {
         foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
@@ -420,4 +423,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     }
 
 
+    @Override
+    public void onItemClick(View v, int position) {
+        Log.e(TAG, "onItemClick: " + position);
+    }
 }

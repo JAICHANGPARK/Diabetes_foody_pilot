@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -14,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
+import com.lid.lib.LabelImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,17 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
     ArrayList<Integer> imageList;
     ArrayList<Food> foodArrayList;
 
+    OnItemClickListrner listrner;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public void setOnItemClickListrner(OnItemClickListrner listrner){
+        this.listrner = listrner;
+    }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name, description, price;
-        public ImageView thumbnail;
+        //public ImageView thumbnail;
+        public LabelImageView thumbnail;
         public RelativeLayout viewBackground, viewForeground;
 
         public MyViewHolder(View view) {
@@ -39,6 +46,16 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
             thumbnail = view.findViewById(R.id.thumbnail);
             viewBackground = view.findViewById(R.id.view_background);
             viewForeground = view.findViewById(R.id.view_foreground);
+            // TODO: 2018-08-15 클릭 리스너 추가
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (listrner != null){
+                listrner.onItemClick(v, getAdapterPosition());
+
+            }
         }
     }
 
