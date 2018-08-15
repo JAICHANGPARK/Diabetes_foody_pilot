@@ -34,7 +34,9 @@ import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapter;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
+import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
+import com.dreamwalker.diabetesfoodypilot.model.MixedFood;
 import com.dreamwalker.diabetesfoodypilot.model.Suggestions;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
 import com.dreamwalker.diabetesfoodypilot.remote.Common;
@@ -52,21 +54,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener{
+public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener {
 
     private static final String TAG = "MainActivity";
 
     private final String URL_API = "https://api.androidhive.info/json/menu.json";
-
-    private RecyclerView recyclerView;
-    private List<TestModel> cartList;
-    private CartListAdapter mAdapter;
-
-    IMenuRequest service;
+    
 //
 //    @BindView(R.id.bottomSheet)
 //    LinearLayout mBottomSheet;
 
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    
     @BindView(R.id.bottomSheet)
     CoordinatorLayout mBottomSheet;
 
@@ -82,42 +82,49 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     @BindView(R.id.bottom_recycler_view)
     RecyclerView bottomRecyclerView;
 
+    private List<TestModel> cartList;
+    private CartListAdapter mAdapter;
+
+    IMenuRequest service;
+
     SearchAdapter searchAdapter;
 
     ArrayList<FoodItem> searchList = new ArrayList<>();
+    ArrayList<MixedFoodItem> searchListV2 = new ArrayList<>();
 
     BottomSheetBehavior bottomSheetBehavior;
 
     Realm realm;
-
 
     CartListAdapterV2 adapterV2;
 
     ArrayList<Food> foodArrayList = new ArrayList<>();
     ArrayList<Integer> imageList = new ArrayList<>();
 
+    ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>();
+    RealmResults<MixedFoodItem> results;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // TODO: 2018-08-15 액티비티 풀스크린 전환 - 박제창
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
+        bindViews();
         setBottomSheetBehavior();
 
-        Realm.init(this);
-        realm = Realm.getDefaultInstance();
+        // TODO: 2018-08-15 Realm 초기화 - 박제창
+        initRealm();
+
+        // TODO: 2018-08-15 card animation added - 박제창
+        initCardAnimate();
 
         service = Common.getMenuRequest();
 
-        Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
-        RelativeLayout rl = findViewById(R.id.card_container);
-        rl.startAnimation(slideUp);
-
-
-        recyclerView = findViewById(R.id.recycler_view);
+        //recyclerView = findViewById(R.id.recycler_view);
         cartList = new ArrayList<>();
         mAdapter = new CartListAdapter(this, cartList);
-
 
         setInitData();
         adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
@@ -133,8 +140,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         //bottomRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
         bottomRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
         bottomRecyclerView.setItemAnimator(new DefaultItemAnimator());
-       // bottomRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-       // bottomRecyclerView.setHasFixedSize(true);
+        // bottomRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        // bottomRecyclerView.setHasFixedSize(true);
         //bottomRecyclerView.setNestedScrollingEnabled(true);
         bottomRecyclerView.setAdapter(searchAdapter);
 
@@ -144,10 +151,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         addItemToCart();
 
-        RealmResults<FoodItem> results = realm.where(FoodItem.class).findAll();
-
-        Log.e(TAG, "onCreate: " + results.size());
-
+        fetchFromRealm();
 
 
 //        for (int i = 0 ; i < results.size(); i++){
@@ -157,54 +161,77 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         setFloatingSearchView();
 
 
+    }
+
+    private void bindViews() {
+        ButterKnife.bind(this);
+    }
+
+    private void initCardAnimate() {
+        Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        RelativeLayout rl = findViewById(R.id.card_container);
+        rl.startAnimation(slideUp);
+    }
+
+    private void initRealm() {
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
 
     }
 
-    private void setInitData(){
-        foodArrayList.add(new Food("","식품 입력","","","","",""));
+    private void fetchFromRealm() {
+        results = realm.where(MixedFoodItem.class).findAll();
+        Log.e(TAG, "onCreate: " + results.size());
+    }
+
+
+
+    private void setInitData() {
+        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.rice);
 
-        foodArrayList.add(new Food("","식품 입력","","","","",""));
+        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.soup);
 
-        foodArrayList.add(new Food("","식품 입력","","","","",""));
+        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.side_dish_01);
 
-        foodArrayList.add(new Food("","식품 입력","","","","",""));
+        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.side_dish_02);
 
-        foodArrayList.add(new Food("","식품 입력","","","","",""));
+        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.side_dish_03);
 
-        foodArrayList.add(new Food("","식품 입력","","","","",""));
+        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.side_dish_04);
 
 
-
     }
 
-    private void setFloatingSearchView(){
+    private void setFloatingSearchView() {
 
-        floatingSearchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
-            @Override
-            public void onSearchTextChanged(String oldQuery, String newQuery) {
-                List<Suggestions> foodName = new ArrayList<>();
-                Log.e(TAG, ": oldQuery --> " + oldQuery + " new Query --> " + newQuery);
-                RealmResults<FoodItem> result1 = realm.where(FoodItem.class).contains("foodName", newQuery).findAll();
-                //floatingSearchView.swapSuggestions();
-                //RealmResults<FoodItem> result1 = realm.where(FoodItem.class).like("foodName", newQuery, Case.INSENSITIVE).findAllSortedAsync("foodName", Sort.ASCENDING);
-                if (result1.size() != 0) {
-                    for (FoodItem item : result1) {
-                        foodName.add(new Suggestions(item.getFoodName()));
-                    }
+        floatingSearchView.setOnQueryChangeListener((oldQuery, newQuery) -> {
+
+            List<Suggestions> foodName = new ArrayList<>();
+            Log.e(TAG, ": oldQuery --> " + oldQuery + " new Query --> " + newQuery);
+            RealmResults<MixedFoodItem> result1 = realm.where(MixedFoodItem.class).contains("foodName", newQuery).findAll();
+//            RealmResults<FoodItem> result1 = realm.where(FoodItem.class).contains("foodName", newQuery).findAll();
+            //floatingSearchView.swapSuggestions();
+            //RealmResults<FoodItem> result1 = realm.where(FoodItem.class).like("foodName", newQuery, Case.INSENSITIVE).findAllSortedAsync("foodName", Sort.ASCENDING);
+            if (result1.size() != 0) {
+//                for (FoodItem item : result1) {
+//                    foodName.add(new Suggestions(item.getFoodName()));
+//                }
+                for (MixedFoodItem item : result1){
+                    foodName.add(new Suggestions(item.getFoodName()));
                 }
-
-                floatingSearchView.swapSuggestions(foodName);
-
-
-                //floatingSearchView.swapSuggestions(foodName);
-
             }
+
+            floatingSearchView.swapSuggestions(foodName);
+
+
+            //floatingSearchView.swapSuggestions(foodName);
+
         });
 
 
@@ -281,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         });
     }
 
+    // TODO: 2018-08-15 리사이클러뷰 삭제 시 처리  
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
 
@@ -366,11 +394,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     }
 
     @OnClick(R.id.add)
-    public void onClickedAddButton(){
+    public void onClickedAddButton() {
 //        foodArrayList.add(new Food("","식품 입력","","","","",""));
 //        imageList.add(R.drawable.rice);
 
-        adapterV2.addItem(new Food("","식품 입력","","","","",""),
+        adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
                 R.drawable.side_dish_04);
 
         adapterV2.notifyDataSetChanged();
