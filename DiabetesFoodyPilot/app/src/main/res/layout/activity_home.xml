@@ -15,6 +15,10 @@
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="15dp">
 
+
+
+
+
         <com.dreamwalker.spacebottomnav.SpaceNavigationView
             android:id="@+id/space"
             android:layout_width="match_parent"

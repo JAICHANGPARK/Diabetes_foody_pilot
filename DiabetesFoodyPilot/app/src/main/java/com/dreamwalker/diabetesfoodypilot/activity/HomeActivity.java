@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
@@ -25,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
@@ -54,7 +56,16 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(int itemIndex, String itemName) {
+
                 Log.d("onItemClick ", "" + itemIndex + " " + itemName);
+                switch (itemIndex){
+                    case 0:
+                        break;
+                    case 1:
+                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+
+                        break;
+                }
             }
 
             @Override
