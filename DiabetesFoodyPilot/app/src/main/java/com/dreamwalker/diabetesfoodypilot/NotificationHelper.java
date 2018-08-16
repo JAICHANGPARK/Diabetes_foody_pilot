@@ -37,18 +37,14 @@ public class NotificationHelper {
         //mContentTitle = mContext.getString(R.string.content_title); //Full title of the notification in the pull down
         mContentTitle = "식품 데이터";
         CharSequence contentText = "0% complete"; //Text of the notification in the pull down
-
         //you have to set a PendingIntent on a notification to tell the system what you want it to do when the notification is selected
         //I don't want to use this here so I'm just creating a blank one
         Intent notificationIntent = new Intent();
         mContentIntent = PendingIntent.getActivity(mContext, 0, notificationIntent, 0);
-
         //add the additional content and intent to the notification
         //mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
-
         //make this notification appear in the 'Ongoing events' section
         mNotification.flags = Notification.FLAG_ONGOING_EVENT;
-
         //show the notification
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
     }

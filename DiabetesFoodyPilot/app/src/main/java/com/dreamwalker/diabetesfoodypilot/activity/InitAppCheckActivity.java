@@ -1,4 +1,4 @@
-package com.dreamwalker.diabetesfoodypilot;
+package com.dreamwalker.diabetesfoodypilot.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.AppVersion;
 import com.dreamwalker.diabetesfoodypilot.model.MixedFood;

@@ -13,10 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionbar"></activity>
         <activity
-            android:name=".InitAppCheckActivity"
+            android:name=".activity.InitAppCheckActivity"
             android:theme="@style/AppTheme.NoActionbar">
 
         </activity>

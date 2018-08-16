@@ -1,4 +1,4 @@
-package com.dreamwalker.diabetesfoodypilot;
+package com.dreamwalker.diabetesfoodypilot.activity;
 
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.OnItemClickListrner;
@@ -56,8 +57,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener,
-        OnItemClickListrner{
+public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener, OnItemClickListrner{
 
     private static final String TAG = "MainActivity";
 
