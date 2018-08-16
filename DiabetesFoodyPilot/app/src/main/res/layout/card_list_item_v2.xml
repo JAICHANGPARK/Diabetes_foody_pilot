@@ -55,7 +55,8 @@
         <!--app:label_text="POP"-->
         <!--app:label_textSize="10sp" />-->
 
-        <cn.label.library.LabelView
+        <com.dreamwalker.avatarlibrary.LabelView
+            android:id="@+id/thumbnail"
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:backgroundColor="#ff4d32"

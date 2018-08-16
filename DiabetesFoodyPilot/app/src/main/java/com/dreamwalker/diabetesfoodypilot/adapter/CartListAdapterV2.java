@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dreamwalker.avatarlibrary.LabelView;
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
-import com.lid.lib.LabelImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,8 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView name, description, price;
         //public ImageView thumbnail;
-        public LabelImageView thumbnail;
+        //public LabelImageView thumbnail;
+        public LabelView thumbnail;
         public RelativeLayout viewBackground, viewForeground;
 
         public MyViewHolder(View view) {
@@ -42,7 +43,7 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
             name = view.findViewById(R.id.name);
             description = view.findViewById(R.id.description);
             price = view.findViewById(R.id.price);
-            //thumbnail = view.findViewById(R.id.thumbnail);
+            thumbnail = view.findViewById(R.id.thumbnail);
             viewBackground = view.findViewById(R.id.view_background);
             viewForeground = view.findViewById(R.id.view_foreground);
             // TODO: 2018-08-15 클릭 리스너 추가
@@ -87,9 +88,10 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
         holder.name.setText(item.getFoodName());
         holder.description.setText(item.getFoodGroup());
         holder.price.setText(item.getFoodKcal());
+        //holder.thumbnail.setTextTitle();
 
 //        Glide.with(context).load(item.getThumbnail()).into(holder.thumbnail);
-        
+
 
         //Glide.with(context).load(imageList.get(position)).into(holder.thumbnail);
     }
