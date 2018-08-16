@@ -91,6 +91,7 @@ public class StartActivity extends AppCompatActivity {
         Log.e(TAG, "onClickedStartButton: ");
         Paper.book().write("firstRun", true);
         startActivity(new Intent(StartActivity.this, InitAppCheckActivity.class));
+        finish();
 
     }
 
@@ -110,7 +111,8 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mediaPlayer.release();
+        //mediaPlayer.stop();
+        //mediaPlayer.release();
         mediaPlayer = null;
     }
 

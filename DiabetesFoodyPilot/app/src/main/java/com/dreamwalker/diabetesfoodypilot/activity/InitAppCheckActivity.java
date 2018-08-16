@@ -91,7 +91,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
                         if (versionFoodCode.equals(appVersion.getVersion())) {
                             Log.e(TAG, "onResponse: 이전 버전 과 같은경우   ");
-                            Intent intent = new Intent(InitAppCheckActivity.this, MainActivity.class);
+                            Intent intent = new Intent(InitAppCheckActivity.this, HomeActivity.class);
                             startActivity(intent);
                             finish();
 
@@ -156,7 +156,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                             Paper.book().write("food_version_code", fetchVersionCode);
                                             textView.setText("다운로드 및 저장 완료");
                                             Log.e(TAG, "onSuccess: " + "저장 완료 ");
-                                            startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
+                                            startActivity(new Intent(InitAppCheckActivity.this, HomeActivity.class));
                                             finish();
                                         }
                                     }, new Realm.Transaction.OnError() {
@@ -432,7 +432,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                 Paper.book().write("food_version_code", fetchVersionCode);
                 textView.setText("다운로드 및 저장 완료");
                 Log.e(TAG, "onSuccess: " + "저장 완료 ");
-                startActivity(new Intent(InitAppCheckActivity.this, MainActivity.class));
+                startActivity(new Intent(InitAppCheckActivity.this, HomeActivity.class));
                 finish();
                 //finish();
                 super.onPostExecute(aVoid);

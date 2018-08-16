@@ -14,26 +14,25 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionbar"></activity>
+            android:theme="@style/AppTheme.NoActionbar" />
         <activity
             android:name=".activity.InitAppCheckActivity"
+            android:theme="@style/AppTheme.NoActionbar"></activity>
+        <activity
+            android:name=".activity.StartActivity"
             android:theme="@style/AppTheme.NoActionbar">
-
-        </activity>
-        <activity android:name=".activity.StartActivity"
-            android:theme="@style/AppTheme.NoActionbar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".activity.HomeActivity"></activity>
     </application>
 
 </manifest>
