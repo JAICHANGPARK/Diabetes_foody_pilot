@@ -55,15 +55,24 @@
         <!--app:label_text="POP"-->
         <!--app:label_textSize="10sp" />-->
 
-        <com.lid.lib.LabelImageView
-            android:id="@+id/thumbnail"
+        <cn.label.library.LabelView
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginEnd="@dimen/activity_padding_horizontal"
-            android:scaleType="centerCrop"
-            app:label_backgroundColor="#C2185B"
-            app:label_orientation="LEFT_TOP"
-            app:label_text="밥" />
+            app:backgroundColor="#ff4d32"
+            app:labelTopPadding="20dp"
+            app:textContent="火爆"
+            app:textContentSize="15sp"
+            app:textContentStyle="bold" />
+
+        <!--<com.lid.lib.LabelImageView-->
+        <!--android:id="@+id/thumbnail"-->
+        <!--android:layout_width="60dp"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_marginEnd="@dimen/activity_padding_horizontal"-->
+        <!--android:scaleType="centerCrop"-->
+        <!--app:label_backgroundColor="#C2185B"-->
+        <!--app:label_orientation="LEFT_TOP"-->
+        <!--app:label_text="밥" />-->
 
         <!--<ImageView-->
         <!--android:id="@+id/thumbnail"-->

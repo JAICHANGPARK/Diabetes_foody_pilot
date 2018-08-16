@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
@@ -43,7 +42,7 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
             name = view.findViewById(R.id.name);
             description = view.findViewById(R.id.description);
             price = view.findViewById(R.id.price);
-            thumbnail = view.findViewById(R.id.thumbnail);
+            //thumbnail = view.findViewById(R.id.thumbnail);
             viewBackground = view.findViewById(R.id.view_background);
             viewForeground = view.findViewById(R.id.view_foreground);
             // TODO: 2018-08-15 클릭 리스너 추가
@@ -90,7 +89,9 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
         holder.price.setText(item.getFoodKcal());
 
 //        Glide.with(context).load(item.getThumbnail()).into(holder.thumbnail);
-        Glide.with(context).load(imageList.get(position)).into(holder.thumbnail);
+        
+
+        //Glide.with(context).load(imageList.get(position)).into(holder.thumbnail);
     }
 
     @Override

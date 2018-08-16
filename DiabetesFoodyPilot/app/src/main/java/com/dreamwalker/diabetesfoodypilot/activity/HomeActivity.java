@@ -71,6 +71,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
                 Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
+                switch (itemIndex){
+                    case 0:
+                        break;
+                    case 1:
+                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+
+                        break;
+                }
             }
         });
 

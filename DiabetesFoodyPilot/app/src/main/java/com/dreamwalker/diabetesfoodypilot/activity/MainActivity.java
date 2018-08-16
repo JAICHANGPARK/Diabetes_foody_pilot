@@ -1,5 +1,6 @@
 package com.dreamwalker.diabetesfoodypilot.activity;
 
+import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -81,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     @BindView(R.id.add)
     ImageView addItemButton;
+
+    @BindView(R.id.save)
+    ImageView saveItemButton;
 
     @BindView(R.id.bottom_recycler_view)
     RecyclerView bottomRecyclerView;
@@ -421,10 +426,37 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         adapterV2.notifyDataSetChanged();
     }
-
+    @OnClick(R.id.save)
+    public void onClickedSaveButton(){
+        // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
+        String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an Items");
+        builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.e(TAG, "onClick: " + i);
+            }
+        });
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
+        
+    }
 
     @Override
     public void onItemClick(View v, int position) {
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         Log.e(TAG, "onItemClick: " + position);
     }
 }
