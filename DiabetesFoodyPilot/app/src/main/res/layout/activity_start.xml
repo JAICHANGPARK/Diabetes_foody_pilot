@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.StartActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:elevation="10dp"
+            android:fontFamily="@font/pacifico"
+            android:gravity="center"
+            android:text="Diabetes\nFoodie"
+            android:textColor="@android:color/white"
+            android:textSize="60sp" />
+
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
+
+        <!-- style="@style/Widget.MaterialComponents.Button.TextButton"-->
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btnFacebookLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="Start"
+            app:cornerRadius="50dp" />
+
+    </RelativeLayout>
+
+
+    <!--<android.support.design.button.MaterialButton-->
+    <!--android:id="@+id/btnFacebookLogin"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:gravity="center"-->
+    <!--android:paddingTop="10dp"-->
+    <!--android:paddingBottom="10dp"-->
+    <!--app:cornerRadius="50dp"-->
+    <!--android:layout_marginStart="40dp"-->
+    <!--android:layout_marginEnd="40dp"-->
+    <!--android:text="Start"-->
+    <!--app:backgroundTint="@color/colorLoginPrimary" />-->
+
+</android.support.design.widget.CoordinatorLayout>

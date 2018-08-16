@@ -25,4 +25,9 @@
 
     <color name="secondary_text" type="color">#ff808080</color>
 
+
+    <!--login colors-->
+    <color name="colorLoginPrimary">#6200EA</color>
+    <color name="colorLoginAccent">#6200EA</color>
+
 </resources>

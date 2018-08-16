@@ -1,0 +1,109 @@
+package com.dreamwalker.diabetesfoodypilot.activity;
+
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.design.button.MaterialButton;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.VideoView;
+
+import com.dreamwalker.diabetesfoodypilot.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class StartActivity extends AppCompatActivity {
+    private static final String TAG = "StartActivity";
+
+    @BindView(R.id.btnFacebookLogin)
+    MaterialButton materialButton;
+
+    @BindView(R.id.videoView)
+    VideoView videoView;
+    @BindView(R.id.text_view)
+    TextView textView;
+
+    MediaPlayer mediaPlayer;
+    int currentVideoPosition;
+    int i = 0;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        setContentView(R.layout.activity_start);
+        ButterKnife.bind(this);
+        // TODO: 2018-08-16 TextView가 안보인다. 해결이 필요하다.
+        textView.bringToFront();
+        textView.setZ(10.0f);
+
+
+        Uri uriZero = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_3);
+        Uri uriOne = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_2);
+        Uri uriTwo = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak);
+
+        List<Uri> videoPathes = new ArrayList<Uri>();
+        videoPathes.add(uriOne);
+        videoPathes.add(uriTwo);
+        videoPathes.add(uriZero);
+
+        videoView.setVideoURI(uriZero);
+        videoView.start();
+
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                i = (i + 1) % videoPathes.size();
+                videoView.setVideoURI(videoPathes.get(i));
+                videoView.start();
+            }
+        });
+
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mediaPlayer = mp;
+                //mediaPlayer.setLooping(true);
+                if (currentVideoPosition != 0) {
+                    mediaPlayer.seekTo(currentVideoPosition);
+                    mediaPlayer.start();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        currentVideoPosition = mediaPlayer.getCurrentPosition();
+        videoView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        videoView.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }
+
+    @OnClick(R.id.btnFacebookLogin)
+    public void  onClickedStartButton(){
+        Log.e(TAG, "onClickedStartButton: ");
+
+    }
+}
