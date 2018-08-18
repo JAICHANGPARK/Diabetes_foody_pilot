@@ -11,13 +11,16 @@ import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodDock;
+import com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal;
 import com.dreamwalker.spacebottomnav.SpaceItem;
 import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
 import com.dreamwalker.spacebottomnav.SpaceOnLongClickListener;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,12 +52,27 @@ public class HomeActivity extends AppCompatActivity {
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
-        RealmResults<FoodDock> result =  realm.where(FoodDock.class).findAll();
-        Log.e(TAG, "onCreate: " + result.size() );
+        RealmResults<FoodDock> result = realm.where(FoodDock.class).findAll();
+        Log.e(TAG, "onCreate: " + result.size());
+
+        List<FoodDock> foodDockArrayList = realm.copyFromRealm(result);
+        ArrayList<List<FoodTotal>> foodTotalList = new ArrayList<>();
+        for (int i = 0; i < foodDockArrayList.size(); i++){
+
+            Log.e(TAG, "onCreate:1 " + foodDockArrayList.get(i).getFoodTotals());
+            Log.e(TAG, "onCreate:2 " + foodDockArrayList.get(i).getSaveDate());
+            Log.e(TAG, "onCreate: 3" + foodDockArrayList.get(i).getTimestamp());
+            foodTotalList.add(realm.copyFromRealm(foodDockArrayList.get(i).getFoodTotals()));
+        }
+
+        for (int i = 0; i< foodTotalList.size(); i++){
+            Log.e(TAG, "onCreate: " + foodTotalList.get(i).get(i).getIntakeType());
+        }
+
 
     }
 
-    private void setSpaceNavigationView(Bundle sis){
+    private void setSpaceNavigationView(Bundle sis) {
         spaceNavigationView.initWithSaveInstanceState(sis);
         spaceNavigationView.setCentreButtonIcon(R.drawable.ic_add_white_24dp);
         spaceNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home_white_24dp));
@@ -67,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 spaceNavigationView.shouldShowFullBadgeText(true);
-                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기",Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
+                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -79,7 +97,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(int itemIndex, String itemName) {
 
                 Log.d("onItemClick ", "" + itemIndex + " " + itemName);
-                switch (itemIndex){
+                switch (itemIndex) {
                     case 0:
                         break;
                     case 1:
@@ -91,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onItemReselected(int itemIndex, String itemName) {
                 Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
-                switch (itemIndex){
+                switch (itemIndex) {
                     case 0:
                         break;
                     case 1:
