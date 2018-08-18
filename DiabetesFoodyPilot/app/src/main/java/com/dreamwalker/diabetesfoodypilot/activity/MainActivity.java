@@ -29,7 +29,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -280,18 +279,18 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
 
 
-                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
 
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
 
         }
     }
@@ -540,8 +539,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 adapterV3.notifyDataSetChanged();
                 // TODO: 2018-08-18 백그라운드에서 하나 생성
                 mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
-                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
                 dialogInterface.dismiss();
             }
         });
@@ -624,30 +623,46 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                         Timestamp timestamp = new Timestamp(saveDate.getTime());
                         long ts = timestamp.getTime();
                         RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal> realmList = new RealmList<>();
+
                         realmList.addAll(resultList);
+
+
                         realm = Realm.getDefaultInstance();
-                        realm.executeTransactionAsync(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                FoodDock foodItem = realm.createObject(FoodDock.class);
-                                foodItem.setMain(realmList);
-                                foodItem.setSaveDate(saveDate);
-                                foodItem.setTimestamp(ts);
 
-                            }
-                        }, new Realm.Transaction.OnSuccess() {
-                            @Override
-                            public void onSuccess() {
-                                startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                                finish();
-                            }
-                        }, new Realm.Transaction.OnError() {
-                            @Override
-                            public void onError(Throwable error) {
-                                Toast.makeText(MainActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        realm.beginTransaction();
+                        FoodDock foodDock = new FoodDock();
+                        realm.insertOrUpdate(foodDock);
+//                        FoodDock foodItem = realm.createObject(FoodDock.class);
+                        foodDock.setFoodTotals(realmList);
+                        foodDock.setSaveDate(saveDate);
+                        foodDock.setTimestamp(ts);
+                        realm.commitTransaction();
 
-                            }
-                        });
+                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                        finish();
+
+//                        realm.executeTransactionAsync(new Realm.Transaction() {
+//                            @Override
+//                            public void execute(Realm realm) {
+//
+//
+//
+//                            }
+//                        }, new Realm.Transaction.OnSuccess() {
+//                            @Override
+//                            public void onSuccess() {
+//                                startActivity(new Intent(MainActivity.this, HomeActivity.class));
+//                                finish();
+//                            }
+//                        }, new Realm.Transaction.OnError() {
+//                            @Override
+//                            public void onError(Throwable error) {
+//                                Log.e(TAG, "onError: " + error.getMessage() );
+//
+//                                Toast.makeText(MainActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                            }
+//                        });
 
                     } else {
                         Log.e(TAG, "onClick: tempList Size Zero");

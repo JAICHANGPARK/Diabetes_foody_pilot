@@ -2,8 +2,9 @@ package com.dreamwalker.diabetesfoodypilot.database.food;
 
 import io.realm.RealmList;
 import io.realm.RealmModel;
+import io.realm.RealmObject;
 
-public class FoodTotal implements RealmModel {
+public class FoodTotal extends RealmObject implements RealmModel {
     private String intakeType;
     private RealmList<FoodCard> foodCardArrayList;
 

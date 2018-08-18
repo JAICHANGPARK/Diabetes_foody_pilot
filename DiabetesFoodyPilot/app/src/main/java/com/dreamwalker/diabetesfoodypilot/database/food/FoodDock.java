@@ -5,13 +5,15 @@ import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmModel;
+import io.realm.RealmObject;
 
-public class FoodDock implements RealmModel {
+public class FoodDock extends RealmObject implements RealmModel {
     public RealmList<FoodTotal> foodTotals;
     private Date saveDate;
     private long timestamp;
 
     public FoodDock() {
+
     }
 
     public FoodDock(RealmList<FoodTotal> main, Date saveDate, long timestamp) {
@@ -20,12 +22,12 @@ public class FoodDock implements RealmModel {
         this.timestamp = timestamp;
     }
 
-    public RealmList<FoodTotal> getMain() {
+    public RealmList<FoodTotal> getFoodTotals() {
         return foodTotals;
     }
 
-    public void setMain(RealmList<FoodTotal> main) {
-        this.foodTotals = main;
+    public void setFoodTotals(RealmList<FoodTotal> foodTotals) {
+        this.foodTotals = foodTotals;
     }
 
     public Date getSaveDate() {
@@ -43,8 +45,6 @@ public class FoodDock implements RealmModel {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
-
-
 }
 
 
