@@ -13,9 +13,6 @@ import android.widget.VideoView;
 
 import com.dreamwalker.diabetesfoodypilot.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -57,29 +54,29 @@ public class StartActivity extends AppCompatActivity {
         textView.bringToFront();
         textView.setZ(10.0f);
 
-        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_glass);
-        Uri uriZero = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_3);
-        Uri uriOne = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_2);
-        Uri uriTwo = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak);
-
-        List<Uri> videoPathes = new ArrayList<>();
-        videoPathes.add(uriOne);
-        videoPathes.add(uriTwo);
-        videoPathes.add(uriZero);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_edit);
+//        Uri uriZero = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_3);
+//        Uri uriOne = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_2);
+//        Uri uriTwo = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak);
+//
+//        List<Uri> videoPathes = new ArrayList<>();
+//        videoPathes.add(uriOne);
+//        videoPathes.add(uriTwo);
+//        videoPathes.add(uriZero);
 
         videoView.setVideoURI(uri);
         videoView.start();
 
         videoView.setOnCompletionListener(mediaPlayer -> {
             // TODO: 2018-08-16 동영상을 자동적으로 연속재생할 필요가 있음 - 박제창
-            i = (i + 1) % videoPathes.size();
-            videoView.setVideoURI(videoPathes.get(i));
-            videoView.start();
+//            i = (i + 1) % videoPathes.size();
+//            videoView.setVideoURI(videoPathes.get(i));
+//            videoView.start();
         });
 
         videoView.setOnPreparedListener(mp -> {
             mediaPlayer = mp;
-            //mediaPlayer.setLooping(true);
+            mediaPlayer.setLooping(true);
             if (currentVideoPosition != 0) {
                 mediaPlayer.seekTo(currentVideoPosition);
                 mediaPlayer.start();

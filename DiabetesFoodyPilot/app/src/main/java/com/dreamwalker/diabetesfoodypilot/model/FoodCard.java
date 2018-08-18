@@ -2,6 +2,7 @@ package com.dreamwalker.diabetesfoodypilot.model;
 
 public class FoodCard {
 
+    private String intakeType;
     private String cardClass;
     private String foodClass;
     private String foodName;
@@ -35,6 +36,35 @@ public class FoodCard {
         this.foodName = foodName;
         this.foodAmount = foodAmount;
         this.totalExchange = totalExchange;
+    }
+
+    public FoodCard(String cardClass, String foodClass, String foodName, String foodAmount,
+                    String foodGroup1, String foodGroup2, String foodGroup3, String foodGroup4, String foodGroup5, String foodGroup6,
+                    String totalExchange, String kcal, String carbo, String fatt, String prot, String fiber) {
+        this.cardClass = cardClass;
+        this.foodClass = foodClass;
+        this.foodName = foodName;
+        this.foodAmount = foodAmount;
+        this.foodGroup1 = foodGroup1;
+        this.foodGroup2 = foodGroup2;
+        this.foodGroup3 = foodGroup3;
+        this.foodGroup4 = foodGroup4;
+        this.foodGroup5 = foodGroup5;
+        this.foodGroup6 = foodGroup6;
+        this.totalExchange = totalExchange;
+        this.kcal = kcal;
+        this.carbo = carbo;
+        this.fatt = fatt;
+        this.prot = prot;
+        this.fiber = fiber;
+    }
+
+    public String getIntakeType() {
+        return intakeType;
+    }
+
+    public void setIntakeType(String intakeType) {
+        this.intakeType = intakeType;
     }
 
     public String getCardClass() {

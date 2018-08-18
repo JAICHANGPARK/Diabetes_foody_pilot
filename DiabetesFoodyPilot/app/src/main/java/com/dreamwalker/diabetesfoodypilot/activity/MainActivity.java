@@ -44,6 +44,7 @@ import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
 import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
 import com.dreamwalker.diabetesfoodypilot.model.FoodCard;
+import com.dreamwalker.diabetesfoodypilot.model.Main;
 import com.dreamwalker.diabetesfoodypilot.model.MixedFood;
 import com.dreamwalker.diabetesfoodypilot.model.Suggestions;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
@@ -116,8 +117,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     ArrayList<FoodCard> foodCardArrayList = new ArrayList<>();
 
-    ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>();
+    ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>(10);
     RealmResults<MixedFoodItem> results;
+
+    ArrayList<Main> resultArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +261,15 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
+
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+
+
         }
     }
 
@@ -502,6 +514,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //                adapterV2.notifyDataSetChanged();
                 adapterV3.addItem(new FoodCard(selectedItem[0], "없음", "식품 터치 검색", "0", "0"));
                 adapterV3.notifyDataSetChanged();
+                // TODO: 2018-08-18 백그라운드에서 하나 생성
+                mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
                 dialogInterface.dismiss();
             }
         });
@@ -512,38 +526,65 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 dialogInterface.dismiss();
             }
         });
-
         builder.show();
     }
 
+    String intakeType;
 
     @OnClick(R.id.save)
     public void onClickedSaveButton() {
 
-        // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
-        String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose an Items");
-        builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Log.e(TAG, "onClick: " + i);
+        boolean dataExistCheck = false;
+        for (MixedFood mf : mixedFoodArrayList) {
+            if (!mf.getFoodName().equals("")) {
+                dataExistCheck = true;
+            }
+        }
+        // TODO: 2018-08-18 식품선택이 진행되지 않았을 경우의 사용자 예외 처리 - 박제창
+        if (dataExistCheck) {
 
-            }
-        });
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
+            // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
+            String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose an Items");
+            builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Log.e(TAG, "onClick: " + i);
+                    intakeType = listItems[i];
+                    Log.e(TAG, "onClick: intake--> " + intakeType);
+                }
+            });
+
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // TODO: 2018-08-18 1 페이즈 최종 저장 처리 부분 - 박제창
+
+                    resultArrayList.add(new Main(intakeType, mixedFoodArrayList));
+
+                    for (Main m : resultArrayList) {
+                        Log.e(TAG, "최종: " + m.getIntakeType());
+                        for (MixedFood mf : m.getFoodCardArrayList()) {
+                            Log.e(TAG, "최종 리스트 결과: " + mf.getFoodName());
+                        }
+                    }
+
+                    dialogInterface.dismiss();
+                }
+            });
+
+            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            builder.show();
+        } else {
+            Snackbar.make(getWindow().getDecorView().getRootView(), "식품을 추가해주세요", Snackbar.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -571,10 +612,37 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                     searchListV2.get(position).getTotalExchange()));
             adapterV3.notifyDataSetChanged();
 
+            try {
+
+                mixedFoodArrayList.set(cartListPosition,
+                        new MixedFood(searchListV2.get(position).getFoodClass(),
+                                searchListV2.get(position).getFoodName(),
+                                searchListV2.get(position).getFoodAmount(),
+                                searchListV2.get(position).getFoodGroup1(),
+                                searchListV2.get(position).getFoodGroup2(),
+                                searchListV2.get(position).getFoodGroup3(),
+                                searchListV2.get(position).getFoodGroup4(),
+                                searchListV2.get(position).getFoodGroup5(),
+                                searchListV2.get(position).getFoodGroup6(),
+                                searchListV2.get(position).getTotalExchange(),
+                                searchListV2.get(position).getKcal(),
+                                searchListV2.get(position).getCarbo(),
+                                searchListV2.get(position).getFatt(),
+                                searchListV2.get(position).getProt(),
+                                searchListV2.get(position).getFiber()
+                        ));
+
+            } catch (IndexOutOfBoundsException ex) {
+                ex.printStackTrace();
+            }
+
+
             Log.e(TAG, "onSearchItemClick: " + searchListV2.get(position).getFoodName());
 
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             cartListPosition = 1000;
+
+
         } else {
             // TODO: 2018-08-18 그냥 검색버튼을 사용자가 눌렀을 때는 아무 반응 없이 검색만 가능해야 합니다.
             cartListPosition = 1000;
