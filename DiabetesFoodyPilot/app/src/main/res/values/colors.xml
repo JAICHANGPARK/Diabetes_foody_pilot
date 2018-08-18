@@ -30,4 +30,6 @@
     <color name="colorLoginPrimary">#6200EA</color>
     <color name="colorLoginAccent">#6200EA</color>
 
+    <color name="blue">#4885ed</color>
+
 </resources>

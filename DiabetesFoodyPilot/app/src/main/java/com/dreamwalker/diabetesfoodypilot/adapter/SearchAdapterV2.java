@@ -17,6 +17,12 @@ public class SearchAdapterV2 extends RecyclerView.Adapter<SearchAdapterV2.Search
     Context context;
     ArrayList<MixedFoodItem> foodItems;
 
+    OnSearchItemClickListener listener;
+
+    public void setOnSearchItemClickListener(OnSearchItemClickListener listener) {
+        this.listener = listener;
+    }
+
     public SearchAdapterV2(Context context, ArrayList<MixedFoodItem> foodItems) {
         this.context = context;
         this.foodItems = foodItems;
@@ -56,7 +62,7 @@ public class SearchAdapterV2 extends RecyclerView.Adapter<SearchAdapterV2.Search
     }
 
 
-    public class SearchViewHolder extends RecyclerView.ViewHolder{
+    public class SearchViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView name, group, amount, kcal, carbo, protein, fat;
         TextView totalExchange, group1, group2, group3, group4, group5, group6;
 
@@ -79,6 +85,13 @@ public class SearchAdapterV2 extends RecyclerView.Adapter<SearchAdapterV2.Search
             group5 = itemView.findViewById(R.id.text_group5);
             group6 = itemView.findViewById(R.id.text_group6);
 
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onSearchItemClick(view, getAdapterPosition());
         }
     }
 }

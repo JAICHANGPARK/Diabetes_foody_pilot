@@ -36,7 +36,8 @@ import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV3;
 import com.dreamwalker.diabetesfoodypilot.adapter.OnItemClickListrner;
-import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV2;
+import com.dreamwalker.diabetesfoodypilot.adapter.OnSearchItemClickListener;
+import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV3;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
@@ -61,10 +62,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener, OnItemClickListrner {
+public class MainActivity extends AppCompatActivity implements OnItemClickListrner,
+        RecyclerItemTouchHelperV3.RecyclerItemTouchHelperListener,
+        OnSearchItemClickListener {
 
     private static final String TAG = "MainActivity";
-
     private final String URL_API = "https://api.androidhive.info/json/menu.json";
 
 //
@@ -161,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         searchAdapter = new SearchAdapter(this, searchList);
         searchAdapterV2 = new SearchAdapterV2(this, searchListV2);
+        // TODO: 2018-08-18 터치 리스너 추가
+        searchAdapterV2.setOnSearchItemClickListener(this);
         //bottomRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false));
         bottomRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
         bottomRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -173,20 +177,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     private void initRecyclerView(int versionCode) {
         RecyclerView.LayoutManager mLayoutManager;
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback;
-        switch (versionCode){
+
+        switch (versionCode) {
             case 1:
                 break;
             case 2:
-                adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
-                mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-                recyclerView.setAdapter(adapterV2);
-                itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
-                new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-                adapterV2.setOnItemClickListrner(this);
+//                adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
+//                mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//                recyclerView.setLayoutManager(mLayoutManager);
+//                recyclerView.setItemAnimator(new DefaultItemAnimator());
+//                recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//                recyclerView.setAdapter(adapterV2);
+//                ItemTouchHelper.SimpleCallback itemTouchHelperCallbackV2 = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
+//                new ItemTouchHelper(itemTouchHelperCallbackV2).attachToRecyclerView(recyclerView);
+//                adapterV2.setOnItemClickListrner(this);
                 break;
             case 3:
                 adapterV3 = new CartListAdapterV3(this, foodCardArrayList);
@@ -195,8 +199,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
                 recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
                 recyclerView.setAdapter(adapterV3);
-                itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
-                new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+                ItemTouchHelper.SimpleCallback itemTouchHelperCallbackV3 = new RecyclerItemTouchHelperV3(0, ItemTouchHelper.LEFT, this);
+                new ItemTouchHelper(itemTouchHelperCallbackV3).attachToRecyclerView(recyclerView);
                 adapterV3.setOnItemClickListrner(this);
                 break;
         }
@@ -229,10 +233,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             case 1:
                 break;
             case 2:
-                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                foodArrayList.add(new Food("", "식품 선택 입력", "", "", "", "", ""));
                 imageList.add(R.drawable.rice);
 
-                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                foodArrayList.add(new Food("", "식품 선택 입력", "", "", "", "", ""));
                 imageList.add(R.drawable.soup);
 
                 foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
@@ -248,12 +252,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                 imageList.add(R.drawable.side_dish_04);
                 break;
             case 3:
-                foodCardArrayList.add(new FoodCard("밥", "없음", "식품 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("국", "없음", "식품 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("밥", "없음", "식품 터치 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("국", "없음", "식품 터치 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
         }
     }
 
@@ -374,11 +378,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
 
-        if (viewHolder instanceof CartListAdapterV2.MyViewHolder) {
+        if (viewHolder instanceof CartListAdapterV3.MyViewHolder) {
             // get the removed item name to display it in snack bar
 //            String name = foodArrayList.get(viewHolder.getAdapterPosition()).getFoodName();
-
-
             // backup of removed item for undo purpose
 //            final Food deletedItem = foodArrayList.get(viewHolder.getAdapterPosition());
             String name = foodCardArrayList.get(viewHolder.getAdapterPosition()).getFoodName();
@@ -463,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     public void onClickedAddButton() {
 //        foodArrayList.add(new Food("","식품 입력","","","","",""));
 //        imageList.add(R.drawable.rice);
-
+        final String[] selectedItem = new String[1];
         String[] listItems = new String[]{"밥", "국", "반찬", "기타"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose an Items");
@@ -472,35 +474,52 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.e(TAG, "onClick: " + i);
-
+                switch (i) {
+                    case 0:
+                        selectedItem[0] = "밥";
+                        break;
+                    case 1:
+                        selectedItem[0] = "국";
+                        break;
+                    case 2:
+                        selectedItem[0] = "찬";
+                        break;
+                    case 3:
+                        selectedItem[0] = "찬";
+                        break;
+                }
             }
         });
+
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.e(TAG, "반찬 추가 onClick: " + i );
-                
+                Log.e(TAG, "반찬 추가 onClick: " + i);
 
-                adapterV3.addItem(new FoodCard("밥", "없음", "식품 검색", "없음", "없음"));
+
 //                adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
 //                        R.drawable.side_dish_04);
 //                adapterV2.notifyDataSetChanged();
+                adapterV3.addItem(new FoodCard(selectedItem[0], "없음", "식품 터치 검색", "없음", "없음"));
                 adapterV3.notifyDataSetChanged();
                 dialogInterface.dismiss();
             }
         });
+
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
             }
         });
+
         builder.show();
     }
 
 
     @OnClick(R.id.save)
     public void onClickedSaveButton() {
+
         // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
         String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -509,6 +528,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Log.e(TAG, "onClick: " + i);
+
             }
         });
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -527,9 +547,36 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     }
 
+    // TODO: 2018-08-18 선택하지 않고 검색만 할 경우를 대비해야한다. - 박제창
+    private int cartListPosition = 1000;
+
+    // TODO: 2018-08-18 음식 리스트 터치 리스너
     @Override
     public void onItemClick(View v, int position) {
+        cartListPosition = position;
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         Log.e(TAG, "onItemClick: " + position);
+        //Log.e(TAG, "onItemClick: " + searchListV2.get(position).getFoodName());
+    }
+
+    // TODO: 2018-08-18 검색 후 터치 리스터  
+    @Override
+    public void onSearchItemClick(View v, int position) {
+        if (cartListPosition != 1000) {
+            foodCardArrayList.set(cartListPosition, new FoodCard(foodCardArrayList.get(cartListPosition).getCardClass(),
+                    searchListV2.get(position).getFoodClass(),
+                    searchListV2.get(position).getFoodName(),
+                    searchListV2.get(position).getFoodAmount(),
+                    searchListV2.get(position).getTotalExchange()));
+            adapterV3.notifyDataSetChanged();
+
+            Log.e(TAG, "onSearchItemClick: " + searchListV2.get(position).getFoodName());
+
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            cartListPosition = 1000;
+        } else {
+            cartListPosition = 1000;
+        }
+
     }
 }

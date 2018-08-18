@@ -17,9 +17,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:tint="@color/space_white"
-        android:src="@drawable/ic_filter_list_white_24dp"
-        app:layout_anchor="@+id/bottomSheet"
-        app:layout_anchorGravity="top|right" />
+        android:src="@drawable/ic_filter_list_white_24dp"/>
+        <!--app:layout_anchor="@+id/bottomSheet"-->
+        <!--app:layout_anchorGravity="top|right" />-->
 
 
 </android.support.design.widget.CoordinatorLayout>
