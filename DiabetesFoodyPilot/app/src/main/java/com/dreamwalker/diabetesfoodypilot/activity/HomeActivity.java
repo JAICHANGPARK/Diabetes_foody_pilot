@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         List<RealmList<FoodTotal>> foodTotalList = new ArrayList<>();
         List<RealmList<FoodCard>> foodCardList = new ArrayList<>();
 
-        for (int i = 0; i < foodDockArrayList.size(); i++){
+        for (int i = 0; i < foodDockArrayList.size(); i++) {
             Log.e(TAG, "onCreate:1 " + foodDockArrayList.get(i).getFoodTotals());
             Log.e(TAG, "onCreate:2 " + foodDockArrayList.get(i).getSaveDate());
             Log.e(TAG, "onCreate: 3" + foodDockArrayList.get(i).getTimestamp());
@@ -69,10 +69,37 @@ public class HomeActivity extends AppCompatActivity {
             foodTotalList.add(foodDockArrayList.get(i).getFoodTotals());
         }
 
-        for (int i = 0; i< foodTotalList.size(); i++){
-            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getIntakeType());
-            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
+        for (int i = 0; i < foodTotalList.size(); i++) {
+
+            Log.e(TAG, "onCreate: " + i);
+            Log.e(TAG, "onCreate: " + foodTotalList.get(i));
+//            Log.e(TAG, "onCreate: " + foodTotalList.get(i));
+            RealmList<FoodTotal> fT = foodTotalList.get(i);
+
+            for (int k = 0; k < fT.size(); k++) {
+                Log.e(TAG, "onCreate: fT " + fT.get(k).getIntakeType());
+                foodCardList.add(fT.get(k).getFoodCardArrayList());
+            }
+
+//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getIntakeType());
+//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getCardClass());
+//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodName());
+//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodClass());
+//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodAmount());
+//            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
         }
+
+        for (int i = 0; i < foodCardList.size(); i++) {
+            RealmList<FoodCard> fC = foodCardList.get(i);
+            for (int k = 0; k < fC.size(); k++) {
+                Log.e(TAG, "onCreate: fC " + fC.get(k).getFoodName());
+            }
+//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodCardList.get(i).get(i).getFoodName());
+//
+//            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
+        }
+
+
     }
 
     private void setSpaceNavigationView(Bundle sis) {
