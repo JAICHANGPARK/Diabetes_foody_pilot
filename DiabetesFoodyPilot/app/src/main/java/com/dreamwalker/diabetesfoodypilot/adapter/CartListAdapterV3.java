@@ -11,20 +11,18 @@ import android.widget.TextView;
 
 import com.dreamwalker.avatarlibrary.LabelView;
 import com.dreamwalker.diabetesfoodypilot.R;
-import com.dreamwalker.diabetesfoodypilot.model.Food;
-import com.dreamwalker.diabetesfoodypilot.model.MixedFood;
+import com.dreamwalker.diabetesfoodypilot.model.FoodCard;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.MyViewHolder> {
+public class CartListAdapterV3 extends RecyclerView.Adapter<CartListAdapterV3.MyViewHolder> {
 
     private Context context;
     private List<TestModel> cartList;
     ArrayList<Integer> imageList;
-    ArrayList<Food> foodArrayList;
-    ArrayList<MixedFood> mixedFoodArrayList;
+    ArrayList<FoodCard> foodCardArrayList;
 
     OnItemClickListrner listrner;
 
@@ -34,18 +32,18 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView name, description, price;
-        //public ImageView thumbnail;
-        //public LabelImageView thumbnail;
+        public TextView name, description, amount, exchange;
         public LabelView thumbnail;
         public RelativeLayout viewBackground, viewForeground;
 
         public MyViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.name);
-            description = view.findViewById(R.id.description);
-            price = view.findViewById(R.id.price);
             thumbnail = view.findViewById(R.id.thumbnail);
+
+            name = view.findViewById(R.id.name_text);
+            description = view.findViewById(R.id.description_text);
+            amount = view.findViewById(R.id.amount_text);
+            exchange = view.findViewById(R.id.exchange_text);
             viewBackground = view.findViewById(R.id.view_background);
             viewForeground = view.findViewById(R.id.view_foreground);
             // TODO: 2018-08-15 클릭 리스너 추가
@@ -61,21 +59,22 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
         }
     }
 
-    public CartListAdapterV2(Context context, List<TestModel> cartList) {
+
+    // TODO: 2018-08-18 생성자
+    public CartListAdapterV3(Context context, List<TestModel> cartList) {
         this.context = context;
         this.cartList = cartList;
     }
 
-    public CartListAdapterV2(Context context, ArrayList<Integer> imageList, ArrayList<Food> foodArrayList) {
+    public CartListAdapterV3(Context context, ArrayList<FoodCard> foodCardArrayList) {
         this.context = context;
-        this.imageList = imageList;
-        this.foodArrayList = foodArrayList;
+        this.foodCardArrayList = foodCardArrayList;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_list_item_v2, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_list_item_v3, parent, false);
         return new MyViewHolder(itemView);
     }
 
@@ -86,10 +85,14 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
 //        holder.name.setText(item.getName());
 //        holder.description.setText(item.getDescription());
 //        holder.price.setText("₹" + item.getPrice());
-        final Food item = foodArrayList.get(position);
+
+        final FoodCard item = foodCardArrayList.get(position);
+//        holder.thumbnail.setTextTitle();
+        holder.thumbnail.setTextContent(item.getCardClass());
         holder.name.setText(item.getFoodName());
-        holder.description.setText(item.getFoodGroup());
-        holder.price.setText(item.getFoodKcal());
+        holder.description.setText(item.getFoodClass());
+        holder.amount.setText(item.getFoodAmount());
+        holder.exchange.setText(item.getTotalExchange());
         //holder.thumbnail.setTextTitle();
 
 //        Glide.with(context).load(item.getThumbnail()).into(holder.thumbnail);
@@ -100,22 +103,22 @@ public class CartListAdapterV2 extends RecyclerView.Adapter<CartListAdapterV2.My
 
     @Override
     public int getItemCount() {
-        return foodArrayList.size();
+        return foodCardArrayList.size();
     }
 
     public void removeItem(int position) {
-        foodArrayList.remove(position);
+        foodCardArrayList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void restoreItem(Food item, int position) {
-        foodArrayList.add(position, item);
+    public void restoreItem(FoodCard item, int position) {
+        foodCardArrayList.add(position, item);
         notifyItemInserted(position);
     }
 
-    public void addItem(Food item, int image) {
-        imageList.add(image);
-        foodArrayList.add(item);
+    public void addItem(FoodCard item, int image) {
+//        imageList.add(image);
+        foodCardArrayList.add(item);
         notifyDataSetChanged();
     }
 }

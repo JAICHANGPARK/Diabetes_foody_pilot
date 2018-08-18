@@ -34,6 +34,7 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV2;
+import com.dreamwalker.diabetesfoodypilot.adapter.CartListAdapterV3;
 import com.dreamwalker.diabetesfoodypilot.adapter.OnItemClickListrner;
 import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV2;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapter;
@@ -41,6 +42,7 @@ import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
 import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
+import com.dreamwalker.diabetesfoodypilot.model.FoodCard;
 import com.dreamwalker.diabetesfoodypilot.model.MixedFood;
 import com.dreamwalker.diabetesfoodypilot.model.Suggestions;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
@@ -59,19 +61,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener, OnItemClickListrner{
+public class MainActivity extends AppCompatActivity implements RecyclerItemTouchHelperV2.RecyclerItemTouchHelperListener, OnItemClickListrner {
 
     private static final String TAG = "MainActivity";
 
     private final String URL_API = "https://api.androidhive.info/json/menu.json";
-    
+
 //
 //    @BindView(R.id.bottomSheet)
 //    LinearLayout mBottomSheet;
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
-    
+
     @BindView(R.id.bottomSheet)
     CoordinatorLayout mBottomSheet;
 
@@ -105,9 +107,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
     Realm realm;
 
     CartListAdapterV2 adapterV2;
+    CartListAdapterV3 adapterV3;
 
     ArrayList<Food> foodArrayList = new ArrayList<>();
     ArrayList<Integer> imageList = new ArrayList<>();
+
+    ArrayList<FoodCard> foodCardArrayList = new ArrayList<>();
 
     ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>();
     RealmResults<MixedFoodItem> results;
@@ -134,9 +139,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         cartList = new ArrayList<>();
         mAdapter = new CartListAdapter(this, cartList);
 
-        setInitData();
-
-        initRecyclerView();
+//        setInitData();
+        setInitDataVersion(1);
+        initRecyclerView(3);
         initBottomRecyclerView();
         fetchFromRealm();
         setFloatingSearchView();
@@ -149,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     }
 
-    private void initBottomRecyclerView(){
+    private void initBottomRecyclerView() {
 
         searchAdapter = new SearchAdapter(this, searchList);
         searchAdapterV2 = new SearchAdapterV2(this, searchListV2);
@@ -163,16 +168,36 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
     }
 
-    private void initRecyclerView(){
-        adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapterV2);
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
-        adapterV2.setOnItemClickListrner(this);
+    private void initRecyclerView(int versionCode) {
+        RecyclerView.LayoutManager mLayoutManager;
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback;
+        switch (versionCode){
+            case 1:
+                break;
+            case 2:
+                adapterV2 = new CartListAdapterV2(this, imageList, foodArrayList);
+                mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+                recyclerView.setAdapter(adapterV2);
+                itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
+                new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+                adapterV2.setOnItemClickListrner(this);
+                break;
+            case 3:
+                adapterV3 = new CartListAdapterV3(this, foodCardArrayList);
+                mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+                recyclerView.setAdapter(adapterV3);
+                itemTouchHelperCallback = new RecyclerItemTouchHelperV2(0, ItemTouchHelper.LEFT, this);
+                new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+                adapterV3.setOnItemClickListrner(this);
+                break;
+        }
+
     }
 
     private void bindViews() {
@@ -215,6 +240,36 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
         imageList.add(R.drawable.side_dish_04);
 
+    }
+
+    private void setInitDataVersion(int versionCode) {
+        switch (versionCode) {
+            case 1:
+                foodCardArrayList.add(new FoodCard("밥", "없음", "식품 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("국", "없음", "식품 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
+
+        }
+//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+//        imageList.add(R.drawable.rice);
+//
+//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+//        imageList.add(R.drawable.soup);
+//
+//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+//        imageList.add(R.drawable.side_dish_01);
+//
+//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+//        imageList.add(R.drawable.side_dish_02);
+//
+//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+//        imageList.add(R.drawable.side_dish_03);
+//
+//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+//        imageList.add(R.drawable.side_dish_04);
 
     }
 
@@ -235,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //                for (FoodItem item : result1) {
 //                    foodName.add(new Suggestions(item.getFoodName()));
 //                }
-                for (MixedFoodItem item : result1){
+                for (MixedFoodItem item : result1) {
                     foodName.add(new Suggestions(item.getFoodName()));
                 }
             }
@@ -421,13 +476,38 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 //        foodArrayList.add(new Food("","식품 입력","","","","",""));
 //        imageList.add(R.drawable.rice);
 
-        adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
-                R.drawable.side_dish_04);
+        String[] listItems = new String[]{"밥", "국", "반찬", "기타"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an Items");
 
-        adapterV2.notifyDataSetChanged();
+        builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.e(TAG, "onClick: " + i);
+
+            }
+        });
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
+                        R.drawable.side_dish_04);
+                adapterV2.notifyDataSetChanged();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
+
+
     @OnClick(R.id.save)
-    public void onClickedSaveButton(){
+    public void onClickedSaveButton() {
         // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
         String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -451,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
             }
         });
         builder.show();
-        
+
     }
 
     @Override
