@@ -1,6 +1,7 @@
 package com.dreamwalker.diabetesfoodypilot.activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
@@ -28,6 +29,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -40,24 +42,30 @@ import com.dreamwalker.diabetesfoodypilot.adapter.OnSearchItemClickListener;
 import com.dreamwalker.diabetesfoodypilot.adapter.RecyclerItemTouchHelperV3;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.SearchAdapterV2;
+import com.dreamwalker.diabetesfoodypilot.database.food.FoodDock;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodItem;
 import com.dreamwalker.diabetesfoodypilot.database.food.MixedFoodItem;
 import com.dreamwalker.diabetesfoodypilot.model.Food;
 import com.dreamwalker.diabetesfoodypilot.model.FoodCard;
-import com.dreamwalker.diabetesfoodypilot.model.Main;
+import com.dreamwalker.diabetesfoodypilot.model.FoodTotal;
 import com.dreamwalker.diabetesfoodypilot.model.MixedFood;
 import com.dreamwalker.diabetesfoodypilot.model.Suggestions;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
 import com.dreamwalker.diabetesfoodypilot.remote.Common;
 import com.dreamwalker.diabetesfoodypilot.remote.IMenuRequest;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -117,11 +125,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     ArrayList<FoodCard> foodCardArrayList = new ArrayList<>();
     ArrayList<FoodCard> backgroundArrayList = new ArrayList<>();
+    ArrayList<com.dreamwalker.diabetesfoodypilot.database.food.FoodCard> backgroundDBArrayList = new ArrayList<>();
     ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>(10);
 
     RealmResults<MixedFoodItem> results;
 
-    ArrayList<Main> resultArrayList = new ArrayList<>();
+    ArrayList<FoodTotal> resultArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,7 +281,17 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
 
                 backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
-                
+                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
 
         }
     }
@@ -332,6 +351,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 RealmResults<MixedFoodItem> result1 = realm.where(MixedFoodItem.class).contains("foodName", currentQuery).findAll();
                 if (result1.size() != 0) {
                     for (MixedFoodItem item : result1) {
+
                         Log.e(TAG, "onSearchAction: " + item.getFoodName());
                         foodName.add(item.getFoodName());
                     }
@@ -520,6 +540,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 adapterV3.notifyDataSetChanged();
                 // TODO: 2018-08-18 백그라운드에서 하나 생성
                 mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "","","","","","","","","","","","","","",""));
                 dialogInterface.dismiss();
             }
         });
@@ -551,6 +573,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Choose an Items");
+            builder.setCancelable(false);
             builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -563,11 +586,24 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    ArrayList<MixedFood> tempList = new ArrayList<>();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
+                    ArrayList<FoodCard> tempList = new ArrayList<>();
+                    RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodCard> temp2List = new RealmList<>();
+                    RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal> resultList = new RealmList<>();
                     // TODO: 2018-08-18 1 페이즈 최종 저장 처리 부분 - 박제창
-                    for (int k = 0; k < mixedFoodArrayList.size(); k++) {
-                        if (!mixedFoodArrayList.get(k).getFoodName().equals("")) {
-                            tempList.add(mixedFoodArrayList.get(k));
+//                    for (int k = 0; k < mixedFoodArrayList.size(); k++) {
+//                        if (!mixedFoodArrayList.get(k).getFoodName().equals("")) {
+//                            tempList.add(mixedFoodArrayList.get(k));
+//                        } else {
+//                            // TODO: 2018-08-18 Pass
+//                            Log.e(TAG, "onClick: " + "pass");
+//                        }
+//                    }
+
+                    for (int k = 0; k < backgroundArrayList.size(); k++) {
+                        if (!backgroundArrayList.get(k).getFoodName().equals("")) {
+                            tempList.add(backgroundArrayList.get(k));
+                            temp2List.add(backgroundDBArrayList.get(k));
                         } else {
                             // TODO: 2018-08-18 Pass
                             Log.e(TAG, "onClick: " + "pass");
@@ -575,13 +611,44 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                     }
 
                     if (tempList.size() != 0) {
-                        resultArrayList.add(new Main(intakeType, tempList));
-                        for (Main m : resultArrayList) {
+                        resultArrayList.add(new FoodTotal(intakeType, tempList));
+                        resultList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal(intakeType, temp2List));
+                        for (FoodTotal m : resultArrayList) {
                             Log.e(TAG, "최종: " + m.getIntakeType());
-                            for (MixedFood mf : m.getFoodCardArrayList()) {
+                            for (FoodCard mf : m.getFoodCardArrayList()) {
                                 Log.e(TAG, "최종 리스트 결과: " + mf.getFoodName());
                             }
                         }
+
+                        Date saveDate = new Date();
+                        Timestamp timestamp = new Timestamp(saveDate.getTime());
+                        long ts = timestamp.getTime();
+                        RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal> realmList = new RealmList<>();
+                        realmList.addAll(resultList);
+                        realm = Realm.getDefaultInstance();
+                        realm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                FoodDock foodItem = realm.createObject(FoodDock.class);
+                                foodItem.setMain(realmList);
+                                foodItem.setSaveDate(saveDate);
+                                foodItem.setTimestamp(ts);
+
+                            }
+                        }, new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                finish();
+                            }
+                        }, new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                Toast.makeText(MainActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
                     } else {
                         Log.e(TAG, "onClick: tempList Size Zero");
                     }
@@ -593,6 +660,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    resultArrayList.clear();
                     dialogInterface.dismiss();
                 }
             });
@@ -629,6 +697,42 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             adapterV3.notifyDataSetChanged();
 
             try {
+                backgroundArrayList.set(cartListPosition,
+                        new FoodCard(foodCardArrayList.get(cartListPosition).getCardClass(),
+                                searchListV2.get(position).getFoodClass(),
+                                searchListV2.get(position).getFoodName(),
+                                searchListV2.get(position).getFoodAmount(),
+                                searchListV2.get(position).getFoodGroup1(),
+                                searchListV2.get(position).getFoodGroup2(),
+                                searchListV2.get(position).getFoodGroup3(),
+                                searchListV2.get(position).getFoodGroup4(),
+                                searchListV2.get(position).getFoodGroup5(),
+                                searchListV2.get(position).getFoodGroup6(),
+                                searchListV2.get(position).getTotalExchange(),
+                                searchListV2.get(position).getKcal(),
+                                searchListV2.get(position).getCarbo(),
+                                searchListV2.get(position).getFatt(),
+                                searchListV2.get(position).getProt(),
+                                searchListV2.get(position).getFiber()));
+
+                backgroundDBArrayList.set(cartListPosition,
+                        new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard(
+                                foodCardArrayList.get(cartListPosition).getCardClass(),
+                                searchListV2.get(position).getFoodClass(),
+                                searchListV2.get(position).getFoodName(),
+                                searchListV2.get(position).getFoodAmount(),
+                                searchListV2.get(position).getFoodGroup1(),
+                                searchListV2.get(position).getFoodGroup2(),
+                                searchListV2.get(position).getFoodGroup3(),
+                                searchListV2.get(position).getFoodGroup4(),
+                                searchListV2.get(position).getFoodGroup5(),
+                                searchListV2.get(position).getFoodGroup6(),
+                                searchListV2.get(position).getTotalExchange(),
+                                searchListV2.get(position).getKcal(),
+                                searchListV2.get(position).getCarbo(),
+                                searchListV2.get(position).getFatt(),
+                                searchListV2.get(position).getProt(),
+                                searchListV2.get(position).getFiber()));
 
                 mixedFoodArrayList.set(cartListPosition,
                         new MixedFood(searchListV2.get(position).getFoodClass(),

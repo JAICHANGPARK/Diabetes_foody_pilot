@@ -10,18 +10,28 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
+import com.dreamwalker.diabetesfoodypilot.database.food.FoodDock;
 import com.dreamwalker.spacebottomnav.SpaceItem;
 import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
 import com.dreamwalker.spacebottomnav.SpaceOnLongClickListener;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class HomeActivity extends AppCompatActivity {
 
+
+    private static final String TAG = "HomeActivity";
     @BindView(R.id.space)
     SpaceNavigationView spaceNavigationView;
+
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +40,18 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         setSpaceNavigationView(savedInstanceState);
+
+        Date testDate = new Date();
+        Log.e(TAG, "onCreate: " + testDate);
+        Timestamp timestamp = new Timestamp(testDate.getTime());
+        Log.e(TAG, "onCreate: " + timestamp.getTime());
+
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
+
+        RealmResults<FoodDock> result =  realm.where(FoodDock.class).findAll();
+        Log.e(TAG, "onCreate: " + result.size() );
+
     }
 
     private void setSpaceNavigationView(Bundle sis){

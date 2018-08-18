@@ -2,11 +2,14 @@ package com.dreamwalker.diabetesfoodypilot.model;
 
 import java.util.ArrayList;
 
-public class Main {
+public class FoodTotal  {
     private String intakeType;
-    private ArrayList<MixedFood> foodCardArrayList;
+    ArrayList<FoodCard> foodCardArrayList;
 
-    public Main(String intakeType, ArrayList<MixedFood> foodCardArrayList) {
+    public FoodTotal() {
+    }
+
+    public FoodTotal(String intakeType, ArrayList<FoodCard> foodCardArrayList) {
         this.intakeType = intakeType;
         this.foodCardArrayList = foodCardArrayList;
     }
@@ -19,11 +22,11 @@ public class Main {
         this.intakeType = intakeType;
     }
 
-    public ArrayList<MixedFood> getFoodCardArrayList() {
+    public ArrayList<FoodCard> getFoodCardArrayList() {
         return foodCardArrayList;
     }
 
-    public void setFoodCardArrayList(ArrayList<MixedFood> foodCardArrayList) {
+    public void setFoodCardArrayList(ArrayList<FoodCard> foodCardArrayList) {
         this.foodCardArrayList = foodCardArrayList;
     }
 }
