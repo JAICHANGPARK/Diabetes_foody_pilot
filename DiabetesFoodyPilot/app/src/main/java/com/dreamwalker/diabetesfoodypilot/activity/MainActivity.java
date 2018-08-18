@@ -622,6 +622,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                         Date saveDate = new Date();
                         Timestamp timestamp = new Timestamp(saveDate.getTime());
                         long ts = timestamp.getTime();
+                        Log.e(TAG, "onClick: " + saveDate + "|" + ts);
                         RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal> realmList = new RealmList<>();
 
                         realmList.addAll(resultList);
@@ -629,13 +630,24 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
                         realm = Realm.getDefaultInstance();
 
+
+//                        realm.executeTransaction(new Realm.Transaction() {
+//                            @Override
+//                            public void execute(Realm realm) {
+//                                FoodDock foodItem = realm.createObject(FoodDock.class);
+//                                foodItem.setFoodTotals(realmList);
+//                                foodItem.setSaveDate(saveDate);
+//                                foodItem.setTimestamp(ts);
+//                            }
+//                        });
+
                         realm.beginTransaction();
                         FoodDock foodDock = new FoodDock();
-                        realm.insertOrUpdate(foodDock);
-//                        FoodDock foodItem = realm.createObject(FoodDock.class);
                         foodDock.setFoodTotals(realmList);
                         foodDock.setSaveDate(saveDate);
                         foodDock.setTimestamp(ts);
+                        realm.insertOrUpdate(foodDock);
+//                        FoodDock foodItem = realm.createObject(FoodDock.class);
                         realm.commitTransaction();
 
                         startActivity(new Intent(MainActivity.this, HomeActivity.class));

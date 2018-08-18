@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
+import com.dreamwalker.diabetesfoodypilot.database.food.FoodCard;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodDock;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal;
 import com.dreamwalker.spacebottomnav.SpaceItem;
@@ -25,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class HomeActivity extends AppCompatActivity {
@@ -56,20 +58,21 @@ public class HomeActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: " + result.size());
 
         List<FoodDock> foodDockArrayList = realm.copyFromRealm(result);
-        ArrayList<List<FoodTotal>> foodTotalList = new ArrayList<>();
-        for (int i = 0; i < foodDockArrayList.size(); i++){
+        List<RealmList<FoodTotal>> foodTotalList = new ArrayList<>();
+        List<RealmList<FoodCard>> foodCardList = new ArrayList<>();
 
+        for (int i = 0; i < foodDockArrayList.size(); i++){
             Log.e(TAG, "onCreate:1 " + foodDockArrayList.get(i).getFoodTotals());
             Log.e(TAG, "onCreate:2 " + foodDockArrayList.get(i).getSaveDate());
             Log.e(TAG, "onCreate: 3" + foodDockArrayList.get(i).getTimestamp());
-            foodTotalList.add(realm.copyFromRealm(foodDockArrayList.get(i).getFoodTotals()));
+//            realm.copyFromRealm(foodDockArrayList.get(i).getFoodTotals());
+            foodTotalList.add(foodDockArrayList.get(i).getFoodTotals());
         }
 
         for (int i = 0; i< foodTotalList.size(); i++){
-            Log.e(TAG, "onCreate: " + foodTotalList.get(i).get(i).getIntakeType());
+            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getIntakeType());
+            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
         }
-
-
     }
 
     private void setSpaceNavigationView(Bundle sis) {
