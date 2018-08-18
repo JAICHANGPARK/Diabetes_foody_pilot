@@ -140,8 +140,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         mAdapter = new CartListAdapter(this, cartList);
 
 //        setInitData();
-        setInitDataVersion(1);
+        // TODO: 2018-08-18 버전별 데이터 세팅 변경 메소드 호출요 - 박제창
+        setInitDataVersion(3);
+        // TODO: 2018-08-18 버전별 리사이클러 뷰 변경 이요 (메소드 참고하세요 )- 박제창
         initRecyclerView(3);
+
         initBottomRecyclerView();
         fetchFromRealm();
         setFloatingSearchView();
@@ -221,56 +224,37 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         Log.e(TAG, "onCreate: " + results.size());
     }
 
-    private void setInitData() {
-        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-        imageList.add(R.drawable.rice);
-
-        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-        imageList.add(R.drawable.soup);
-
-        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-        imageList.add(R.drawable.side_dish_01);
-
-        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-        imageList.add(R.drawable.side_dish_02);
-
-        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-        imageList.add(R.drawable.side_dish_03);
-
-        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-        imageList.add(R.drawable.side_dish_04);
-
-    }
-
     private void setInitDataVersion(int versionCode) {
         switch (versionCode) {
             case 1:
+                break;
+            case 2:
+                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                imageList.add(R.drawable.rice);
+
+                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                imageList.add(R.drawable.soup);
+
+                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                imageList.add(R.drawable.side_dish_01);
+
+                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                imageList.add(R.drawable.side_dish_02);
+
+                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                imageList.add(R.drawable.side_dish_03);
+
+                foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
+                imageList.add(R.drawable.side_dish_04);
+                break;
+            case 3:
                 foodCardArrayList.add(new FoodCard("밥", "없음", "식품 검색", "없음", "없음"));
                 foodCardArrayList.add(new FoodCard("국", "없음", "식품 검색", "없음", "없음"));
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
                 foodCardArrayList.add(new FoodCard("찬", "없음", "식품 검색", "없음", "없음"));
-
         }
-//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-//        imageList.add(R.drawable.rice);
-//
-//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-//        imageList.add(R.drawable.soup);
-//
-//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-//        imageList.add(R.drawable.side_dish_01);
-//
-//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-//        imageList.add(R.drawable.side_dish_02);
-//
-//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-//        imageList.add(R.drawable.side_dish_03);
-//
-//        foodArrayList.add(new Food("", "식품 입력", "", "", "", "", ""));
-//        imageList.add(R.drawable.side_dish_04);
-
     }
 
     private void setFloatingSearchView() {
@@ -392,14 +376,18 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
 
         if (viewHolder instanceof CartListAdapterV2.MyViewHolder) {
             // get the removed item name to display it in snack bar
-            String name = foodArrayList.get(viewHolder.getAdapterPosition()).getFoodName();
+//            String name = foodArrayList.get(viewHolder.getAdapterPosition()).getFoodName();
+
 
             // backup of removed item for undo purpose
-            final Food deletedItem = foodArrayList.get(viewHolder.getAdapterPosition());
+//            final Food deletedItem = foodArrayList.get(viewHolder.getAdapterPosition());
+            String name = foodCardArrayList.get(viewHolder.getAdapterPosition()).getFoodName();
+            final FoodCard deletedItem = foodCardArrayList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
-            adapterV2.removeItem(viewHolder.getAdapterPosition());
+            //adapterV2.removeItem(viewHolder.getAdapterPosition());
+            adapterV3.removeItem(viewHolder.getAdapterPosition());
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), name + " removed from cart!", Snackbar.LENGTH_LONG);
@@ -408,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
                 public void onClick(View view) {
 
                     // undo is selected, restore the deleted item
-                    adapterV2.restoreItem(deletedItem, deletedIndex);
+                    adapterV3.restoreItem(deletedItem, deletedIndex);
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);
@@ -490,9 +478,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerItemTouch
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
-                        R.drawable.side_dish_04);
-                adapterV2.notifyDataSetChanged();
+                Log.e(TAG, "반찬 추가 onClick: " + i );
+                
+
+                adapterV3.addItem(new FoodCard("밥", "없음", "식품 검색", "없음", "없음"));
+//                adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
+//                        R.drawable.side_dish_04);
+//                adapterV2.notifyDataSetChanged();
+                adapterV3.notifyDataSetChanged();
                 dialogInterface.dismiss();
             }
         });

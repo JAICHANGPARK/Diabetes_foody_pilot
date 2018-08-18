@@ -116,7 +116,7 @@ public class CartListAdapterV3 extends RecyclerView.Adapter<CartListAdapterV3.My
         notifyItemInserted(position);
     }
 
-    public void addItem(FoodCard item, int image) {
+    public void addItem(FoodCard item) {
 //        imageList.add(image);
         foodCardArrayList.add(item);
         notifyDataSetChanged();
