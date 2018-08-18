@@ -116,8 +116,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     ArrayList<Integer> imageList = new ArrayList<>();
 
     ArrayList<FoodCard> foodCardArrayList = new ArrayList<>();
-
+    ArrayList<FoodCard> backgroundArrayList = new ArrayList<>();
     ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>(10);
+
     RealmResults<MixedFoodItem> results;
 
     ArrayList<Main> resultArrayList = new ArrayList<>();
@@ -269,6 +270,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
                 mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
 
+
+                backgroundArrayList.add(new FoodCard("", "","","","","","","","","","","","","","",""));
+                
 
         }
     }
@@ -559,15 +563,27 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    ArrayList<MixedFood> tempList = new ArrayList<>();
                     // TODO: 2018-08-18 1 페이즈 최종 저장 처리 부분 - 박제창
-
-                    resultArrayList.add(new Main(intakeType, mixedFoodArrayList));
-
-                    for (Main m : resultArrayList) {
-                        Log.e(TAG, "최종: " + m.getIntakeType());
-                        for (MixedFood mf : m.getFoodCardArrayList()) {
-                            Log.e(TAG, "최종 리스트 결과: " + mf.getFoodName());
+                    for (int k = 0; k < mixedFoodArrayList.size(); k++) {
+                        if (!mixedFoodArrayList.get(k).getFoodName().equals("")) {
+                            tempList.add(mixedFoodArrayList.get(k));
+                        } else {
+                            // TODO: 2018-08-18 Pass
+                            Log.e(TAG, "onClick: " + "pass");
                         }
+                    }
+
+                    if (tempList.size() != 0) {
+                        resultArrayList.add(new Main(intakeType, tempList));
+                        for (Main m : resultArrayList) {
+                            Log.e(TAG, "최종: " + m.getIntakeType());
+                            for (MixedFood mf : m.getFoodCardArrayList()) {
+                                Log.e(TAG, "최종 리스트 결과: " + mf.getFoodName());
+                            }
+                        }
+                    } else {
+                        Log.e(TAG, "onClick: tempList Size Zero");
                     }
 
                     dialogInterface.dismiss();
