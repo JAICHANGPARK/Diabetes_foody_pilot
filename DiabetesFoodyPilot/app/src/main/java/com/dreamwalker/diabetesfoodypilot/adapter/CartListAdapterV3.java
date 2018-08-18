@@ -91,8 +91,8 @@ public class CartListAdapterV3 extends RecyclerView.Adapter<CartListAdapterV3.My
         holder.thumbnail.setTextContent(item.getCardClass());
         holder.name.setText(item.getFoodName());
         holder.description.setText(item.getFoodClass());
-        holder.amount.setText(item.getFoodAmount());
-        holder.exchange.setText(item.getTotalExchange());
+        holder.amount.setText(item.getFoodAmount() + "g");
+        holder.exchange.setText(item.getTotalExchange() +"unit");
         //holder.thumbnail.setTextTitle();
 
 //        Glide.with(context).load(item.getThumbnail()).into(holder.thumbnail);

@@ -252,12 +252,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 imageList.add(R.drawable.side_dish_04);
                 break;
             case 3:
-                foodCardArrayList.add(new FoodCard("밥", "없음", "식품 터치 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("국", "없음", "식품 터치 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
-                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "없음", "없음"));
+                foodCardArrayList.add(new FoodCard("밥", "없음", "식품 터치 검색", "0", "0"));
+                foodCardArrayList.add(new FoodCard("국", "없음", "식품 터치 검색", "0", "0"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
+                foodCardArrayList.add(new FoodCard("찬", "없음", "식품 터치 검색", "0", "0"));
         }
     }
 
@@ -500,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //                adapterV2.addItem(new Food("", "식품 입력", "", "", "", "", ""),
 //                        R.drawable.side_dish_04);
 //                adapterV2.notifyDataSetChanged();
-                adapterV3.addItem(new FoodCard(selectedItem[0], "없음", "식품 터치 검색", "없음", "없음"));
+                adapterV3.addItem(new FoodCard(selectedItem[0], "없음", "식품 터치 검색", "0", "0"));
                 adapterV3.notifyDataSetChanged();
                 dialogInterface.dismiss();
             }
@@ -563,6 +563,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     @Override
     public void onSearchItemClick(View v, int position) {
         if (cartListPosition != 1000) {
+            // TODO: 2018-08-18  아이템을 선택하여 클릭했을때 처리하는 부분입니다. - 박제창
             foodCardArrayList.set(cartListPosition, new FoodCard(foodCardArrayList.get(cartListPosition).getCardClass(),
                     searchListV2.get(position).getFoodClass(),
                     searchListV2.get(position).getFoodName(),
@@ -575,6 +576,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             cartListPosition = 1000;
         } else {
+            // TODO: 2018-08-18 그냥 검색버튼을 사용자가 눌렀을 때는 아무 반응 없이 검색만 가능해야 합니다.
             cartListPosition = 1000;
         }
 

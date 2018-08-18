@@ -29,7 +29,6 @@ public class HomeActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-
         setSpaceNavigationView(savedInstanceState);
     }
 
@@ -63,7 +62,6 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case 1:
                         startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
-
                         break;
                 }
             }

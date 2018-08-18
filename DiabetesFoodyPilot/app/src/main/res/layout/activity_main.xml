@@ -166,8 +166,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:tint="@color/space_white"
         android:src="@drawable/ic_search_black_24dp"
+        android:tint="@color/space_white"
+        app:backgroundTint="@color/blue"
         app:layout_anchor="@+id/bottomSheet"
         app:layout_anchorGravity="top|right" />
 
