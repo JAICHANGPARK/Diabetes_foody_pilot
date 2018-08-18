@@ -57,6 +57,7 @@ public class StartActivity extends AppCompatActivity {
         textView.bringToFront();
         textView.setZ(10.0f);
 
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_glass);
         Uri uriZero = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_3);
         Uri uriOne = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak_2);
         Uri uriTwo = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.start_steak);
@@ -66,7 +67,7 @@ public class StartActivity extends AppCompatActivity {
         videoPathes.add(uriTwo);
         videoPathes.add(uriZero);
 
-        videoView.setVideoURI(uriZero);
+        videoView.setVideoURI(uri);
         videoView.start();
 
         videoView.setOnCompletionListener(mediaPlayer -> {
