@@ -15,10 +15,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.ramotion.foldingcell.animations.AnimationEndListener;
-import com.ramotion.foldingcell.animations.FoldAnimation;
-import com.ramotion.foldingcell.animations.HeightAnimation;
-import com.ramotion.foldingcell.views.FoldingCellView;
+import com.dreamwalker.flipcard.animations.AnimationEndListener;
+import com.dreamwalker.flipcard.animations.FoldAnimation;
+import com.dreamwalker.flipcard.animations.HeightAnimation;
+import com.dreamwalker.flipcard.views.FoldingCellView;
 
 import java.util.ArrayList;
 import java.util.Collections;
