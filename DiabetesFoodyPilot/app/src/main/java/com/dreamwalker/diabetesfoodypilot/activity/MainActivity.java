@@ -22,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,6 +61,8 @@ import com.dreamwalker.diabetesfoodypilot.remote.Common;
 import com.dreamwalker.diabetesfoodypilot.remote.IMenuRequest;
 import com.philliphsu.bottomsheetpickers.date.DatePickerDialog;
 import com.philliphsu.bottomsheetpickers.time.BottomSheetTimePickerDialog;
+import com.philliphsu.bottomsheetpickers.time.grid.GridTimePickerDialog;
+import com.philliphsu.bottomsheetpickers.time.numberpad.NumberPadTimePickerDialog;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -759,9 +762,24 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 now.get(Calendar.YEAR),
                 now.get(Calendar.MONTH),
                 now.get(Calendar.DAY_OF_MONTH));
-        date.setHeaderColor(getResources().getColor(R.color.blue));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+//        date.setThemeDark(true);
 
+        date.setHeaderColor(getResources().getColor(R.color.blue));
+        date.setAccentColor(getResources().getColor(R.color.blue));
+
+        NumberPadTimePickerDialog pad = NumberPadTimePickerDialog.newInstance(MainActivity.this, true);
+//        GridTimePickerDialog grid = GridTimePickerDialog.newInstance(
+//                MainActivity.this,
+//                now.get(Calendar.HOUR_OF_DAY),
+//                now.get(Calendar.MINUTE),
+//                DateFormat.is24HourFormat(MainActivity.this));
+//        grid.setAccentColor(getResources().getColor(android.R.color.white));
+//        grid.setBackgroundColor(getResources().getColor(android.R.color.white));
+////        grid.setTimeSeparatorColor(getResources().getColor(android.R.color.white));
+//        grid.setHeaderTextColorSelected(getResources().getColor(android.R.color.black));
+//        grid.setHeaderTextColorUnselected(getResources().getColor(android.R.color.darker_gray));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREA);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh시 mm분", Locale.KOREA);
 
 //        bottomSheetBehaviorDateTime.setState(BottomSheetBehavior.STATE_COLLAPSED);
        // floatingActionButton.setVisibility(View.GONE);
@@ -781,11 +799,28 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         ImageView endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
 
         dateTextView.setText(dateFormat.format(now.getTime()));
+        startTimeTextView.setText(timeFormat.format(now.getTime()));
+        endTimeTextView.setText(timeFormat.format(now.getTime()));
+
 
         dateImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 date.show(getSupportFragmentManager(),  "datepicker");
+            }
+        });
+
+        startTimeImagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                grid.show(getSupportFragmentManager(), "timePicker");
+            }
+        });
+
+        endTimeImagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pad.show(getSupportFragmentManager(), "timePicker2");
             }
         });
         //registerLayout.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -927,6 +962,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     @Override
     public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
+        Log.e(TAG, "onTimeSet: " +viewGroup.getTag() );
         Log.e(TAG, "onTimeSet:  "  + hourOfDay + minute);
+
+        Calendar cal = new java.util.GregorianCalendar();
+        cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        cal.set(Calendar.MINUTE, minute);
+        Log.e(TAG, "onTimeSet: "  +  DateFormat.getTimeFormat(this).format(cal.getTime()) );
+//        mText.setText("Time set: " + DateFormat.getTimeFormat(this).format(cal.getTime()));
     }
 }
