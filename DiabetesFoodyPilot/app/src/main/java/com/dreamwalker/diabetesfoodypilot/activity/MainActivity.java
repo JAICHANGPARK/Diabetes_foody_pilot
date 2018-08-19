@@ -61,7 +61,6 @@ import com.dreamwalker.diabetesfoodypilot.remote.Common;
 import com.dreamwalker.diabetesfoodypilot.remote.IMenuRequest;
 import com.philliphsu.bottomsheetpickers.date.DatePickerDialog;
 import com.philliphsu.bottomsheetpickers.time.BottomSheetTimePickerDialog;
-import com.philliphsu.bottomsheetpickers.time.grid.GridTimePickerDialog;
 import com.philliphsu.bottomsheetpickers.time.numberpad.NumberPadTimePickerDialog;
 
 import java.sql.Timestamp;
@@ -86,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         RecyclerItemTouchHelperV3.RecyclerItemTouchHelperListener,
         OnSearchItemClickListener,
         BottomSheetTimePickerDialog.OnTimeSetListener,
-        com.philliphsu.bottomsheetpickers.date.DatePickerDialog.OnDateSetListener{
+        com.philliphsu.bottomsheetpickers.date.DatePickerDialog.OnDateSetListener {
 
     private static final String TAG = "MainActivity";
     private final String URL_API = "https://api.androidhive.info/json/menu.json";
@@ -442,7 +441,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //    }
 
 
-
     @Deprecated
     private void addItemToCart() {
 
@@ -752,8 +750,18 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     }
 
-    @OnClick(R.id.calendar)
-    public void onClickCalendar(){
+
+    TextView dateTextView;
+    TextView startTimeTextView;
+    TextView endTimeTextView;
+    ImageView dateImagePicker;
+    ImageView startTimeImagePicker;
+    ImageView endTimeImagePicker;
+
+    boolean startTimeSelectFlag = false;
+    boolean endTimeSelectFlag = false;
+
+    private AlertDialog.Builder showDateTimePickerDialog() {
 
         Calendar now = Calendar.getInstance();
 // As of version 2.3.0, `BottomSheetDatePickerDialog` is deprecated.
@@ -767,7 +775,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         date.setHeaderColor(getResources().getColor(R.color.blue));
         date.setAccentColor(getResources().getColor(R.color.blue));
 
-        NumberPadTimePickerDialog pad = NumberPadTimePickerDialog.newInstance(MainActivity.this, true);
+        NumberPadTimePickerDialog pad = NumberPadTimePickerDialog.newInstance(
+                MainActivity.this,
+                false);
 //        GridTimePickerDialog grid = GridTimePickerDialog.newInstance(
 //                MainActivity.this,
 //                now.get(Calendar.HOUR_OF_DAY),
@@ -782,7 +792,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         SimpleDateFormat timeFormat = new SimpleDateFormat("hh시 mm분", Locale.KOREA);
 
 //        bottomSheetBehaviorDateTime.setState(BottomSheetBehavior.STATE_COLLAPSED);
-       // floatingActionButton.setVisibility(View.GONE);
+        // floatingActionButton.setVisibility(View.GONE);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
 //        dialog.setTitle("REGISTER");
 //        dialog.setMessage("Please use email to register");
@@ -791,12 +801,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //        Date date = now.getTime();
         LayoutInflater inflater = LayoutInflater.from(this);
         View registerLayout = inflater.inflate(R.layout.layout_bottom_sheet_datetime, null);
-        TextView dateTextView = registerLayout.findViewById(R.id.date_text_view);
-        TextView startTimeTextView = registerLayout.findViewById(R.id.start_time_text_view);
-        TextView endTimeTextView = registerLayout.findViewById(R.id.end_time_text_view);
-        ImageView dateImagePicker = registerLayout.findViewById(R.id.date_picker);
-        ImageView startTimeImagePicker = registerLayout.findViewById(R.id.start_time_picker);
-        ImageView endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
+
+        dateTextView = registerLayout.findViewById(R.id.date_text_view);
+        startTimeTextView = registerLayout.findViewById(R.id.start_time_text_view);
+        endTimeTextView = registerLayout.findViewById(R.id.end_time_text_view);
+        dateImagePicker = registerLayout.findViewById(R.id.date_picker);
+        startTimeImagePicker = registerLayout.findViewById(R.id.start_time_picker);
+        endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
 
         dateTextView.setText(dateFormat.format(now.getTime()));
         startTimeTextView.setText(timeFormat.format(now.getTime()));
@@ -806,25 +817,28 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         dateImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                date.show(getSupportFragmentManager(),  "datepicker");
+
+                date.show(getSupportFragmentManager(), "datepicker");
             }
         });
 
         startTimeImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                grid.show(getSupportFragmentManager(), "timePicker");
+                startTimeSelectFlag = true;
+                pad.show(getSupportFragmentManager(), "timePicker");
+//                grid.show(getSupportFragmentManager(), "timePicker");
             }
         });
 
         endTimeImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                endTimeSelectFlag = true;
                 pad.show(getSupportFragmentManager(), "timePicker2");
             }
         });
         //registerLayout.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
 
 
         dialog.setView(registerLayout);
@@ -844,7 +858,15 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //                dialog.dismiss();
 //            }
 //        });
-        AlertDialog alertDialog = dialog.create();
+
+        return dialog;
+
+    }
+
+    @OnClick(R.id.calendar)
+    public void onClickCalendar() {
+
+        AlertDialog alertDialog = showDateTimePickerDialog().create();
         alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         Window window = alertDialog.getWindow();
@@ -962,13 +984,23 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     @Override
     public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
-        Log.e(TAG, "onTimeSet: " +viewGroup.getTag() );
-        Log.e(TAG, "onTimeSet:  "  + hourOfDay + minute);
-
+        Log.e(TAG, "onTimeSet: " + viewGroup.getTag());
+        Log.e(TAG, "onTimeSet:  " + hourOfDay + minute);
         Calendar cal = new java.util.GregorianCalendar();
         cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
         cal.set(Calendar.MINUTE, minute);
-        Log.e(TAG, "onTimeSet: "  +  DateFormat.getTimeFormat(this).format(cal.getTime()) );
-//        mText.setText("Time set: " + DateFormat.getTimeFormat(this).format(cal.getTime()));
+        Log.e(TAG, "onTimeSet: time -->" + cal.getTime());
+        Log.e(TAG, "onTimeSet: " + DateFormat.getTimeFormat(this).format(cal.getTime()));
+
+        if (startTimeSelectFlag) {
+            startTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
+            startTimeSelectFlag = false;
+        } else if (endTimeSelectFlag) {
+            endTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
+            endTimeSelectFlag = false;
+        }
+
+
+//
     }
 }
