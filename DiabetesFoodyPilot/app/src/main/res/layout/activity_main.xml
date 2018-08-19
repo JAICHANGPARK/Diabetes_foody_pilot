@@ -171,7 +171,7 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-    <include layout="@layout/layout_bottom_sheet_datetime" />
+    <!--<include layout="@layout/layout_bottom_sheet_datetime" />-->
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

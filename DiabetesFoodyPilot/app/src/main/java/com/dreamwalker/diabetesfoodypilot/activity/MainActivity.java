@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
@@ -23,12 +24,17 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -52,10 +58,13 @@ import com.dreamwalker.diabetesfoodypilot.model.Suggestions;
 import com.dreamwalker.diabetesfoodypilot.model.TestModel;
 import com.dreamwalker.diabetesfoodypilot.remote.Common;
 import com.dreamwalker.diabetesfoodypilot.remote.IMenuRequest;
+import com.philliphsu.bottomsheetpickers.date.DatePickerDialog;
+import com.philliphsu.bottomsheetpickers.time.BottomSheetTimePickerDialog;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -72,7 +81,9 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements OnItemClickListrner,
         RecyclerItemTouchHelperV3.RecyclerItemTouchHelperListener,
-        OnSearchItemClickListener {
+        OnSearchItemClickListener,
+        BottomSheetTimePickerDialog.OnTimeSetListener,
+        com.philliphsu.bottomsheetpickers.date.DatePickerDialog.OnDateSetListener{
 
     private static final String TAG = "MainActivity";
     private final String URL_API = "https://api.androidhive.info/json/menu.json";
@@ -86,9 +97,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     @BindView(R.id.bottomSheet)
     CoordinatorLayout mBottomSheet;
-
-    @BindView(R.id.bottomSheet2)
-    CoordinatorLayout mBottomSheet2;
 
 
     @BindView(R.id.fab)
@@ -119,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     ArrayList<MixedFoodItem> searchListV2 = new ArrayList<>();
 
     BottomSheetBehavior bottomSheetBehavior;
-    BottomSheetBehavior bottomSheetBehaviorDateTime;
+//    BottomSheetBehavior bottomSheetBehaviorDateTime;
 
     Realm realm;
 
@@ -147,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
         bindViews();
         setBottomSheetBehavior();
-        setDateTimeBottomSheetBehavior();
+//        setDateTimeBottomSheetBehavior();
 
         // TODO: 2018-08-15 Realm 초기화 - 박제창
         initRealm();
@@ -399,33 +407,36 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         });
     }
 
-    private void setDateTimeBottomSheetBehavior() {
-        bottomSheetBehaviorDateTime = BottomSheetBehavior.from(mBottomSheet2);
-        bottomSheetBehaviorDateTime.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
-                switch (newState) {
-                    case BottomSheetBehavior.STATE_HIDDEN:
-                        //finish();
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                        bottomSheet.requestLayout();
-                        setStatusBarDim(false);
-                        break;
-                    default:
-                        setStatusBarDim(true);
-                        break;
-                }
-
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
-    }
+//    private void setDateTimeBottomSheetBehavior() {
+//        bottomSheetBehaviorDateTime = BottomSheetBehavior.from(mBottomSheet2);
+//        bottomSheetBehaviorDateTime.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//
+//                switch (newState) {
+//                    case BottomSheetBehavior.STATE_HIDDEN:
+//                        //finish();
+//                        break;
+//                    case BottomSheetBehavior.STATE_EXPANDED:
+//                        bottomSheet.requestLayout();
+//                        setStatusBarDim(false);
+//
+//                        break;
+//                    default:
+//                        setStatusBarDim(true);
+//                        break;
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
+//
+//        bottomSheetBehaviorDateTime.setState(BottomSheetBehavior.STATE_HIDDEN);
+//    }
 
 
 
@@ -740,7 +751,75 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     @OnClick(R.id.calendar)
     public void onClickCalendar(){
-        bottomSheetBehaviorDateTime.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        Calendar now = Calendar.getInstance();
+// As of version 2.3.0, `BottomSheetDatePickerDialog` is deprecated.
+        DatePickerDialog date = DatePickerDialog.newInstance(
+                MainActivity.this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH));
+        date.setHeaderColor(getResources().getColor(R.color.blue));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+
+
+//        bottomSheetBehaviorDateTime.setState(BottomSheetBehavior.STATE_COLLAPSED);
+       // floatingActionButton.setVisibility(View.GONE);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+//        dialog.setTitle("REGISTER");
+//        dialog.setMessage("Please use email to register");
+
+//        Calendar now = Calendar.getInstance();
+//        Date date = now.getTime();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View registerLayout = inflater.inflate(R.layout.layout_bottom_sheet_datetime, null);
+        TextView dateTextView = registerLayout.findViewById(R.id.date_text_view);
+        TextView startTimeTextView = registerLayout.findViewById(R.id.start_time_text_view);
+        TextView endTimeTextView = registerLayout.findViewById(R.id.end_time_text_view);
+        ImageView dateImagePicker = registerLayout.findViewById(R.id.date_picker);
+        ImageView startTimeImagePicker = registerLayout.findViewById(R.id.start_time_picker);
+        ImageView endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
+
+        dateTextView.setText(dateFormat.format(now.getTime()));
+
+        dateImagePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                date.show(getSupportFragmentManager(),  "datepicker");
+            }
+        });
+        //registerLayout.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+
+
+        dialog.setView(registerLayout);
+
+//        dialog.setPositiveButton("REGISTER", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//
+//
+//            }
+//        });
+//
+//        dialog.setNegativeButton("CANCLE", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//        });
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        Window window = alertDialog.getWindow();
+        WindowManager.LayoutParams wlp = window.getAttributes();
+
+        wlp.gravity = Gravity.BOTTOM;
+        wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        window.setAttributes(wlp);
+        alertDialog.show();
+
     }
 
     // TODO: 2018-08-18 선택하지 않고 검색만 할 경우를 대비해야한다. - 박제창
@@ -841,4 +920,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     }
 
 
+    @Override
+    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+        Log.e(TAG, "onDateSet: " + year + monthOfYear + dayOfMonth);
+    }
+
+    @Override
+    public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
+        Log.e(TAG, "onTimeSet:  "  + hourOfDay + minute);
+    }
 }
