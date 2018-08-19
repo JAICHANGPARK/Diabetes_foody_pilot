@@ -35,6 +35,8 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0-rc01'
     implementation 'com.android.support:support-annotations:28.0.0-rc01'
     implementation 'com.android.support:support-v4:28.0.0-rc01'
+    implementation 'com.android.support:gridlayout-v7:28.0.0-rc01'
+
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.airbnb.android:lottie:2.5.5'
@@ -53,4 +55,11 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':spacebottomnav')
     implementation project(':avatarlibrary')
+
+
+    implementation('com.philliphsu:bottomsheetpickers:2.4.1') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'design'
+        exclude group: 'com.android.support', module: 'gridlayout-v7'
+    }
 }

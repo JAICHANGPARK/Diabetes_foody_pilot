@@ -87,17 +87,23 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     @BindView(R.id.bottomSheet)
     CoordinatorLayout mBottomSheet;
 
+    @BindView(R.id.bottomSheet2)
+    CoordinatorLayout mBottomSheet2;
+
+
     @BindView(R.id.fab)
     FloatingActionButton floatingActionButton;
 
     @BindView(R.id.floating_search_view)
     FloatingSearchView floatingSearchView;
 
+    // TODO: 2018-08-19 상단 이미지 버튼
     @BindView(R.id.add)
     ImageView addItemButton;
-
     @BindView(R.id.save)
     ImageView saveItemButton;
+    @BindView(R.id.calendar)
+    ImageView calendarButton;
 
     @BindView(R.id.bottom_recycler_view)
     RecyclerView bottomRecyclerView;
@@ -113,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     ArrayList<MixedFoodItem> searchListV2 = new ArrayList<>();
 
     BottomSheetBehavior bottomSheetBehavior;
+    BottomSheetBehavior bottomSheetBehaviorDateTime;
 
     Realm realm;
 
@@ -140,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
         bindViews();
         setBottomSheetBehavior();
+        setDateTimeBottomSheetBehavior();
 
         // TODO: 2018-08-15 Realm 초기화 - 박제창
         initRealm();
@@ -391,6 +399,36 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         });
     }
 
+    private void setDateTimeBottomSheetBehavior() {
+        bottomSheetBehaviorDateTime = BottomSheetBehavior.from(mBottomSheet2);
+        bottomSheetBehaviorDateTime.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        //finish();
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        bottomSheet.requestLayout();
+                        setStatusBarDim(false);
+                        break;
+                    default:
+                        setStatusBarDim(true);
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+    }
+
+
+
     @Deprecated
     private void addItemToCart() {
 
@@ -585,6 +623,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
                     ArrayList<FoodCard> tempList = new ArrayList<>();
                     RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodCard> temp2List = new RealmList<>();
@@ -699,6 +738,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     }
 
+    @OnClick(R.id.calendar)
+    public void onClickCalendar(){
+        bottomSheetBehaviorDateTime.setState(BottomSheetBehavior.STATE_COLLAPSED);
+    }
+
     // TODO: 2018-08-18 선택하지 않고 검색만 할 경우를 대비해야한다. - 박제창
     private int cartListPosition = 1000;
 
@@ -794,6 +838,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             // TODO: 2018-08-18 그냥 검색버튼을 사용자가 눌렀을 때는 아무 반응 없이 검색만 가능해야 합니다.
             cartListPosition = 1000;
         }
-
     }
+
+
 }

@@ -47,8 +47,19 @@
             android:padding="8dp"
             android:src="@drawable/ic_add_black_24dp" />
 
-        <TextView
+        <ImageView
+            android:id="@+id/calendar"
+            style="@style/ClickableImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_tool"
+            android:layout_gravity="end"
+            android:layout_margin="8dp"
+            android:layout_toStartOf="@+id/add"
+            android:padding="8dp"
+            android:src="@drawable/ic_date_range_black_24dp" />
 
+        <TextView
             android:id="@+id/title"
             style="@style/ClickableImageView"
             android:layout_width="wrap_content"
@@ -82,7 +93,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/layout_bottomsheet_background"
         android:orientation="vertical"
-        app:behavior_hideable="true"
+        app:behavior_hideable="false"
         app:behavior_peekHeight="60dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
@@ -159,6 +170,8 @@
         <!--android:text="Modal bottom sheets are alternatives to menus, or simple dialogs, and can display deep-linked content from another app. They appear above other UI elements and must be dismissed in order to interact with the underlying content. When a modal bottom sheet slides into the screen, the rest of the screen dims, giving focus to the bottom sheet." />-->
 
     </android.support.design.widget.CoordinatorLayout>
+
+    <include layout="@layout/layout_bottom_sheet_datetime" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
