@@ -982,6 +982,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         Log.e(TAG, "onDateSet: " + year + monthOfYear + dayOfMonth);
     }
 
+    String startIntakeTime;
+    String endIntakeTime;
+    Date startDate;
+    Date endDate;
+    
     @Override
     public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
         Log.e(TAG, "onTimeSet: " + viewGroup.getTag());
@@ -1000,7 +1005,5 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             endTimeSelectFlag = false;
         }
 
-
-//
     }
 }
