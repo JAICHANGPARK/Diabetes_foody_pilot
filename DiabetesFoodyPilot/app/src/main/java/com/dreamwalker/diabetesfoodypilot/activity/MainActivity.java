@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -757,6 +759,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     ImageView dateImagePicker;
     ImageView startTimeImagePicker;
     ImageView endTimeImagePicker;
+    MaterialButton materialButton;
 
     boolean startTimeSelectFlag = false;
     boolean endTimeSelectFlag = false;
@@ -808,18 +811,25 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         dateImagePicker = registerLayout.findViewById(R.id.date_picker);
         startTimeImagePicker = registerLayout.findViewById(R.id.start_time_picker);
         endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
+        materialButton = registerLayout.findViewById(R.id.select_button);
+
 
         dateTextView.setText(dateFormat.format(now.getTime()));
 
-        if (startIntakeTime != null && endIntakeTime != null){
+        startIntakeTimestamp = now.getTime().getTime();
+        endIntakeTimestamp = now.getTime().getTime();
+
+        if (startIntakeTime != null && endIntakeTime != null) {
             startTimeTextView.setText(startIntakeTime);
             endTimeTextView.setText(endIntakeTime);
-        }else {
+        } else {
             startIntakeTime = timeFormat.format(now.getTime());
             endIntakeTime = timeFormat.format(now.getTime());
+            startTimeTextView.setText(startIntakeTime);
+            endTimeTextView.setText(endIntakeTime);
         }
 
-        
+
         dateImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -865,6 +875,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //            }
 //        });
 
+
         return dialog;
 
     }
@@ -881,6 +892,19 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         wlp.gravity = Gravity.BOTTOM;
         wlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         window.setAttributes(wlp);
+
+        materialButton.setOnClickListener(view -> {
+            if (startIntakeTimestamp == endIntakeTimestamp) {
+                Toast.makeText(MainActivity.this, "시작시간과 종료시간은 같을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            } else if (startIntakeTimestamp > endIntakeTimestamp) {
+                Toast.makeText(MainActivity.this, "종료 시간이 시작 시간보다 빠를 수 없습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                alertDialog.dismiss();
+            }
+
+
+        });
+
         alertDialog.show();
 
     }
@@ -992,6 +1016,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     String endIntakeTime;
     Date startDate;
     Date endDate;
+    long startIntakeTimestamp;
+    long endIntakeTimestamp;
 
     @Override
     public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
@@ -1010,11 +1036,15 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
             startTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
             startIntakeTime = formatter.format(cal.getTime());
             startDate = cal.getTime();
+            startIntakeTimestamp = startDate.getTime();
+            Log.e(TAG, "startIntakeTimestamp: " + startIntakeTimestamp);
             startTimeSelectFlag = false;
         } else if (endTimeSelectFlag) {
             endTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
             endIntakeTime = formatter.format(cal.getTime());
             endDate = cal.getTime();
+            endIntakeTimestamp = endDate.getTime();
+            Log.e(TAG, "endIntakeTimestamp: " + endIntakeTimestamp);
             endTimeSelectFlag = false;
         }
 
