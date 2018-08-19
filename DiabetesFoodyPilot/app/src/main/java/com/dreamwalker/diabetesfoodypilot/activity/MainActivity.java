@@ -986,9 +986,12 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     String endIntakeTime;
     Date startDate;
     Date endDate;
-    
+
     @Override
     public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
+
         Log.e(TAG, "onTimeSet: " + viewGroup.getTag());
         Log.e(TAG, "onTimeSet:  " + hourOfDay + minute);
         Calendar cal = new java.util.GregorianCalendar();
@@ -999,9 +1002,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
         if (startTimeSelectFlag) {
             startTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
+            startIntakeTime = formatter.format(cal.getTime());
+            startDate = cal.getTime();
             startTimeSelectFlag = false;
         } else if (endTimeSelectFlag) {
             endTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
+            endIntakeTime = formatter.format(cal.getTime());
+            endDate = cal.getTime();
             endTimeSelectFlag = false;
         }
 
