@@ -1,1 +1,1 @@
-include ':app', ':spacebottomnav', ':avatarlibrary'
+include ':app', ':spacebottomnav', ':avatarlibrary', ':flipcard'
