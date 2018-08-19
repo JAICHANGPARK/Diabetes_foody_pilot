@@ -810,10 +810,16 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
 
         dateTextView.setText(dateFormat.format(now.getTime()));
-        startTimeTextView.setText(timeFormat.format(now.getTime()));
-        endTimeTextView.setText(timeFormat.format(now.getTime()));
 
+        if (startIntakeTime != null && endIntakeTime != null){
+            startTimeTextView.setText(startIntakeTime);
+            endTimeTextView.setText(endIntakeTime);
+        }else {
+            startIntakeTime = timeFormat.format(now.getTime());
+            endIntakeTime = timeFormat.format(now.getTime());
+        }
 
+        
         dateImagePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
