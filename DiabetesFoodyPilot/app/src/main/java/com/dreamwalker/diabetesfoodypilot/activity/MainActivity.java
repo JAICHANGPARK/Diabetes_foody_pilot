@@ -606,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         builder.show();
     }
 
-    String intakeType;
+    String intakeType; // 아침, 점심, 저녁, 간식 구분 맴버 변수
 
     @OnClick(R.id.save)
     public void onClickedSaveButton() {
@@ -620,29 +620,47 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         // TODO: 2018-08-18 식품선택이 진행되지 않았을 경우의 사용자 예외 처리 - 박제창
         if (dataExistCheck) {
 
-            // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
-            String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Choose an Items");
-            builder.setCancelable(false);
-            builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Log.e(TAG, "onClick: " + i);
-                    intakeType = listItems[i];
-                    Log.e(TAG, "onClick: intake--> " + intakeType);
-                }
-            });
+            showSaveDialog();
 
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+        } else {
+            Snackbar.make(getWindow().getDecorView().getRootView(), "식품을 추가해주세요", Snackbar.LENGTH_SHORT).show();
+        }
 
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
-                    ArrayList<FoodCard> tempList = new ArrayList<>();
-                    RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodCard> temp2List = new RealmList<>();
-                    RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal> resultList = new RealmList<>();
-                    // TODO: 2018-08-18 1 페이즈 최종 저장 처리 부분 - 박제창
+
+    }
+
+    private void showSaveDialog() {
+
+        // TODO: 2018-08-16 다이얼 로그를 보여주고 유형 선택하기
+        String[] listItems = new String[]{"아침", "점심", "저녁", "간식"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose an Items");
+        builder.setCancelable(false);
+        builder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.e(TAG, "onClick: " + i);
+                intakeType = listItems[i];
+                Log.e(TAG, "onClick: intake--> " + intakeType);
+            }
+        });
+
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                // TODO: 2018-08-18 1 페이즈 최종 저장 처리 부분 - 박제창
+
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
+                ArrayList<FoodCard> tempList = new ArrayList<>();
+                RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodCard> temp2List = new RealmList<>();
+                RealmList<com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal> resultList = new RealmList<>();
+                // TODO: 2018-08-19  시간 저장되어있는지 확인
+                if (startDate == null || endDate == null) {
+                    Toast.makeText(MainActivity.this, "식사 시간을 설정해주세요", Toast.LENGTH_SHORT).show();
+                    dialogInterface.dismiss();
+                } else {
+
 //                    for (int k = 0; k < mixedFoodArrayList.size(); k++) {
 //                        if (!mixedFoodArrayList.get(k).getFoodName().equals("")) {
 //                            tempList.add(mixedFoodArrayList.get(k));
@@ -680,25 +698,16 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
                         realmList.addAll(resultList);
 
-
                         realm = Realm.getDefaultInstance();
-
-
-//                        realm.executeTransaction(new Realm.Transaction() {
-//                            @Override
-//                            public void execute(Realm realm) {
-//                                FoodDock foodItem = realm.createObject(FoodDock.class);
-//                                foodItem.setFoodTotals(realmList);
-//                                foodItem.setSaveDate(saveDate);
-//                                foodItem.setTimestamp(ts);
-//                            }
-//                        });
 
                         realm.beginTransaction();
                         FoodDock foodDock = new FoodDock();
                         foodDock.setFoodTotals(realmList);
                         foodDock.setSaveDate(saveDate);
                         foodDock.setTimestamp(ts);
+                        foodDock.setUserSelectDate(nowDate);
+                        foodDock.setStartIntakeDate(startDate);
+                        foodDock.setEndIntakeDate(endDate);
                         realm.insertOrUpdate(foodDock);
 //                        FoodDock foodItem = realm.createObject(FoodDock.class);
                         realm.commitTransaction();
@@ -706,53 +715,27 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                         startActivity(new Intent(MainActivity.this, HomeActivity.class));
                         finish();
 
-//                        realm.executeTransactionAsync(new Realm.Transaction() {
-//                            @Override
-//                            public void execute(Realm realm) {
-//
-//
-//
-//                            }
-//                        }, new Realm.Transaction.OnSuccess() {
-//                            @Override
-//                            public void onSuccess() {
-//                                startActivity(new Intent(MainActivity.this, HomeActivity.class));
-//                                finish();
-//                            }
-//                        }, new Realm.Transaction.OnError() {
-//                            @Override
-//                            public void onError(Throwable error) {
-//                                Log.e(TAG, "onError: " + error.getMessage() );
-//
-//                                Toast.makeText(MainActivity.this, "" + error.getMessage(), Toast.LENGTH_SHORT).show();
-//
-//                            }
-//                        });
 
                     } else {
                         Log.e(TAG, "onClick: tempList Size Zero");
                     }
-
                     dialogInterface.dismiss();
                 }
-            });
+            }
+        });
 
-            builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    resultArrayList.clear();
-                    dialogInterface.dismiss();
-                }
-            });
-            builder.show();
-        } else {
-            Snackbar.make(getWindow().getDecorView().getRootView(), "식품을 추가해주세요", Snackbar.LENGTH_SHORT).show();
-        }
-
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                resultArrayList.clear();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
 
     }
 
-
+    // TODO: 2018-08-19 날짜 시간 선택 다이얼로그 뷰 위젯 클래스 맴버
     TextView dateTextView;
     TextView startTimeTextView;
     TextView endTimeTextView;
@@ -813,7 +796,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         endTimeImagePicker = registerLayout.findViewById(R.id.end_time_picker);
         materialButton = registerLayout.findViewById(R.id.select_button);
 
-
+        nowDate = now.getTime();
         dateTextView.setText(dateFormat.format(now.getTime()));
 
         startIntakeTimestamp = now.getTime().getTime();
@@ -1010,19 +993,30 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     @Override
     public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
         Log.e(TAG, "onDateSet: " + year + monthOfYear + dayOfMonth);
+
+        Calendar cal = new java.util.GregorianCalendar();
+        cal.set(Calendar.YEAR, year);
+        cal.set(Calendar.MONTH, monthOfYear);
+        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        // TODO: 2018-08-19 사용자가 날짜를 변경하면 변경한 Date 값을 넣어야한다. - 박제창
+        nowDate = cal.getTime();
+        Log.e(TAG, "onDateSet: " +  DateFormat.getDateFormat(this).format(cal.getTime()));
+//        mText.setText("Date set: " + DateFormat.getDateFormat(this).format(cal.getTime()));
+
     }
 
-    String startIntakeTime;
-    String endIntakeTime;
-    Date startDate;
-    Date endDate;
-    long startIntakeTimestamp;
-    long endIntakeTimestamp;
+    String startIntakeTime; //문자열 변수
+    String endIntakeTime; // 문자열 변수
+    Date nowDate;
+    Date startDate; // Realm 데이터베이스 저장 맴버 변수
+    Date endDate; // Realm 데이터베이스 저장 맴버 변수
+    long startIntakeTimestamp; //사용자 시간 선택 예외 처리 변수
+    long endIntakeTimestamp; // 사용자 시간 선택 예외 처리 변수
 
     @Override
     public void onTimeSet(ViewGroup viewGroup, int hourOfDay, int minute) {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.KOREA);
+        SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss", Locale.KOREA);
 
         Log.e(TAG, "onTimeSet: " + viewGroup.getTag());
         Log.e(TAG, "onTimeSet:  " + hourOfDay + minute);
@@ -1034,14 +1028,15 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
         if (startTimeSelectFlag) {
             startTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
-            startIntakeTime = formatter.format(cal.getTime());
+            startIntakeTime = DateFormat.getTimeFormat(this).format(cal.getTime());
             startDate = cal.getTime();
             startIntakeTimestamp = startDate.getTime();
             Log.e(TAG, "startIntakeTimestamp: " + startIntakeTimestamp);
             startTimeSelectFlag = false;
+
         } else if (endTimeSelectFlag) {
             endTimeTextView.setText(DateFormat.getTimeFormat(this).format(cal.getTime()));
-            endIntakeTime = formatter.format(cal.getTime());
+            endIntakeTime = DateFormat.getTimeFormat(this).format(cal.getTime());
             endDate = cal.getTime();
             endIntakeTimestamp = endDate.getTime();
             Log.e(TAG, "endIntakeTimestamp: " + endIntakeTimestamp);

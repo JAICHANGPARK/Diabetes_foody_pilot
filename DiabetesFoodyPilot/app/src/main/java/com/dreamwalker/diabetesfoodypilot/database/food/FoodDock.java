@@ -11,6 +11,7 @@ public class FoodDock extends RealmObject implements RealmModel {
     public RealmList<FoodTotal> foodTotals;
     private Date saveDate;
     private long timestamp;
+    private Date userSelectDate;
     private Date startIntakeDate;
     private Date endIntakeDate;
 
@@ -18,16 +19,11 @@ public class FoodDock extends RealmObject implements RealmModel {
 
     }
 
-    public FoodDock(RealmList<FoodTotal> main, Date saveDate, long timestamp) {
-        this.foodTotals = main;
-        this.saveDate = saveDate;
-        this.timestamp = timestamp;
-    }
-
-    public FoodDock(RealmList<FoodTotal> foodTotals, Date saveDate, long timestamp, Date startIntakeDate, Date endIntakeDate) {
+    public FoodDock(RealmList<FoodTotal> foodTotals, Date saveDate, long timestamp, Date userSelectDate, Date startIntakeDate, Date endIntakeDate) {
         this.foodTotals = foodTotals;
         this.saveDate = saveDate;
         this.timestamp = timestamp;
+        this.userSelectDate = userSelectDate;
         this.startIntakeDate = startIntakeDate;
         this.endIntakeDate = endIntakeDate;
     }
@@ -54,6 +50,14 @@ public class FoodDock extends RealmObject implements RealmModel {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Date getUserSelectDate() {
+        return userSelectDate;
+    }
+
+    public void setUserSelectDate(Date userSelectDate) {
+        this.userSelectDate = userSelectDate;
     }
 
     public Date getStartIntakeDate() {
