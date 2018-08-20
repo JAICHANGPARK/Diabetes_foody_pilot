@@ -97,10 +97,10 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
 
         // set custom btn handler for list item from that item
         if (item.getRequestBtnClickListener() != null) {
-            viewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
+            //viewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
         } else {
             // (optionally) add "default" handler if no handler found in item
-            viewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
+            //viewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
         }
         return cell;
     }
