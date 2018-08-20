@@ -619,14 +619,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         }
         // TODO: 2018-08-18 식품선택이 진행되지 않았을 경우의 사용자 예외 처리 - 박제창
         if (dataExistCheck) {
-
             showSaveDialog();
-
         } else {
             Snackbar.make(getWindow().getDecorView().getRootView(), "식품을 추가해주세요", Snackbar.LENGTH_SHORT).show();
         }
-
-
     }
 
     private void showSaveDialog() {

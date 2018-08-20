@@ -4,6 +4,10 @@ import io.realm.RealmObject;
 
 public class FoodCard extends RealmObject{
 
+    /**
+     * 식품 카드 1개에 대한 데이터 Dock
+     */
+
     private String intakeType;
     private String cardClass;
     private String foodClass;

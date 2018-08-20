@@ -31,7 +31,6 @@ import io.realm.RealmResults;
 
 public class HomeActivity extends AppCompatActivity {
 
-
     private static final String TAG = "HomeActivity";
     @BindView(R.id.space)
     SpaceNavigationView spaceNavigationView;
@@ -47,59 +46,72 @@ public class HomeActivity extends AppCompatActivity {
         setSpaceNavigationView(savedInstanceState);
 
         Date testDate = new Date();
-        Log.e(TAG, "onCreate: " + testDate);
+        Log.e(TAG, "onCreate: testDate" + testDate);
         Timestamp timestamp = new Timestamp(testDate.getTime());
-        Log.e(TAG, "onCreate: " + timestamp.getTime());
+        Log.e(TAG, "onCreate: timestamp.getTime()" + timestamp.getTime());
 
         Realm.init(this);
         realm = Realm.getDefaultInstance();
 
         RealmResults<FoodDock> result = realm.where(FoodDock.class).findAll();
-        Log.e(TAG, "onCreate: " + result.size());
+        Log.e(TAG, "전제 데이터베이스 Size -->" + result.size());
 
         List<FoodDock> foodDockArrayList = realm.copyFromRealm(result);
         List<RealmList<FoodTotal>> foodTotalList = new ArrayList<>();
         List<RealmList<FoodCard>> foodCardList = new ArrayList<>();
 
+        // TODO: 2018-08-20 FoodDock 모델에서 FoodTotal 리스트 값을 가져온다.
         for (int i = 0; i < foodDockArrayList.size(); i++) {
-            Log.e(TAG, "onCreate:1 " + foodDockArrayList.get(i).getFoodTotals());
-            Log.e(TAG, "onCreate:2 " + foodDockArrayList.get(i).getSaveDate());
-            Log.e(TAG, "onCreate: 3" + foodDockArrayList.get(i).getTimestamp());
+            Log.e(TAG, "onCreate: Big Count i --> " + i );
+            Log.e(TAG, "foodDockArrayList: getFoodTotals->" + foodDockArrayList.get(i).getFoodTotals());
+            Log.e(TAG, "foodDockArrayList: getSaveDate->" + foodDockArrayList.get(i).getSaveDate());
+            Log.e(TAG, "foodDockArrayList: getTimestamp->" + foodDockArrayList.get(i).getTimestamp());
+            RealmList<FoodTotal> tmpFoodTotalList = foodDockArrayList.get(i).getFoodTotals(); // 1개의 푸드 독 안의 리스트를 가져온다.
+            for (int k = 0; k < tmpFoodTotalList.size(); k++){
+                Log.e(TAG, "onCreate: mid Count k --> " + k );
+                Log.e(TAG, "tmpFoodTotalList: " + tmpFoodTotalList.get(k).getIntakeType());
+                RealmList<FoodCard> tmpFoodCardList = tmpFoodTotalList.get(k).getFoodCardArrayList(); // 1개의 푸드 포탈 리스트 안의 푸트 카드 리스트를 가져온다.
+                for (int j = 0 ; j < tmpFoodCardList.size(); j++){
+                    Log.e(TAG, "onCreate: small Count j --> " + j );
+                    Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getCardClass());
+                    Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getFoodName());
+                    Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getFoodAmount());
+                    Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getKcal());
+                }
+            }
 //            realm.copyFromRealm(foodDockArrayList.get(i).getFoodTotals());
             foodTotalList.add(foodDockArrayList.get(i).getFoodTotals());
         }
 
-        for (int i = 0; i < foodTotalList.size(); i++) {
-
-            Log.e(TAG, "onCreate: " + i);
-            Log.e(TAG, "onCreate: " + foodTotalList.get(i));
-//            Log.e(TAG, "onCreate: " + foodTotalList.get(i));
-            RealmList<FoodTotal> fT = foodTotalList.get(i);
-
-            for (int k = 0; k < fT.size(); k++) {
-                Log.e(TAG, "onCreate: fT " + fT.get(k).getIntakeType());
-                foodCardList.add(fT.get(k).getFoodCardArrayList());
-            }
-
-//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getIntakeType());
-//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getCardClass());
-//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodName());
-//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodClass());
-//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodAmount());
-//            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
-        }
-
-        for (int i = 0; i < foodCardList.size(); i++) {
-            RealmList<FoodCard> fC = foodCardList.get(i);
-            for (int k = 0; k < fC.size(); k++) {
-                Log.e(TAG, "onCreate: fC " + fC.get(k).getFoodName());
-            }
-//            Log.e(TAG, "onCreate: " + "Total Count "  +  foodCardList.get(i).get(i).getFoodName());
+//        for (int i = 0; i < foodTotalList.size(); i++) {
 //
-//            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
-        }
-
-
+//            Log.e(TAG, "onCreate: count i->" + i);
+//            Log.e(TAG, "onCreate: " + foodTotalList.get(i));
+////            Log.e(TAG, "onCreate: " + foodTotalList.get(i));
+//            RealmList<FoodTotal> fT = foodTotalList.get(i);
+//
+//            for (int k = 0; k < fT.size(); k++) {
+//                Log.e(TAG, "onCreate: fT " + fT.get(k).getIntakeType());
+//                foodCardList.add(fT.get(k).getFoodCardArrayList());
+//            }
+//
+////            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getIntakeType());
+////            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getCardClass());
+////            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodName());
+////            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodClass());
+////            Log.e(TAG, "onCreate: " + "Total Count "  +  foodTotalList.get(i).get(i).getFoodCardArrayList().get(i).getFoodAmount());
+////            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
+//        }
+//
+//        for (int i = 0; i < foodCardList.size(); i++) {
+//            RealmList<FoodCard> fC = foodCardList.get(i);
+//            for (int k = 0; k < fC.size(); k++) {
+//                Log.e(TAG, "onCreate: fC " + fC.get(k).getFoodName());
+//            }
+////            Log.e(TAG, "onCreate: " + "Total Count "  +  foodCardList.get(i).get(i).getFoodName());
+////
+////            foodCardList.add(foodTotalList.get(i).get(i).getFoodCardArrayList());
+//        }
     }
 
     private void setSpaceNavigationView(Bundle sis) {

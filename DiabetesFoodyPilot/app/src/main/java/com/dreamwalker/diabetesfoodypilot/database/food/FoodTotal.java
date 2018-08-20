@@ -5,8 +5,8 @@ import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 public class FoodTotal extends RealmObject implements RealmModel {
-    private String intakeType;
-    private RealmList<FoodCard> foodCardArrayList;
+    private String intakeType;  // 식사 섭취 유형
+    private RealmList<FoodCard> foodCardArrayList; // 섭취한 음식 리스트
 
     public FoodTotal() {
     }

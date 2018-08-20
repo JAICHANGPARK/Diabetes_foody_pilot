@@ -8,12 +8,12 @@ import io.realm.RealmModel;
 import io.realm.RealmObject;
 
 public class FoodDock extends RealmObject implements RealmModel {
-    public RealmList<FoodTotal> foodTotals;
-    private Date saveDate;
-    private long timestamp;
-    private Date userSelectDate;
-    private Date startIntakeDate;
-    private Date endIntakeDate;
+    private RealmList<FoodTotal> foodTotals;  //FoodTotal List
+    private Date saveDate;        // 저장한 시간
+    private Date userSelectDate;  // 섭취 닐짜
+    private Date startIntakeDate; // 섭취 시작 시간
+    private Date endIntakeDate;   // 섭취 종료 시간
+    private long timestamp;       // Timestamp 저장한
 
     public FoodDock() {
 

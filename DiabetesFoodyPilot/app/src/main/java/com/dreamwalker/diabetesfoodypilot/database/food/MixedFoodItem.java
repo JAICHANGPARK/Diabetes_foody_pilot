@@ -4,7 +4,9 @@ import io.realm.RealmObject;
 
 public class MixedFoodItem extends RealmObject {
 
+
     /**
+     * dbClass : 0
      * foodClass : 밥류
      * foodName : 김밥
      * foodAmount : 191
@@ -22,6 +24,7 @@ public class MixedFoodItem extends RealmObject {
      * fiber : 3.3
      */
 
+    private String dbClass;
     private String foodClass;
     private String foodName;
     private String foodAmount;
@@ -38,12 +41,18 @@ public class MixedFoodItem extends RealmObject {
     private String prot;
     private String fiber;
 
+
+
+
     public MixedFoodItem() {
     }
 
-    public MixedFoodItem(String foodClass, String foodName, String foodAmount,
-                         String foodGroup1, String foodGroup2, String foodGroup3, String foodGroup4, String foodGroup5, String foodGroup6,
+    public MixedFoodItem(String dbClass, String foodClass, String foodName, String foodAmount,
+                         String foodGroup1, String foodGroup2, String foodGroup3,
+                         String foodGroup4, String foodGroup5, String foodGroup6,
                          String totalExchange, String kcal, String carbo, String fatt, String prot, String fiber) {
+
+        this.dbClass = dbClass;
         this.foodClass = foodClass;
         this.foodName = foodName;
         this.foodAmount = foodAmount;
@@ -179,5 +188,13 @@ public class MixedFoodItem extends RealmObject {
 
     public void setFiber(String fiber) {
         this.fiber = fiber;
+    }
+
+    public String getDbClass() {
+        return dbClass;
+    }
+
+    public void setDbClass(String dbClass) {
+        this.dbClass = dbClass;
     }
 }

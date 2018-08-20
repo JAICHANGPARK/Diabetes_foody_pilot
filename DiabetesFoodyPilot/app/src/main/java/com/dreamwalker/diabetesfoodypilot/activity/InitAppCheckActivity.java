@@ -35,6 +35,13 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
     private static final String TAG = "InitAppCheckActivity";
     private static final String FOOD_FETCH_V2_URL = "mix_food_v1.php";
+    private static final String FOOD_FETCH_V3_URL = "food_db_fetch.php";
+
+    @BindView(R.id.animation_view)
+    LottieAnimationView lottieAnimationView;
+    @BindView(R.id.text_view)
+    TextView textView;
+
     IAppCheck service;
 
     IDatabaseRequest dbService;
@@ -45,11 +52,6 @@ public class InitAppCheckActivity extends AppCompatActivity {
     ArrayList<MixedFood> foodsList;
 
     Realm realm;
-
-    @BindView(R.id.animation_view)
-    LottieAnimationView lottieAnimationView;
-    @BindView(R.id.text_view)
-    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
                             Log.e(TAG, "onResponse: 버전 업그레이드 된 경우   ");
                             // TODO: 2018-08-01 버전 업그레이드 된 경우
-                            dbService.fetchTotalFood(FOOD_FETCH_V2_URL).enqueue(new Callback<ArrayList<MixedFood>>() {
+                            dbService.fetchTotalFood(FOOD_FETCH_V3_URL).enqueue(new Callback<ArrayList<MixedFood>>() {
                                 @Override
                                 public void onResponse(Call<ArrayList<MixedFood>> call, Response<ArrayList<MixedFood>> response) {
                                     foodsList.clear();
@@ -118,6 +120,8 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                             MixedFoodItem foodItem = realm.createObject(MixedFoodItem.class);
 
                                             for (MixedFood f : foodsList) {
+
+                                                foodItem.setDbClass(f.getDbClass());
                                                 foodItem.setFoodClass(f.getFoodClass());
                                                 foodItem.setFoodName(f.getFoodName());
                                                 foodItem.setFoodAmount(f.getFoodAmount());
@@ -134,20 +138,6 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                                 foodItem.setFatt(f.getFatt());
                                                 foodItem.setProt(f.getProt());
                                                 foodItem.setFiber(f.getFiber());
-
-//                                                foodItem.setFoodNumber(f.getFoodNumber());
-//                                                foodItem.setFoodGroup(f.getFoodGroup());
-//                                                foodItem.setFoodName(f.getFoodName());
-//                                                foodItem.setFoodAmount(f.getFoodAmount());
-//                                                foodItem.setFoodKcal(f.getFoodKcal());
-//                                                foodItem.setFoodCarbo(f.getFoodCarbo());
-//                                                foodItem.setFoodProtein(f.getFoodProtein());
-//                                                foodItem.setFoodFat(f.getFoodFat());
-//                                                foodItem.setFoodSugar(f.getFoodSugar());
-//                                                foodItem.setFoodNatrium(f.getFoodNatrium());
-//                                                foodItem.setFoodCholest(f.getFoodCholest());
-//                                                foodItem.setFoodFatty(f.getFoodFatty());
-//                                                foodItem.setFoodTransFatty(f.getFoodTransFatty());
                                             }
                                         }
                                     }, new Realm.Transaction.OnSuccess() {
@@ -182,7 +172,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                         Log.e(TAG, "onResponse: 처음 사용자  처리 합니다 ");
                         // TODO: 2018-08-01 처음 사용자 
                         long start = System.currentTimeMillis();
-                        dbService.fetchTotalFood(FOOD_FETCH_V2_URL).enqueue(new Callback<ArrayList<MixedFood>>() {
+                        dbService.fetchTotalFood(FOOD_FETCH_V3_URL).enqueue(new Callback<ArrayList<MixedFood>>() {
                             @Override
                             public void onResponse(Call<ArrayList<MixedFood>> call, Response<ArrayList<MixedFood>> response) {
 
@@ -350,7 +340,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
             realm = Realm.getDefaultInstance();
             for (int i = 0; i < foodsList.size(); i++) {
                 index = i;
-
+                String dbClass = foodsList.get(i).getDbClass();
                 String foodClass = foodsList.get(i).getFoodClass();
                 String foodName = foodsList.get(i).getFoodName();
                 String foodAmount = foodsList.get(i).getFoodAmount();
@@ -384,6 +374,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
                 realm.executeTransaction(realm -> {
                     MixedFoodItem foodItem = realm.createObject(MixedFoodItem.class);
+                    foodItem.setDbClass(dbClass);
                     foodItem.setFoodClass(foodClass);
                     foodItem.setFoodName(foodName);
                     foodItem.setFoodAmount(foodAmount);
@@ -402,19 +393,6 @@ public class InitAppCheckActivity extends AppCompatActivity {
                     foodItem.setProt(prot);
                     foodItem.setFiber(fiber);
 
-//                    foodItem.setFoodNumber(foodNumber);
-//                    foodItem.setFoodGroup(foodGroup);
-//                    foodItem.setFoodName(foodName);
-//                    foodItem.setFoodAmount(foodAmount);
-//                    foodItem.setFoodKcal(foodKcal);
-//                    foodItem.setFoodCarbo(foodCarbo);
-//                    foodItem.setFoodProtein(foodProtein);
-//                    foodItem.setFoodFat(foodFat);
-//                    foodItem.setFoodSugar(foodSugar);
-//                    foodItem.setFoodNatrium(foodNatrium);
-//                    foodItem.setFoodCholest(foodCholest);
-//                    foodItem.setFoodFatty(foodFatty);
-//                    foodItem.setFoodTransFatty(foodTransFatty);
                 });
                 progressDialog.setProgress((int) (100 * i / foodsList.size()));
                 //Log.e(TAG, "doInBackground: " + i );
@@ -423,19 +401,19 @@ public class InitAppCheckActivity extends AppCompatActivity {
         }
 
 
-            @Override
-            protected void onPostExecute (Void aVoid){
-                progressDialog.dismiss();
-                Toast.makeText(InitAppCheckActivity.this, "저장완료", Toast.LENGTH_SHORT).show();
-                long endTwo = System.currentTimeMillis();
-                //Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
-                Paper.book().write("food_version_code", fetchVersionCode);
-                textView.setText("다운로드 및 저장 완료");
-                Log.e(TAG, "onSuccess: " + "저장 완료 ");
-                startActivity(new Intent(InitAppCheckActivity.this, HomeActivity.class));
-                finish();
-                //finish();
-                super.onPostExecute(aVoid);
-            }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            progressDialog.dismiss();
+            Toast.makeText(InitAppCheckActivity.this, "저장완료", Toast.LENGTH_SHORT).show();
+            long endTwo = System.currentTimeMillis();
+            //Log.e(TAG, "onResponse: Second Phase --> " + (endTwo - startTwo) / 1000.0);
+            Paper.book().write("food_version_code", fetchVersionCode);
+            textView.setText("다운로드 및 저장 완료");
+            Log.e(TAG, "onSuccess: " + "저장 완료 ");
+            startActivity(new Intent(InitAppCheckActivity.this, HomeActivity.class));
+            finish();
+            //finish();
+            super.onPostExecute(aVoid);
         }
     }
+}

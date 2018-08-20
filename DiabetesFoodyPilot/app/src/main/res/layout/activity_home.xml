@@ -59,6 +59,14 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
+        <ListView
+            android:scrollbars="none"
+            android:id="@+id/list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
         <com.dreamwalker.spacebottomnav.SpaceNavigationView
             android:id="@+id/space"
             android:layout_width="match_parent"
