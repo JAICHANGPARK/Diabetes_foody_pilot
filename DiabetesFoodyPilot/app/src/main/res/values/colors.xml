@@ -49,4 +49,6 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <color name="home_card_right_color">#2A3137</color>
+
 </resources>

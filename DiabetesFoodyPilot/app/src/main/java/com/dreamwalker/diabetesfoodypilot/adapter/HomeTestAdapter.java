@@ -3,6 +3,7 @@ package com.dreamwalker.diabetesfoodypilot.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodCard;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal;
 import com.dreamwalker.diabetesfoodypilot.model.HomeFood;
+import com.dreamwalker.diabetesfoodypilot.utils.timeago.ZamanTextView;
 import com.dreamwalker.flipcard.FoldingCell;
 
 import java.util.HashSet;
@@ -69,7 +71,6 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             return cell;
         }
 
-
         RealmList<FoodTotal> foodTotals = item.getFoodTotals();
         String intakeType = foodTotals.get(0).getIntakeType();
         RealmList<FoodCard> foodCards = foodTotals.get(0).getFoodCardArrayList();
@@ -82,15 +83,17 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             exchange_value += Float.valueOf(foodCards.get(k).getTotalExchange());
         }
         Log.e(TAG, "getView: " + kCal + ", " + amount + ", " + exchange_value);
-
+        Log.e(TAG, "getView: Date " + DateFormat.getDateFormat(parent.getContext()).format(item.getUserSelectDate()) );
+        Log.e(TAG, "getView: time " + DateFormat.getTimeFormat(parent.getContext()).format(item.getSaveDate()));
 
 
         // bind data from selected element to view through view holder
         viewHolder.price.setText(intakeType);
-        viewHolder.time.setText("Temp");
-        viewHolder.date.setText("Test");
-        viewHolder.fromAddress.setText(item.getSaveDate().toString());
-        viewHolder.toAddress.setText(item.getEndIntakeDate().toString());
+//        viewHolder.time.setText("Temp");
+        viewHolder.date.setText(DateFormat.getDateFormat(parent.getContext()).format(item.getUserSelectDate()));
+        viewHolder.time.setTimeStamp(item.getUserSelectDate().getTime() / 1000);
+        viewHolder.fromAddress.setText(DateFormat.getTimeFormat(parent.getContext()).format(item.getStartIntakeDate()));
+        viewHolder.toAddress.setText(DateFormat.getTimeFormat(parent.getContext()).format(item.getEndIntakeDate()));
         viewHolder.requestsCount.setText(""+kCal);
         viewHolder.pledgePrice.setText(""+amount);
         viewHolder.weight.setText(""+exchange_value);
@@ -139,7 +142,8 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         TextView toAddress;
         TextView requestsCount;
         TextView date;
-        TextView time;
+//        TextView time;
+        ZamanTextView time;
         TextView weight;
     }
 }
