@@ -55,7 +55,7 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             viewHolder.pledgePrice = cell.findViewById(R.id.title_pledge);
             viewHolder.weight = cell.findViewById(R.id.title_weight);
 
-            //viewHolder.contentRequestBtn = cell.findViewById(R.id.content_request_btn);
+            viewHolder.contentRequestBtn = cell.findViewById(R.id.content_request_btn);
             cell.setTag(viewHolder);
         } else {
             // for existing cell set valid valid state(without animation)
@@ -100,10 +100,10 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
 
         // set custom btn handler for list item from that item
         if (item.getRequestBtnClickListener() != null) {
-            //viewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
+            viewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
         } else {
             // (optionally) add "default" handler if no handler found in item
-            //viewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
+            viewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
         }
         return cell;
     }

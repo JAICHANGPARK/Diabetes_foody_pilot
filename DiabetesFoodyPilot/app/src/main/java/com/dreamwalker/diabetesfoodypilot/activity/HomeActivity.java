@@ -17,6 +17,7 @@ import com.dreamwalker.diabetesfoodypilot.database.food.FoodCard;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodDock;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal;
 import com.dreamwalker.diabetesfoodypilot.model.HomeFood;
+import com.dreamwalker.flipcard.FoldingCell;
 import com.dreamwalker.spacebottomnav.SpaceItem;
 import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
@@ -69,7 +70,7 @@ public class HomeActivity extends AppCompatActivity {
 
         ArrayList<HomeFood> homeFoods = new ArrayList<>();
 
-        for (int i = 0; i < result.size(); i++){
+        for (int i = 0; i < result.size(); i++) {
             homeFoods.add(new HomeFood(foodDockArrayList.get(i).getFoodTotals(),
                     foodDockArrayList.get(i).getSaveDate(),
                     foodDockArrayList.get(i).getUserSelectDate(),
@@ -103,27 +104,27 @@ public class HomeActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                // toggle clicked cell state
-//                ((FoldingCell) view).toggle(false);
-//                // register in adapter that state for selected cell is toggled
-//                adapter.registerToggle(pos);
+//                 toggle clicked cell state
+                ((FoldingCell) view).toggle(false);
+                // register in adapter that state for selected cell is toggled
+                adapter.registerToggle(pos);
             }
         });
 
 
         // TODO: 2018-08-20 FoodDock 모델에서 FoodTotal 리스트 값을 가져온다.
         for (int i = 0; i < foodDockArrayList.size(); i++) {
-            Log.e(TAG, "onCreate: Big Count i --> " + i );
+            Log.e(TAG, "onCreate: Big Count i --> " + i);
             Log.e(TAG, "foodDockArrayList: getFoodTotals->" + foodDockArrayList.get(i).getFoodTotals());
             Log.e(TAG, "foodDockArrayList: getSaveDate->" + foodDockArrayList.get(i).getSaveDate());
             Log.e(TAG, "foodDockArrayList: getTimestamp->" + foodDockArrayList.get(i).getTimestamp());
             RealmList<FoodTotal> tmpFoodTotalList = foodDockArrayList.get(i).getFoodTotals(); // 1개의 푸드 독 안의 리스트를 가져온다.
-            for (int k = 0; k < tmpFoodTotalList.size(); k++){
-                Log.e(TAG, "onCreate: mid Count k --> " + k );
+            for (int k = 0; k < tmpFoodTotalList.size(); k++) {
+                Log.e(TAG, "onCreate: mid Count k --> " + k);
                 Log.e(TAG, "tmpFoodTotalList: " + tmpFoodTotalList.get(k).getIntakeType());
                 RealmList<FoodCard> tmpFoodCardList = tmpFoodTotalList.get(k).getFoodCardArrayList(); // 1개의 푸드 포탈 리스트 안의 푸트 카드 리스트를 가져온다.
-                for (int j = 0 ; j < tmpFoodCardList.size(); j++){
-                    Log.e(TAG, "onCreate: small Count j --> " + j );
+                for (int j = 0; j < tmpFoodCardList.size(); j++) {
+                    Log.e(TAG, "onCreate: small Count j --> " + j);
                     Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getCardClass());
                     Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getFoodName());
                     Log.e(TAG, "tmpFoodCardList: " + tmpFoodCardList.get(j).getFoodAmount());

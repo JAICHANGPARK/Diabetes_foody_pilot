@@ -44,10 +44,10 @@
                         <!--android:tint="@android:color/white" />-->
 
                         <TextView
-                            android:fontFamily="@font/pacifico"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
+                            android:fontFamily="@font/pacifico"
                             android:text="Home"
                             android:textColor="@android:color/black"
                             android:textSize="24sp" />
@@ -66,19 +66,19 @@
             </android.support.design.widget.AppBarLayout>
 
             <ListView
-                android:layout_margin="8dp"
-                android:layout_below="@+id/app_bar"
-                android:scrollbars="none"
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </ListView>
+                android:layout_height="match_parent"
+                android:layout_above="@+id/space"
+                android:layout_below="@+id/app_bar"
+                android:layout_margin="8dp"
+                android:scrollbars="none"/>
 
             <com.dreamwalker.spacebottomnav.SpaceNavigationView
-                android:layout_alignParentBottom="true"
                 android:id="@+id/space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_gravity="bottom"
                 app:centre_part_linear="false"
                 app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />

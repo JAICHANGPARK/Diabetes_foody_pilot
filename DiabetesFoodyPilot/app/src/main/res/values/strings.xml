@@ -12,9 +12,9 @@
     <string name="requests_count_mock" translatable="false">5</string>
     <string name="requests_count_badge" translatable="false">KCal</string>
     <string name="weight_mock" translatable="false">50 oz</string>
-    <string name="weight_badge" translatable="false">Exchange</string>
+    <string name="weight_badge" translatable="false">교환단위</string>
     <string name="pledge_mock" translatable="false">$150</string>
-    <string name="pledge_badge" translatable="false">Amount</string>
+    <string name="pledge_badge" translatable="false">중량</string>
     <string name="sender_badge" translatable="false">SENDER</string>
     <string name="client_name_mock" translatable="false">Edward Norton</string>
     <string name="rating_mock" translatable="false">(26)</string>
