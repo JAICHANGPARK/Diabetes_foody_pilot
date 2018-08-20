@@ -4,20 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.adapter.HomeTestAdapter;
+import com.dreamwalker.diabetesfoodypilot.adapter.HomeTestAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodCard;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodDock;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodTotal;
 import com.dreamwalker.diabetesfoodypilot.model.HomeFood;
-import com.dreamwalker.flipcard.FoldingCell;
+import com.dreamwalker.diabetesfoodypilot.utils.VerticalSpaceItemDecoration;
 import com.dreamwalker.spacebottomnav.SpaceItem;
 import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
@@ -40,8 +41,11 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.space)
     SpaceNavigationView spaceNavigationView;
 
-    @BindView(R.id.list_view)
-    ListView listView;
+//    @BindView(R.id.list_view)
+//    ListView listView;
+
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     Realm realm;
 
@@ -80,39 +84,44 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-        homeFoods.get(0).setRequestBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-//                ((FoldingCell) view).toggle(false);
-//                Toast.makeText(getApplicationContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        homeFoods.get(0).setRequestBtnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+////                ((FoldingCell) view).toggle(false);
+////                Toast.makeText(getApplicationContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         // create custom adapter that holds elements and their state (we need hold a id's of unfolded elements for reusable elements)
         final HomeTestAdapter adapter = new HomeTestAdapter(this, homeFoods);
+        HomeTestAdapterV2 homeTestAdapterV2 = new HomeTestAdapterV2(this, homeFoods);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(10));
+        recyclerView.setAdapter(homeTestAdapterV2);
 
-        // add default btn handler for each request btn on each item if custom handler not found
-        adapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        // add default btn handler for each request btn on each item if custom handler not found
+//        adapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
-        // set elements to adapter
-        listView.setAdapter(adapter);
-
-        // set on click event listener to list view
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-//                 toggle clicked cell state
-                ((FoldingCell) view).toggle(false);
-                // register in adapter that state for selected cell is toggled
-                adapter.registerToggle(pos);
-            }
-        });
+//        // set elements to adapter
+//        listView.setAdapter(adapter);
+//
+//        // set on click event listener to list view
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+////                 toggle clicked cell state
+//                ((FoldingCell) view).toggle(false);
+//                // register in adapter that state for selected cell is toggled
+//                adapter.registerToggle(pos);
+//            }
+//        });
 
 
         // TODO: 2018-08-20 FoodDock 모델에서 FoodTotal 리스트 값을 가져온다.

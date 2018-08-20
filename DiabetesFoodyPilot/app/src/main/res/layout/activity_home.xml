@@ -74,8 +74,8 @@
                 android:layout_margin="8dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-
-                >
+                android:divider="@android:color/transparent"
+                android:dividerHeight="10dp">
 
             </android.support.v7.widget.RecyclerView>
             <!--<ListView-->
