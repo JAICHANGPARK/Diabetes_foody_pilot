@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dreamwalker.diabetesfoodypilot.R;
@@ -55,6 +57,9 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             viewHolder.pledgePrice = cell.findViewById(R.id.title_pledge);
             viewHolder.weight = cell.findViewById(R.id.title_weight);
 
+            viewHolder.intakeLinearLayout = cell.findViewById(R.id.linear_layout_intake_food);
+//            viewHolder.headerImageView = cell.findViewById(R.id.head_image);
+
             viewHolder.contentRequestBtn = cell.findViewById(R.id.content_request_btn);
             cell.setTag(viewHolder);
         } else {
@@ -67,7 +72,7 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             viewHolder = (ViewHolder) cell.getTag();
         }
 
-        if (null == item){
+        if (null == item) {
             return cell;
         }
 
@@ -77,13 +82,22 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         int kCal = 0;
         int amount = 0;
         float exchange_value = 0.0F;
-        for (int k = 0; k < foodCards.size(); k++){
+        int N = foodCards.size();
+        TextView[] myTextViews = new TextView[N]; // create an empty array;
+        
+        for (int k = 0; k < foodCards.size(); k++) {
             kCal += Integer.valueOf(foodCards.get(k).getKcal());
             amount += Integer.valueOf(foodCards.get(k).getFoodAmount());
             exchange_value += Float.valueOf(foodCards.get(k).getTotalExchange());
+            TextView rowTextView = new TextView(parent.getContext());
+            rowTextView.setText(""+ k + ":"
+                    + foodCards.get(k).getFoodClass() + " "
+                    + foodCards.get(k).getFoodName());
+            viewHolder.intakeLinearLayout.addView(rowTextView);
+            myTextViews[k] = rowTextView;
         }
         Log.e(TAG, "getView: " + kCal + ", " + amount + ", " + exchange_value);
-        Log.e(TAG, "getView: Date " + DateFormat.getDateFormat(parent.getContext()).format(item.getUserSelectDate()) );
+        Log.e(TAG, "getView: Date " + DateFormat.getDateFormat(parent.getContext()).format(item.getUserSelectDate()));
         Log.e(TAG, "getView: time " + DateFormat.getTimeFormat(parent.getContext()).format(item.getSaveDate()));
 
 
@@ -94,10 +108,10 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         viewHolder.time.setTimeStamp(item.getUserSelectDate().getTime() / 1000);
         viewHolder.fromAddress.setText(DateFormat.getTimeFormat(parent.getContext()).format(item.getStartIntakeDate()));
         viewHolder.toAddress.setText(DateFormat.getTimeFormat(parent.getContext()).format(item.getEndIntakeDate()));
-        viewHolder.requestsCount.setText(""+kCal);
-        viewHolder.pledgePrice.setText(""+amount);
-        viewHolder.weight.setText(""+exchange_value);
-
+        viewHolder.requestsCount.setText("" + kCal);
+        viewHolder.pledgePrice.setText("" + amount);
+        viewHolder.weight.setText("" + exchange_value);
+//        Glide.with(parent.getContext()).load("https://cdn.pixabay.com/photo/2015/09/02/13/10/coffee-918926_960_720.jpg").into(viewHolder.headerImageView);
         // set custom btn handler for list item from that item
         if (item.getRequestBtnClickListener() != null) {
             viewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
@@ -105,6 +119,24 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             // (optionally) add "default" handler if no handler found in item
             viewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
         }
+
+
+//        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        TextView tv = new TextView(parent.getContext());
+//        tv.setLayoutParams(lparams);
+//        tv.setText("test");
+//
+//        TextView tv1 = new TextView(parent.getContext());
+//        tv1.setLayoutParams(lparams);
+//        tv1.setText("test");
+//
+//        TextView tv2 = new TextView(parent.getContext());
+//        tv2.setLayoutParams(lparams);
+//        tv2.setText("test");
+//        viewHolder.intakeLinearLayout.addView(tv);
+//        viewHolder.intakeLinearLayout.addView(tv1);
+//        viewHolder.intakeLinearLayout.addView(tv2);
+
         return cell;
     }
 
@@ -142,8 +174,13 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         TextView toAddress;
         TextView requestsCount;
         TextView date;
-//        TextView time;
+        //        TextView time;
         ZamanTextView time;
         TextView weight;
+
+
+        ImageView headerImageView;
+
+        LinearLayout intakeLinearLayout;
     }
 }

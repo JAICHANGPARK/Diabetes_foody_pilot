@@ -6,11 +6,13 @@
     <color name="colorPrimaryDark">#FFF</color>
     <color name="colorAccent">#ea3732</color>
 
+
     <color name="default_background">#FAFAFA</color>
     <color name="default_background_2">#bfbfbf</color>
 
     <color name="main_background_dark">#354855</color>
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
 
     <color name="backgroundColor">#E8E8E0</color>
     <color name="backgroundColorPress">#DBDBD3</color>
