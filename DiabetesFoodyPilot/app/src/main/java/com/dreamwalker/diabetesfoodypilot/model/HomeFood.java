@@ -108,6 +108,11 @@ public class HomeFood {
         HomeFood homeFood = (HomeFood) obj;
 
         if (timestamp != homeFood.timestamp) return false;
+
+        if (foodTotals != null ? !foodTotals.equals(homeFood.foodTotals) : homeFood.foodTotals != null) {
+            return false;
+        }
+
         if (saveDate != null ? !saveDate.equals(homeFood.saveDate) : homeFood.saveDate != null) {
             return false;
         }
@@ -118,13 +123,12 @@ public class HomeFood {
         if (startIntakeDate != null ? !startIntakeDate.equals(homeFood.startIntakeDate) : homeFood.startIntakeDate != null) {
             return false;
         }
-        if (endIntakeDate != null ? !endIntakeDate.equals(homeFood.endIntakeDate) : homeFood.endIntakeDate != null) {
-            return false;
-        }
-        if (foodTotals != null ? !foodTotals.equals(homeFood.foodTotals) : homeFood.foodTotals != null) {
-            return false;
-        }
-        return super.equals(obj);
+//        if (endIntakeDate != null ? !endIntakeDate.equals(homeFood.endIntakeDate) : homeFood.endIntakeDate != null) {
+//            return false;
+//        }
+
+        return !(endIntakeDate != null ? !endIntakeDate.equals(homeFood.endIntakeDate) : homeFood.endIntakeDate != null);
+//        return super.equals(obj);
     }
 
     /**

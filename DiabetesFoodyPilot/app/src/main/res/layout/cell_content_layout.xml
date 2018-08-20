@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:visibility="gone">
+    android:visibility="gone"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- content header line -->
     <RelativeLayout
@@ -65,6 +67,7 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:textSize="18sp"
                     android:gravity="center"
                     android:textColor="@color/white_with_alpha"
                     android:layout_width="match_parent"
@@ -74,7 +77,7 @@
 
                 <TextView
                     android:gravity="center"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:id="@+id/head_kcal_text_view"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -93,16 +96,17 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:textSize="18sp"
                     android:gravity="center"
                     android:textColor="@color/white_with_alpha"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/requests_count_badge" />
+                    android:text="@string/pledge_badge" />
 
                 <TextView
                     android:gravity="center"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:id="@+id/head_amount_text_view"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -121,16 +125,17 @@
                 android:weightSum="2">
 
                 <TextView
+                    android:textSize="18sp"
                     android:gravity="center"
                     android:textColor="@color/white_with_alpha"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="@string/requests_count_badge" />
+                    android:text="@string/weight_badge" />
 
                 <TextView
                     android:gravity="center"
-                    android:textSize="20sp"
+                    android:textSize="24sp"
                     android:id="@+id/head_exchange_text_view"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -301,6 +306,7 @@
             android:src="@color/contentDividerLine" />
 
         <!-- addresses part -->
+
         <LinearLayout
             android:id="@+id/linear_layout_intake_food"
             android:layout_width="match_parent"
@@ -406,111 +412,114 @@
 
         <!-- dates part -->
         <LinearLayout
+            android:id="@+id/linear_layout_exchange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1">-->
 
-                <TextView
-                    android:id="@+id/content_delivery_date_badge"
-                    style="@style/ContentMainBadgeTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/delivery_date_badge" />
+                <!--<TextView-->
+                    <!--android:id="@+id/content_delivery_date_badge"-->
+                    <!--style="@style/ContentMainBadgeTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:text="@string/delivery_date_badge" />-->
 
-                <TextView
-                    android:id="@+id/content_delivery_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/content_delivery_date_badge"
-                    android:layout_alignStart="@id/content_delivery_date_badge"
-                    android:layout_below="@id/content_delivery_date_badge"
-                    android:text="@string/delivery_time_mock"
-                    android:textColor="@color/mainTextColor"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                <!--<TextView-->
+                    <!--android:id="@+id/content_delivery_time"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignLeft="@id/content_delivery_date_badge"-->
+                    <!--android:layout_alignStart="@id/content_delivery_date_badge"-->
+                    <!--android:layout_below="@id/content_delivery_date_badge"-->
+                    <!--android:text="@string/delivery_time_mock"-->
+                    <!--android:textColor="@color/mainTextColor"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/content_delivery_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/content_delivery_time"
-                    android:layout_alignStart="@id/content_delivery_time"
-                    android:layout_below="@id/content_delivery_time"
-                    android:text="@string/delivery_date_mock"
-                    android:textColor="@color/mainTextColor"
-                    android:textSize="14sp" />
+                <!--<TextView-->
+                    <!--android:id="@+id/content_delivery_date"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignLeft="@id/content_delivery_time"-->
+                    <!--android:layout_alignStart="@id/content_delivery_time"-->
+                    <!--android:layout_below="@id/content_delivery_time"-->
+                    <!--android:text="@string/delivery_date_mock"-->
+                    <!--android:textColor="@color/mainTextColor"-->
+                    <!--android:textSize="14sp" />-->
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1">-->
 
-                <TextView
-                    android:id="@+id/content_deadline_badge"
-                    style="@style/ContentMainBadgeTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/deadline_badge" />
+                <!--<TextView-->
+                    <!--android:id="@+id/content_deadline_badge"-->
+                    <!--style="@style/ContentMainBadgeTitle"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_alignParentStart="true"-->
+                    <!--android:text="@string/deadline_badge" />-->
 
-                <TextView
-                    android:id="@+id/content_deadline_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/content_deadline_badge"
-                    android:layout_alignStart="@id/content_deadline_badge"
-                    android:layout_below="@id/content_deadline_badge"
-                    android:text="@string/deadline_time_mock"
-                    android:textColor="@color/mainTextColor"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                <!--<TextView-->
+                    <!--android:id="@+id/content_deadline_time"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignLeft="@id/content_deadline_badge"-->
+                    <!--android:layout_alignStart="@id/content_deadline_badge"-->
+                    <!--android:layout_below="@id/content_deadline_badge"-->
+                    <!--android:text="@string/deadline_time_mock"-->
+                    <!--android:textColor="@color/mainTextColor"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/content_deadline_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignLeft="@id/content_deadline_time"
-                    android:layout_alignStart="@id/content_deadline_time"
-                    android:layout_below="@id/content_deadline_time"
-                    android:text=""
-                    android:textColor="@color/mainTextColor"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                <!--<TextView-->
+                    <!--android:id="@+id/content_deadline_date"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignLeft="@id/content_deadline_time"-->
+                    <!--android:layout_alignStart="@id/content_deadline_time"-->
+                    <!--android:layout_below="@id/content_deadline_time"-->
+                    <!--android:text=""-->
+                    <!--android:textColor="@color/mainTextColor"-->
+                    <!--android:textSize="14sp" />-->
+            <!--</RelativeLayout>-->
 
         </LinearLayout>
 
-        <!-- request button -->
-        <TextView
+        <!--&lt;!&ndash; request button &ndash;&gt;-->
+        <android.support.design.button.MaterialButton
             android:id="@+id/content_request_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@color/btnRequest"
+            android:background="@color/blue"
+            app:backgroundTint="@color/blue"
+            app:cornerRadius="50dp"
             android:padding="10dp"
             android:text="@string/request_btn_text"
             android:textAlignment="center"
-            android:textColor="@color/mainTextColor"
-            android:textSize="20sp" />
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/btn_annotation_mock"
-            android:textAlignment="center"
-            android:textColor="@color/contentBadgeTitle"
-            android:textSize="12sp" />
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:text="@string/btn_annotation_mock"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textColor="@color/contentBadgeTitle"-->
+            <!--android:textSize="12sp" />-->
 
     </LinearLayout>
 

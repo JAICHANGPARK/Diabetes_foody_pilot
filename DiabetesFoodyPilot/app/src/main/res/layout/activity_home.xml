@@ -65,14 +65,31 @@
                 </android.support.v7.widget.Toolbar>
             </android.support.design.widget.AppBarLayout>
 
-            <ListView
-                android:id="@+id/list_view"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/space"
                 android:layout_below="@+id/app_bar"
                 android:layout_margin="8dp"
-                android:scrollbars="none"/>
+                android:clipChildren="false"
+                android:clipToPadding="false"
+
+                >
+
+            </android.support.v7.widget.RecyclerView>
+            <!--<ListView-->
+            <!--android:id="@+id/list_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_above="@+id/space"-->
+            <!--android:layout_below="@+id/app_bar"-->
+            <!--android:layout_margin="8dp"-->
+            <!--android:clipChildren="false"-->
+            <!--android:clipToPadding="false"-->
+            <!--android:divider="@android:color/transparent"-->
+            <!--android:dividerHeight="10dp"-->
+            <!--android:scrollbars="none" />-->
 
             <com.dreamwalker.spacebottomnav.SpaceNavigationView
                 android:id="@+id/space"
@@ -82,6 +99,7 @@
                 android:layout_gravity="bottom"
                 app:centre_part_linear="false"
                 app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />
+
         </RelativeLayout>
 
 

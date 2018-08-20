@@ -79,10 +79,13 @@ public class HomeActivity extends AppCompatActivity {
                     foodDockArrayList.get(i).getTimestamp()));
 
         }
+
         homeFoods.get(0).setRequestBtnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
+
+//                ((FoldingCell) view).toggle(false);
+//                Toast.makeText(getApplicationContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
             }
         });
 

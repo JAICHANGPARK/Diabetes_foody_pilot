@@ -2,14 +2,13 @@ package com.dreamwalker.diabetesfoodypilot.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,68 +25,37 @@ import java.util.List;
 
 import io.realm.RealmList;
 
-public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
-    private static final String TAG = "HomeTestAdapter";
+public class HomeTestAdapterV2 extends RecyclerView.Adapter<HomeTestAdapterV2.HomeTestViewHolder> {
+
+    private static final String TAG = "HomeTestAdapterV2";
+
+    Context context;
     private HashSet<Integer> unfoldedIndexes = new HashSet<>();
     private View.OnClickListener defaultRequestBtnClickListener;
+    List<HomeFood> objects;
 
-    public HomeTestAdapter(Context context, List<HomeFood> objects) {
-        super(context, 0, objects);
-
+    public HomeTestAdapterV2(Context context, List<HomeFood> objects) {
+        this.context = context;
+        this.objects = objects;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // get item for selected view
-        HomeFood item = getItem(position);
-        // if cell is exists - reuse it, if not - create the new one from resource
-        FoldingCell cell = (FoldingCell) convertView;
-        ViewHolder viewHolder;
-        if (cell == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater vi = LayoutInflater.from(getContext());
-            cell = (FoldingCell) vi.inflate(R.layout.cell, parent, false);
-            // binding view parts to view holder
-            viewHolder.price = cell.findViewById(R.id.title_price);
-            viewHolder.time = cell.findViewById(R.id.title_time_label);
-            viewHolder.date = cell.findViewById(R.id.title_date_label);
-            viewHolder.fromAddress = cell.findViewById(R.id.title_from_address);
-            viewHolder.toAddress = cell.findViewById(R.id.title_to_address);
-            viewHolder.requestsCount = cell.findViewById(R.id.title_requests_count);
-            viewHolder.pledgePrice = cell.findViewById(R.id.title_pledge);
-            viewHolder.weight = cell.findViewById(R.id.title_weight);
+    public HomeTestViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.cell, viewGroup, false);
+        return new HomeTestViewHolder(view);
+    }
 
-            viewHolder.headerIntakeTextView = cell.findViewById(R.id.cell_content_top_intake_type);
-            viewHolder.headerKcalTextView = cell.findViewById(R.id.head_kcal_text_view);
-            viewHolder.headerAmountTextView = cell.findViewById(R.id.head_amount_text_view);
-            viewHolder.headerExchangeTextView = cell.findViewById(R.id.head_exchange_text_view);
-            viewHolder.intakeLinearLayout = cell.findViewById(R.id.linear_layout_intake_food);
-            viewHolder.exchangeLinearLayout = cell.findViewById(R.id.linear_layout_exchange);
-
-            viewHolder.contentRequestBtn = cell.findViewById(R.id.content_request_btn);
-            cell.setTag(viewHolder);
-
-        } else {
-            // for existing cell set valid valid state(without animation)
-            if (unfoldedIndexes.contains(position)) {
-                cell.unfold(true);
-            } else {
-                cell.fold(true);
-            }
-            viewHolder = (ViewHolder) cell.getTag();
-        }
-
-        if (null == item) {
-            return cell;
-        }
+    @Override
+    public void onBindViewHolder(@NonNull HomeTestViewHolder homeTestViewHolder, int position) {
+        HomeFood item = objects.get(position);
 
         RealmList<FoodTotal> foodTotals = item.getFoodTotals();
         String intakeType = foodTotals.get(0).getIntakeType();
         RealmList<FoodCard> foodCards = foodTotals.get(0).getFoodCardArrayList();
-        
+
         int N = foodCards.size();
-        
+
         // TODO: 2018-08-20 동적 텍스트뷰 생성 - 박제창
         TextView[] myTextViews = new TextView[N]; // create an empty array;
         TextView[] myExchangeTextViews = new TextView[6]; // create an empty array;
@@ -95,7 +63,7 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         // TODO: 'void android.widget.TextView.setText(java.lang.CharSequence)' on a null object referenc
         // TODO: 2018-08-20  NullPointerException 방지 - 박제창
         for (int i = 0; i < 6; i++){
-            myExchangeTextViews[i]  = new TextView(parent.getContext());
+            myExchangeTextViews[i]  = new TextView(context);
             myExchangeTextViews[i].setTextSize(16.0f);
 //            myExchangeTextViews[i].setTextColor(parent.getContext().getResources().getColor(R.color.black));
         }
@@ -113,14 +81,14 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         float group6 = 0.0F; // 지방군
 
         // TODO: 2018-08-20 중간 음식 해드 텍스트뷰 추가
-        TextView midHeadTextView = new TextView(parent.getContext()); // mid Top Header
-        midHeadTextView.setTextColor(parent.getContext().getResources().getColor(R.color.black));
+        TextView midHeadTextView = new TextView(context); // mid Top Header
+        midHeadTextView.setTextColor(context.getResources().getColor(R.color.black));
         midHeadTextView.setTextSize(18.0f);
         String midHeadText = "섭취 음식 수 : " + N + " 개";
         midHeadTextView.setText(midHeadText);
-        viewHolder.intakeLinearLayout.addView(midHeadTextView);
+        homeTestViewHolder.intakeLinearLayout.addView(midHeadTextView);
 
-        
+
         for (int k = 0; k < foodCards.size(); k++) {
             kCal += Integer.valueOf(foodCards.get(k).getKcal());
             amount += Integer.valueOf(foodCards.get(k).getFoodAmount());
@@ -134,7 +102,7 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
             group5 += Float.valueOf(foodCards.get(k).getFoodGroup5());
             group6 += Float.valueOf(foodCards.get(k).getFoodGroup6());
 
-            TextView rowTextView = new TextView(parent.getContext());
+            TextView rowTextView = new TextView(context);
 
             rowTextView.setTextSize(16.0f);
 //            rowTextView.setTextColor(parent.getContext().getResources().getColor(R.color.black));
@@ -145,29 +113,29 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
                     + foodCards.get(k).getFoodName();
 
             rowTextView.setText(setDynamicText);
-            viewHolder.intakeLinearLayout.addView(rowTextView);
+            homeTestViewHolder.intakeLinearLayout.addView(rowTextView);
             myTextViews[k] = rowTextView;
         }
         Log.e(TAG, "getView: " + kCal + ", " + amount + ", " + exchange_value);
-        Log.e(TAG, "getView: Date " + DateFormat.getDateFormat(parent.getContext()).format(item.getUserSelectDate()));
-        Log.e(TAG, "getView: time " + DateFormat.getTimeFormat(parent.getContext()).format(item.getSaveDate()));
+        Log.e(TAG, "getView: Date " + DateFormat.getDateFormat(context).format(item.getUserSelectDate()));
+        Log.e(TAG, "getView: time " + DateFormat.getTimeFormat(context).format(item.getSaveDate()));
 
 
         // bind data from selected element to view through view holder
-        viewHolder.price.setText(intakeType);
+        homeTestViewHolder.price.setText(intakeType);
 //        viewHolder.time.setText("Temp");
-        viewHolder.date.setText(DateFormat.getDateFormat(parent.getContext()).format(item.getUserSelectDate()));
-        viewHolder.time.setTimeStamp(item.getUserSelectDate().getTime() / 1000);
-        viewHolder.fromAddress.setText(DateFormat.getTimeFormat(parent.getContext()).format(item.getStartIntakeDate()));
-        viewHolder.toAddress.setText(DateFormat.getTimeFormat(parent.getContext()).format(item.getEndIntakeDate()));
-        viewHolder.requestsCount.setText("" + kCal);
-        viewHolder.pledgePrice.setText("" + amount);
-        viewHolder.weight.setText("" + exchange_value);
+        homeTestViewHolder.date.setText(DateFormat.getDateFormat(context).format(item.getUserSelectDate()));
+        homeTestViewHolder.time.setTimeStamp(item.getUserSelectDate().getTime() / 1000);
+        homeTestViewHolder.fromAddress.setText(DateFormat.getTimeFormat(context).format(item.getStartIntakeDate()));
+        homeTestViewHolder.toAddress.setText(DateFormat.getTimeFormat(context).format(item.getEndIntakeDate()));
+        homeTestViewHolder.requestsCount.setText("" + kCal);
+        homeTestViewHolder.pledgePrice.setText("" + amount);
+        homeTestViewHolder.weight.setText("" + exchange_value);
 
-        viewHolder.headerIntakeTextView.setText(intakeType);
-        viewHolder.headerKcalTextView.setText(String.valueOf(kCal));
-        viewHolder.headerAmountTextView.setText(String.valueOf(amount));
-        viewHolder.headerExchangeTextView.setText(String.valueOf(exchange_value));
+        homeTestViewHolder.headerIntakeTextView.setText(intakeType);
+        homeTestViewHolder.headerKcalTextView.setText(String.valueOf(kCal));
+        homeTestViewHolder.headerAmountTextView.setText(String.valueOf(amount));
+        homeTestViewHolder.headerExchangeTextView.setText(String.valueOf(exchange_value));
 
 
         // TODO: 2018-08-20 교환단위 합계 텍스트 설정  -- 박제창
@@ -177,7 +145,7 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         String sGroup4 = "과일군 : " + group4 + " 단위";
         String sGroup5 = "우유군 : " + group5 + " 단위";
         String sGroup6 = "지방군 : " + group6 + " 단위";
-        
+
         myExchangeTextViews[0].setText(sGroup1);
         myExchangeTextViews[1].setText(sGroup2);
         myExchangeTextViews[2].setText(sGroup3);
@@ -185,58 +153,46 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         myExchangeTextViews[4].setText(sGroup5);
         myExchangeTextViews[5].setText(sGroup6);
 
-        TextView bottomHeadTextVeiw = new TextView(parent.getContext());
+        TextView bottomHeadTextVeiw = new TextView(context);
         bottomHeadTextVeiw.setTextSize(18.0f);
-        bottomHeadTextVeiw.setTextColor(parent.getContext().getResources().getColor(R.color.black));
+        bottomHeadTextVeiw.setTextColor(context.getResources().getColor(R.color.black));
         String bottomHeadText = "교환단위 합 : " + exchange_value + " 단위";
         bottomHeadTextVeiw.setText(bottomHeadText);
 
-        viewHolder.exchangeLinearLayout.addView(bottomHeadTextVeiw);
+        homeTestViewHolder.exchangeLinearLayout.addView(bottomHeadTextVeiw);
 
 
         for (int i = 0; i < 6; i++){
-            viewHolder.exchangeLinearLayout.addView(myExchangeTextViews[i]);
+            homeTestViewHolder.exchangeLinearLayout.addView(myExchangeTextViews[i]);
         }
 
 //        Glide.with(parent.getContext()).load("https://cdn.pixabay.com/photo/2015/09/02/13/10/coffee-918926_960_720.jpg").into(viewHolder.headerImageView);
         // set custom btn handler for list item from that item
         if (item.getRequestBtnClickListener() != null) {
-            viewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
+            homeTestViewHolder.contentRequestBtn.setOnClickListener(item.getRequestBtnClickListener());
         } else {
             // (optionally) add "default" handler if no handler found in item
-            viewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
+            homeTestViewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
         }
 
-        return cell;
+        homeTestViewHolder.foldingCell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                homeTestViewHolder.foldingCell.toggle(false);
+            }
+        });
+
     }
 
-    // simple methods for register cell state changes
-    public void registerToggle(int position) {
-        if (unfoldedIndexes.contains(position))
-            registerFold(position);
-        else
-            registerUnfold(position);
+    @Override
+    public int getItemCount() {
+        return objects.size();
     }
 
-    public void registerFold(int position) {
-        unfoldedIndexes.remove(position);
-    }
+    class HomeTestViewHolder extends RecyclerView.ViewHolder {
 
-    public void registerUnfold(int position) {
-        unfoldedIndexes.add(position);
-    }
+        FoldingCell foldingCell;
 
-
-    public View.OnClickListener getDefaultRequestBtnClickListener() {
-        return defaultRequestBtnClickListener;
-    }
-
-    public void setDefaultRequestBtnClickListener(View.OnClickListener defaultRequestBtnClickListener) {
-        this.defaultRequestBtnClickListener = defaultRequestBtnClickListener;
-    }
-
-    // View lookup cache
-    private static class ViewHolder {
         TextView price;
         MaterialButton contentRequestBtn;
         TextView pledgePrice;
@@ -256,5 +212,32 @@ public class HomeTestAdapter extends ArrayAdapter<HomeFood> {
         TextView headerExchangeTextView;
         LinearLayout intakeLinearLayout;
         LinearLayout exchangeLinearLayout;
+
+        public HomeTestViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            foldingCell = itemView.findViewById(R.id.folding_cell);
+            // binding view parts to view holder
+            price = itemView.findViewById(R.id.title_price);
+            time = itemView.findViewById(R.id.title_time_label);
+            date = itemView.findViewById(R.id.title_date_label);
+            fromAddress = itemView.findViewById(R.id.title_from_address);
+            toAddress = itemView.findViewById(R.id.title_to_address);
+            requestsCount = itemView.findViewById(R.id.title_requests_count);
+            pledgePrice = itemView.findViewById(R.id.title_pledge);
+            weight = itemView.findViewById(R.id.title_weight);
+
+            headerIntakeTextView = itemView.findViewById(R.id.cell_content_top_intake_type);
+            headerKcalTextView = itemView.findViewById(R.id.head_kcal_text_view);
+            headerAmountTextView = itemView.findViewById(R.id.head_amount_text_view);
+            headerExchangeTextView = itemView.findViewById(R.id.head_exchange_text_view);
+            intakeLinearLayout = itemView.findViewById(R.id.linear_layout_intake_food);
+            exchangeLinearLayout = itemView.findViewById(R.id.linear_layout_exchange);
+
+            contentRequestBtn = itemView.findViewById(R.id.content_request_btn);
+
+
+        }
+
     }
 }
