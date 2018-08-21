@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">당뇨그루-푸드</string>
+    <string name="action_settings">설정</string>
+    <string name="order_id_mock">상세 보기</string>
+    <string name="weight_badge">교환단위</string>
+    <string name="pledge_badge">중량</string>
+</resources>

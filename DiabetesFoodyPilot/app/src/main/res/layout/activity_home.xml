@@ -78,6 +78,35 @@
                 android:dividerHeight="10dp">
 
             </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:id="@+id/animation_layout"
+                android:layout_above="@+id/space"
+                android:layout_below="@+id/app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_gravity="center"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/dino_dance" />
+
+                <TextView
+                    android:textSize="18sp"
+                    android:id="@+id/text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="식사 기록 정보가 없어요"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
             <!--<ListView-->
             <!--android:id="@+id/list_view"-->
             <!--android:layout_width="match_parent"-->

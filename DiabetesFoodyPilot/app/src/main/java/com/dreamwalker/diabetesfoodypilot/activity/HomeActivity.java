@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.adapter.HomeTestAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.HomeTestAdapterV2;
@@ -47,6 +49,11 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.animation_view)
+    LottieAnimationView animationView;
+    @BindView(R.id.animation_layout)
+    LinearLayout animationLinearLayout;
+
     Realm realm;
 
     @Override
@@ -67,6 +74,18 @@ public class HomeActivity extends AppCompatActivity {
 
         RealmResults<FoodDock> result = realm.where(FoodDock.class).findAll();
         Log.e(TAG, "전제 데이터베이스 Size -->" + result.size());
+
+        if (result.size() == 0){
+            animationLinearLayout.setVisibility(View.VISIBLE);
+            animationView.setVisibility(View.VISIBLE);
+            animationView.playAnimation();
+            recyclerView.setVisibility(View.GONE);
+        }else {
+            recyclerView.setVisibility(View.VISIBLE);
+            animationLinearLayout.setVisibility(View.GONE);
+            animationView.setVisibility(View.GONE);
+            animationView.cancelAnimation();
+        }
 
         List<FoodDock> foodDockArrayList = realm.copyFromRealm(result);
         List<RealmList<FoodTotal>> foodTotalList = new ArrayList<>();
@@ -207,7 +226,8 @@ public class HomeActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                 }
             }
@@ -219,7 +239,8 @@ public class HomeActivity extends AppCompatActivity {
                     case 0:
                         break;
                     case 1:
-                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
 
                         break;
                 }
