@@ -3,6 +3,7 @@ package com.dreamwalker.diabetesfoodypilot.model;
 public class MixedFood {
 
     /**
+     * dbClass : 데이터 베이스 종류
      * foodClass : 밥류
      * foodName : 김밥
      * foodAmount : 191
