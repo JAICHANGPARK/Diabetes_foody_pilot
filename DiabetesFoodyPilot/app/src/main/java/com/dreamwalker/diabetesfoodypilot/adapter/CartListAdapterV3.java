@@ -52,6 +52,7 @@ public class CartListAdapterV3 extends RecyclerView.Adapter<CartListAdapterV3.My
 
         @Override
         public void onClick(View v) {
+
             if (listrner != null){
                 listrner.onItemClick(v, getAdapterPosition());
 

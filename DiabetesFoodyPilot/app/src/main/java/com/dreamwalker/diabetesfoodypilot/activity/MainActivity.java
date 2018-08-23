@@ -315,6 +315,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         }
     }
 
+
+    /**
+     * 검색 처리
+     */
     private void setFloatingSearchView() {
 
         floatingSearchView.setOnQueryChangeListener((oldQuery, newQuery) -> {
@@ -383,6 +387,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         });
     }
 
+    /**
+     * BottomSheet 처리 메소드
+     */
     private void setBottomSheetBehavior() {
         bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -592,7 +599,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
                 // TODO: 2018-08-18 백그라운드에서 하나 생성
                 mixedFoodArrayList.add(new MixedFood("", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
                 backgroundArrayList.add(new FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
-                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                backgroundDBArrayList.add(new com.dreamwalker.diabetesfoodypilot.database.food.FoodCard("", "",
+                        "", "", "", "", "", "", "", "",
+                        "", "", "", "", "", ""));
                 dialogInterface.dismiss();
             }
         });
@@ -888,6 +897,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     }
 
+
+
     // TODO: 2018-08-18 선택하지 않고 검색만 할 경우를 대비해야한다. - 박제창
     private int cartListPosition = 1000;
 
@@ -899,6 +910,8 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         Log.e(TAG, "onItemClick: " + position);
         //Log.e(TAG, "onItemClick: " + searchListV2.get(position).getFoodName());
     }
+
+
 
     // TODO: 2018-08-18 검색 후 터치 리스터  
     @Override

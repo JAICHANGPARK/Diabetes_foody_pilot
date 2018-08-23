@@ -333,7 +333,6 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
         }
 
-
         @Override
         protected Void doInBackground(Void... voids) {
 

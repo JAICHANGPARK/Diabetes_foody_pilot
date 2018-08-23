@@ -2,6 +2,7 @@ package com.dreamwalker.diabetesfoodypilot.remote;
 
 public class Common {
     public static final String BASE_URL = "http://kangwonelec.com/";
+
     public static IMenuRequest getMenuRequest(){
         return RetrofitClient.getClient("https://api.androidhive.info/").create(IMenuRequest.class);
     }
