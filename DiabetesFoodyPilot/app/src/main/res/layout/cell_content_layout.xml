@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:visibility="gone"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- content header line -->
     <RelativeLayout
@@ -507,7 +506,21 @@
             app:backgroundTint="@color/blue"
             app:cornerRadius="50dp"
             android:padding="10dp"
-            android:text="@string/request_btn_text"
+            android:text="@string/edit_btn_text"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/content_delete_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/bg_row_background"
+            app:backgroundTint="@color/bg_row_background"
+            app:cornerRadius="50dp"
+            android:padding="10dp"
+            android:text="@string/delete_btn_text"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="18sp" />
