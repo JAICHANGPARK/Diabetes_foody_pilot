@@ -59,7 +59,7 @@ public class DeviceScanAdapterV2 extends RecyclerView.Adapter<DeviceScanAdapterV
         final String deviceName = deviceArrayList.get(position).getName();
         final String deviceAddress = deviceArrayList.get(position).getAddress();
         int deviceRssi = scanResultArrayList.get(position).getRssi();
-
+        double distance = getDistance(deviceRssi, -21, 2);
         if (deviceName != null && deviceName.length() > 0) {
             holder.deviceName.setText(deviceName);
         } else {
@@ -68,7 +68,7 @@ public class DeviceScanAdapterV2 extends RecyclerView.Adapter<DeviceScanAdapterV
 
 
         holder.deviceAddress.setText(deviceArrayList.get(position).getAddress());
-        holder.deviceRssi.setText(String.valueOf(deviceRssi));
+        holder.deviceRssi.setText(String.valueOf(deviceRssi) + "(" + distance + ")");
 
     }
 
@@ -102,6 +102,43 @@ public class DeviceScanAdapterV2 extends RecyclerView.Adapter<DeviceScanAdapterV
             }
         }
 
+    }
+
+    protected static double calculateAccuracy(int txPower, double rssi) {
+        if (rssi == 0) {
+            return -1.0; // if we cannot determine accuracy, return -1.
+        }
+
+        double ratio = rssi*1.0/txPower;
+        if (ratio < 1.0) {
+            return Math.pow(ratio,10);
+        }
+        else {
+            double accuracy =  (0.89976)*Math.pow(ratio,7.7095) + 0.111;
+            return accuracy;
+        }
+    }
+
+    double getDistance(int rssi, int txPower) {
+        /*
+         * RSSI = TxPower - 10 * n * lg(d)
+         * n = 2 (in free space)
+         *
+         * d = 10 ^ ((TxPower - RSSI) / (10 * n))
+         */
+
+        return Math.pow(10d, ((double) txPower - rssi) / (10 * 2));
+    }
+
+    double getDistance(int rssi, int txPower, int n) {
+        /*
+         * RSSI = TxPower - 10 * n * lg(d)
+         * n = 2 (in free space)
+         *
+         * d = 10 ^ ((TxPower - RSSI) / (10 * n))
+         */
+
+        return Math.sqrt(Math.pow(10d, ((double) txPower - rssi) / (10 * n)));
     }
 
 }
