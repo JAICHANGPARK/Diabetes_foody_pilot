@@ -35,7 +35,8 @@
         <activity
             android:name=".activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionbar" />
-        <activity android:name=".activity.DBSearchActivity"></activity>
+        <activity android:name=".activity.DBSearchActivity" />
+        <activity android:name=".activity.ProfileHomeActivity"></activity>
     </application>
 
 </manifest>

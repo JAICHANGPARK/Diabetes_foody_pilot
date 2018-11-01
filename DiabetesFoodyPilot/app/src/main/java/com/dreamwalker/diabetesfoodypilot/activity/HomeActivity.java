@@ -75,12 +75,12 @@ public class HomeActivity extends AppCompatActivity {
         RealmResults<FoodDock> result = realm.where(FoodDock.class).findAll();
         Log.e(TAG, "전제 데이터베이스 Size -->" + result.size());
 
-        if (result.size() == 0){
+        if (result.size() == 0) {
             animationLinearLayout.setVisibility(View.VISIBLE);
             animationView.setVisibility(View.VISIBLE);
             animationView.playAnimation();
             recyclerView.setVisibility(View.GONE);
-        }else {
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
             animationLinearLayout.setVisibility(View.GONE);
             animationView.setVisibility(View.GONE);
@@ -202,8 +202,11 @@ public class HomeActivity extends AppCompatActivity {
         spaceNavigationView.setCentreButtonIcon(R.drawable.ic_add_white_24dp);
         spaceNavigationView.addSpaceItem(new SpaceItem("HOME", R.drawable.ic_home_white_24dp));
         spaceNavigationView.addSpaceItem(new SpaceItem("SEARCH", R.drawable.ic_search_white_24dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem("CHART", R.drawable.ic_bubble_chart_white_24dp));
+        spaceNavigationView.addSpaceItem(new SpaceItem("PROFILE", R.drawable.ic_person_outline_white_24dp));
         spaceNavigationView.shouldShowFullBadgeText(true);
         spaceNavigationView.setCentreButtonIconColorFilterEnabled(false);
+        spaceNavigationView.showIconOnly();
 
         spaceNavigationView.setSpaceOnClickListener(new SpaceOnClickListener() {
             @Override
@@ -229,6 +232,14 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
+                    case 2:
+                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        break;
+                    case 3:
+                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        break;
                 }
             }
 
@@ -241,7 +252,14 @@ public class HomeActivity extends AppCompatActivity {
                     case 1:
                         Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
-
+                        break;
+                    case 2:
+                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        break;
+                    case 3:
+                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                 }
             }

@@ -32,7 +32,7 @@
     <string name="content_to2_mock">Woodside, NY 11101</string>
     <string name="title_activity_main2">Main2Activity</string>
 
-    <string name="edit_btn_text" >EDIT</string>
-    <string name="delete_btn_text" >DELETE</string>
+    <string name="edit_btn_text">EDIT</string>
+    <string name="delete_btn_text">DELETE</string>
 
 </resources>
