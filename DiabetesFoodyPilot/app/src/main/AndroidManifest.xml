@@ -42,7 +42,16 @@
         <activity
             android:name=".activity.ProfileHomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Profile"></activity>
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".activity.appinfo.DeveloperActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile" />
+        <activity android:name=".activity.WebActivity"></activity>
     </application>
 
 </manifest>

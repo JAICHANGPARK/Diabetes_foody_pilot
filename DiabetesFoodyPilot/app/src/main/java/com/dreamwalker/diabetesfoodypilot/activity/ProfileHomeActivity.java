@@ -2,11 +2,9 @@ package com.dreamwalker.diabetesfoodypilot.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -19,6 +17,8 @@ import com.dreamwalker.spacebottomnav.SpaceOnLongClickListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
 
 public class ProfileHomeActivity extends AppCompatActivity implements IActivityBaseSetting {
 
@@ -43,6 +43,11 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
     public void initSetting() {
         bindView();
         setStatusBarColor();
+        initToasty();
+    }
+
+    private void initToasty(){
+        Toasty.Config.getInstance().apply();
     }
 
     private void setStatusBarColor() {
@@ -68,12 +73,12 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
             public void onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 spaceNavigationView.shouldShowFullBadgeText(true);
-                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                }).show();
+//                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 ", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                }).show();
             }
 
             @Override
@@ -84,15 +89,16 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
                     case 0:
                         break;
                     case 1:
-                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+                        Toasty.warning(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                     case 2:
-                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+                        Toasty.warning(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                     case 3:
-                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
 
                         break;
@@ -104,17 +110,21 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
                 Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
                 switch (itemIndex) {
                     case 0:
+                        startActivity(new Intent(ProfileHomeActivity.this, HomeActivity.class));
+                        finish();
                         break;
                     case 1:
-                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+                        Toasty.warning(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                     case 2:
-                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+                        Toasty.warning(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                     case 3:
-                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                 }
@@ -125,8 +135,8 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
             @Override
             public void onCentreButtonLongClick() {
 //                Toast.makeText(MainActivity.this, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ProfileHomeActivity.this, MainActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(ProfileHomeActivity.this, MainActivity.class);
+//                startActivity(intent);
             }
 
             @Override
@@ -134,11 +144,17 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
                 Toast.makeText(ProfileHomeActivity.this, itemIndex + " " + itemName, Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         spaceNavigationView.onSaveInstanceState(outState);
+    }
+
+    @OnClick(R.id.about_app_button)
+    public void onClickedSetting(){
+        startActivity(new Intent(ProfileHomeActivity.this, SettingActivity.class));
     }
 }
