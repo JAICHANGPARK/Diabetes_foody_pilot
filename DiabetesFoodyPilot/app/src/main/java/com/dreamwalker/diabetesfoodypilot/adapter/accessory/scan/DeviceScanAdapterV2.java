@@ -59,7 +59,9 @@ public class DeviceScanAdapterV2 extends RecyclerView.Adapter<DeviceScanAdapterV
         final String deviceName = deviceArrayList.get(position).getName();
         final String deviceAddress = deviceArrayList.get(position).getAddress();
         int deviceRssi = scanResultArrayList.get(position).getRssi();
-        double distance = getDistance(deviceRssi, -21, 2);
+        double distance = getDistance(deviceRssi, 3, 2);
+        double distanceRound = Math.round(distance * 100) / 100.0;
+        float finalDistance = (float) distanceRound;
         if (deviceName != null && deviceName.length() > 0) {
             holder.deviceName.setText(deviceName);
         } else {
@@ -68,7 +70,7 @@ public class DeviceScanAdapterV2 extends RecyclerView.Adapter<DeviceScanAdapterV
 
 
         holder.deviceAddress.setText(deviceArrayList.get(position).getAddress());
-        holder.deviceRssi.setText(String.valueOf(deviceRssi) + "(" + distance + ")");
+        holder.deviceRssi.setText(String.valueOf(deviceRssi) + "(" + finalDistance + "cm)");
 
     }
 
@@ -109,12 +111,11 @@ public class DeviceScanAdapterV2 extends RecyclerView.Adapter<DeviceScanAdapterV
             return -1.0; // if we cannot determine accuracy, return -1.
         }
 
-        double ratio = rssi*1.0/txPower;
+        double ratio = rssi * 1.0 / txPower;
         if (ratio < 1.0) {
-            return Math.pow(ratio,10);
-        }
-        else {
-            double accuracy =  (0.89976)*Math.pow(ratio,7.7095) + 0.111;
+            return Math.pow(ratio, 10);
+        } else {
+            double accuracy = (0.89976) * Math.pow(ratio, 7.7095) + 0.111;
             return accuracy;
         }
     }
