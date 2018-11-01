@@ -54,8 +54,12 @@ public class SettingActivity extends AppCompatActivity implements IActivityBaseS
 
     @OnClick(R.id.db_management_button)
     public void onClickedManagementButton(){
-//        startActivity(new Intent(SettingActivity.this, FeedbackActivity.class));
         Toasty.warning(this, "준비중..", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.home)
+    public void onClickedHomeButton(){
+        finish();
     }
 
 
