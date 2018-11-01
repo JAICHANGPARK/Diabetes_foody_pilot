@@ -238,7 +238,8 @@ public class HomeActivity extends AppCompatActivity {
                         break;
                     case 3:
                         Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
-//                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        startActivity(new Intent(HomeActivity.this, ProfileHomeActivity.class));
+                        finish();
                         break;
                 }
             }
@@ -260,6 +261,8 @@ public class HomeActivity extends AppCompatActivity {
                     case 3:
                         Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
+                        startActivity(new Intent(HomeActivity.this, ProfileHomeActivity.class));
+                        finish();
                         break;
                 }
             }
@@ -271,6 +274,7 @@ public class HomeActivity extends AppCompatActivity {
 //                Toast.makeText(MainActivity.this, "onCentreButtonLongClick", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
 
             @Override

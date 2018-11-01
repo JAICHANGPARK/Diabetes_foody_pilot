@@ -34,9 +34,15 @@
 
         <activity
             android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionbar" />
-        <activity android:name=".activity.DBSearchActivity" />
-        <activity android:name=".activity.ProfileHomeActivity"></activity>
+        <activity
+            android:name=".activity.DBSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.ProfileHomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile"></activity>
     </application>
 
 </manifest>

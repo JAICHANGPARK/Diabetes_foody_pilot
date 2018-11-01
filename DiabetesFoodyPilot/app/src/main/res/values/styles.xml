@@ -67,4 +67,18 @@
         <item name="android:textSize">12dp</item>
     </style>
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme.Profile" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryProfile</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkProfile</item>
+        <item name="colorAccent">@color/colorAccentProfile</item>
+        <item name="viewInflaterClass">androidx.appcompat.app.AppCompatViewInflater</item>
+    </style>
+
 </resources>
