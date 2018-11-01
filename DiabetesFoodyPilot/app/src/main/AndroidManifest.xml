@@ -51,7 +51,13 @@
             android:name=".activity.appinfo.DeveloperActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Profile" />
-        <activity android:name=".activity.WebActivity"></activity>
+        <activity
+            android:name=".activity.WebActivity"
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".activity.appinfo.FeedbackActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile"></activity>
     </application>
 
 </manifest>

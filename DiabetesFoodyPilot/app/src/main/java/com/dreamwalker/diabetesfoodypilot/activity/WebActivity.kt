@@ -7,10 +7,9 @@ import android.support.v7.app.AppCompatActivity
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
-
 import com.dreamwalker.diabetesfoodypilot.R
-import com.dreamwalker.diabetesfoodypilot.R.id.web_view
 import dmax.dialog.SpotsDialog
+import kotlinx.android.synthetic.main.activity_web.*
 
 class WebActivity : AppCompatActivity() {
 
@@ -22,7 +21,8 @@ class WebActivity : AppCompatActivity() {
         alertDialog = SpotsDialog.Builder().setContext(this).build()
         alertDialog.show()
 
-        with(web_view) {
+
+        with(web_view){
             getSettings().setJavaScriptEnabled(true)
             webChromeClient = WebChromeClient()
 
@@ -32,6 +32,7 @@ class WebActivity : AppCompatActivity() {
                 }
             }
         }
+
 
         if (intent != null) {
             if (!intent.getStringExtra(IntentConst.WEB_URL).isEmpty()) {
