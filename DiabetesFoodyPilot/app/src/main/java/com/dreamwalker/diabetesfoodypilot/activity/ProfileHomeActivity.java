@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
+import com.dreamwalker.diabetesfoodypilot.activity.accessory.foodtray.TrayScanActivity;
 import com.dreamwalker.spacebottomnav.SpaceItem;
 import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
@@ -73,6 +74,7 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
             public void onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 spaceNavigationView.shouldShowFullBadgeText(true);
+                startActivity(new Intent(ProfileHomeActivity.this, TrayScanActivity.class));
 //                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 ", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View view) {

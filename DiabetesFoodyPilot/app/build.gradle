@@ -62,16 +62,19 @@ dependencies {
     implementation 'com.github.linger1216:labelview:v1.1.2'
     implementation 'com.github.GrenderG:Toasty:1.3.0'
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation project(':spacebottomnav')
-    implementation project(':avatarlibrary')
+
     implementation('com.philliphsu:bottomsheetpickers:2.4.1') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'com.android.support', module: 'gridlayout-v7'
     }
+
+    implementation project(':spacebottomnav')
+    implementation project(':avatarlibrary')
     implementation project(':flipcard')
     implementation project(':multiwaveview')
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }

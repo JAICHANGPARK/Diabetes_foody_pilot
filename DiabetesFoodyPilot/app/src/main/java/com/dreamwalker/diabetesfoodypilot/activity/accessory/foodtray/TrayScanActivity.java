@@ -20,22 +20,40 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.activity.IActivityBaseSetting;
+import com.dreamwalker.diabetesfoodypilot.adapter.accessory.scan.DeviceItemClickListener;
+import com.dreamwalker.diabetesfoodypilot.adapter.accessory.scan.DeviceScanAdapterV2;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
+import sha256.com.dreamwalker.multiwaveview.MultiWaveHeader;
 
-public class TrayScanActivity extends AppCompatActivity implements IActivityBaseSetting {
+public class TrayScanActivity extends AppCompatActivity implements IActivityBaseSetting, DeviceItemClickListener {
     private static final String TAG = "TrayScanActivity";
+
+
+    @BindView(R.id.tool_bar)
+    Toolbar toolbar;
+
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @BindView(R.id.waveHeader)
+    MultiWaveHeader multiWaveHeader;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1000;
     private static final int REQUEST_ENABLE_BT = 1;
@@ -43,6 +61,8 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
 
     ArrayList<BluetoothDevice> bleDeviceList;
     ArrayList<ScanResult> scanResultArrayList;
+
+    DeviceScanAdapterV2 adapter;
 
 
     BluetoothManager bluetoothManager;
@@ -53,17 +73,50 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
 
     boolean mScanning;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tray_scan);
+        initSetting();
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(TrayScanActivity.this);
+            builder.setTitle("알림");
+            builder.setMessage("장비(지능형 식판) 검색을 종료하시겠어요?");
+            builder.setPositiveButton(android.R.string.yes, (dialog, which) -> finish());
+            builder.setNegativeButton(android.R.string.no, (dialog, which) -> dialog.dismiss());
+            builder.show();
+        });
+
+        bleDeviceList = new ArrayList<>();
+        scanResultArrayList = new ArrayList<>();
+        handler = new Handler();
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
 
         checkScanPermission();
-
         checkBleSupport();
         getBluetoothAdapter();
         checkBluetoothSupport();
+
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        } else {
+//            if (audioManager.getRingerMode() != AudioManager.ADJUST_MUTE){
+//                mediaPlayer.start();
+//            }
+            adapter = new DeviceScanAdapterV2(bleDeviceList, scanResultArrayList, this);
+            recyclerView.setAdapter(adapter);
+            scanLeDevice(true);
+//            StateButton.setText("STOP");
+        }
+
+        adapter.setDeviceItemClickListener(this);
     }
 
     @Override
@@ -74,6 +127,16 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
     @Override
     public void initSetting() {
         bindView();
+        initToasty();
+        initWaveView();
+    }
+
+    private void initWaveView(){
+        multiWaveHeader.setScaleY(-1f);
+    }
+
+    private void initToasty() {
+        Toasty.Config.getInstance().apply();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -150,7 +213,7 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
             if (bleDeviceList.size() < 1) {
                 bleDeviceList.add(device);
                 scanResultArrayList.add(result);
-//                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             } else {
                 boolean flag = true;
                 for (int i = 0; i < bleDeviceList.size(); i++) {
@@ -161,7 +224,7 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
                 if (flag) {
                     bleDeviceList.add(device);
                     scanResultArrayList.add(result);
-//                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged();
                 }
             }
 
@@ -198,7 +261,7 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
 
     private List<ScanFilter> getScanFilters() {
         List<ScanFilter> allFilters = new ArrayList<>();
-        ScanFilter scanFilter0 = new ScanFilter.Builder().setDeviceName("KNU EG0").build();
+        ScanFilter scanFilter0 = new ScanFilter.Builder().setDeviceName("SmartTray").build();
         allFilters.add(scanFilter0);
 //        ScanFilter scanFilter1 = new ScanFilter.Builder().setDeviceName("").build();
 //        for (DeviceCoordinator coordinator : DeviceHelper.getInstance().getAllCoordinators()) {
@@ -242,9 +305,9 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.scan:
-//                bleDeviceList.clear();
-//                scanResultArrayList.clear();
-//                adapter.notifyDataSetChanged();
+                bleDeviceList.clear();
+                scanResultArrayList.clear();
+                adapter.notifyDataSetChanged();
                 scanLeDevice(true);
                 break;
 
@@ -262,7 +325,7 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
         switch (requestCode) {
             case PERMISSION_REQUEST_COARSE_LOCATION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // TODO: 2018-07-21 스캔 동작하기 -- 박제창 (Dreamwalker)
+                    // TODO: 2018-11-02 권한이 허가되면 스캔을 시작합니다.
                     Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
                 } else {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -273,7 +336,6 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
                     builder.setOnDismissListener(dialog -> finish());
                     builder.show();
                 }
-
                 return;
         }
     }
@@ -309,4 +371,31 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
 
     }
 
+    @Override
+    public void onItemClick(View v, int position) {
+
+        Log.e(TAG, "onItemClick: " + position);
+        String deviceAddress = bleDeviceList.get(position).getAddress();
+        String deviceName = bleDeviceList.get(position).getName();
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Check");
+        builder.setMessage(deviceName + "의 엑세서리를 등록합니다.");
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+
+//            Intent intent = new Intent(this, LoadTestActivity.class);
+//            intent.putExtra(IntentConst.FITNESS_LOAD_TEST_DEVICE_ADDRESS, deviceAddress);
+//            startActivity(intent);
+//            finish();
+
+        });
+
+        builder.show();
+
+    }
+
+    @Override
+    public void onItemLongClick(View v, int position) {
+
+    }
 }
