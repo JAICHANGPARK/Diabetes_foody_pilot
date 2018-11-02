@@ -16,10 +16,12 @@ import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
 import com.dreamwalker.spacebottomnav.SpaceOnLongClickListener;
 
+import a01.lab.dialogflow.com.dreamwalker.dialogflow_lab.consts.IntentConst;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
+import io.paperdb.Paper;
 
 public class ProfileHomeActivity extends AppCompatActivity implements IActivityBaseSetting {
 
@@ -47,7 +49,7 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
         initToasty();
     }
 
-    private void initToasty(){
+    private void initToasty() {
         Toasty.Config.getInstance().apply();
     }
 
@@ -89,6 +91,8 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
                 Log.d("onItemClick ", "" + itemIndex + " " + itemName);
                 switch (itemIndex) {
                     case 0:
+                        startActivity(new Intent(ProfileHomeActivity.this, HomeActivity.class));
+                        finish();
                         break;
                     case 1:
                         Toasty.warning(ProfileHomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
@@ -156,7 +160,34 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
     }
 
     @OnClick(R.id.about_app_button)
-    public void onClickedSetting(){
+    public void onClickedSetting() {
         startActivity(new Intent(ProfileHomeActivity.this, SettingActivity.class));
     }
+
+    @OnClick(R.id.my_device_button)
+    public void onClickedMyDeviceButton() {
+        if (Paper.book("user").read("device") == null) {
+            Toasty.error(this, "등록된 액세서리가 없습니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            startActivity(new Intent(ProfileHomeActivity.this, UserDeviceActivity.class));
+        }
+    }
+
+    @OnClick(R.id.db_realtime_button)
+    public void onClickedRealTimeButton() {
+        Intent intent = new Intent(ProfileHomeActivity.this, TrayScanActivity.class);
+        intent.putExtra(IntentConst.DEVICE_SCAN, IntentConst.REAL_TIME_SCAN_PAGE_VALUE);
+        startActivity(intent);
+
+    }
+
+    @OnClick(R.id.db_sync_button)
+    public void onClickedSyncButton() {
+        Intent intent = new Intent(ProfileHomeActivity.this, TrayScanActivity.class);
+        intent.putExtra(IntentConst.DEVICE_SCAN, IntentConst.SYNC_SCAN_PAGE_VALUE);
+        startActivity(intent);
+
+    }
+
+
 }

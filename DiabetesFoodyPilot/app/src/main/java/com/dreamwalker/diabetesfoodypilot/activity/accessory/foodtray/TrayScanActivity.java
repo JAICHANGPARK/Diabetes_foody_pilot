@@ -39,6 +39,7 @@ import com.dreamwalker.diabetesfoodypilot.model.accessory.Device;
 import java.util.ArrayList;
 import java.util.List;
 
+import a01.lab.dialogflow.com.dreamwalker.dialogflow_lab.consts.IntentConst;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
@@ -60,6 +61,8 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1000;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final long SCAN_PERIOD = 10000; // Stops scanning after 10 seconds.
+
+    private int pageNumber;
 
     ArrayList<BluetoothDevice> bleDeviceList;
     ArrayList<ScanResult> scanResultArrayList;
@@ -129,9 +132,15 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
     @Override
     public void initSetting() {
         bindView();
+        getIntentValue();
         initToasty();
         initWaveView();
         initPaper();
+    }
+
+    private void getIntentValue() {
+        pageNumber = getIntent().getIntExtra(IntentConst.DEVICE_SCAN, 0);
+
     }
 
     private void initWaveView() {
@@ -379,28 +388,40 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
 
     @Override
     public void onItemClick(View v, int position) {
-
         Log.e(TAG, "onItemClick: " + position);
         String deviceAddress = bleDeviceList.get(position).getAddress();
         String deviceName = bleDeviceList.get(position).getName();
         ArrayList<Device> userDeviceList = new ArrayList<>();
-        userDeviceList.add(new Device(deviceName, deviceAddress));
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Check");
-        builder.setMessage(deviceName + "의 엑세서리를 등록합니다.");
-        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+        switch (pageNumber) {
+            case 0:
+                userDeviceList.add(new Device(deviceName, deviceAddress));
+                builder.setTitle("알림...");
+                builder.setMessage(deviceName + "의 엑세서리를 등록합니다.");
+                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    Paper.book("user").write("device", userDeviceList);
+                    finish();
+                });
+                builder.show();
+                break;
+            case 1: //데이터 동기화
+                builder.setTitle("알림..");
+                builder.setMessage(deviceName + "의 엑세서리를 통해 데이터를 동기화 합니다.");
+                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                   
+                });
+                builder.show();
+                break;
+            case 2: //실시간 정보 동기화
+                builder.setTitle("알림..");
+                builder.setMessage(deviceName + "의 엑세서리를 통해 실시간 데이터를 확인합니다.");
+                builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
 
-            Paper.book("user").write("device", userDeviceList);
-            finish();
+                });
+                builder.show();
+                break;
+        }
 
-//            Intent intent = new Intent(this, LoadTestActivity.class);
-//            intent.putExtra(IntentConst.FITNESS_LOAD_TEST_DEVICE_ADDRESS, deviceAddress);
-//            startActivity(intent);
-//            finish();
-
-        });
-
-        builder.show();
 
     }
 

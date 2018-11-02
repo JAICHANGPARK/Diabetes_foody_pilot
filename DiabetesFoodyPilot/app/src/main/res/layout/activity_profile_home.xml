@@ -97,7 +97,7 @@
 
 
             <Button
-                android:id="@+id/db_management_button"
+                android:id="@+id/db_realtime_button"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

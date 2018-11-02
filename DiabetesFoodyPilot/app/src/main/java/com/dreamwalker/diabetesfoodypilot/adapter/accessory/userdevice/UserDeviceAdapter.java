@@ -42,6 +42,7 @@ public class UserDeviceAdapter extends RecyclerView.Adapter<UserDeviceAdapter.Us
                 builder.setTitle("알림");
                 builder.setMessage(deviceArrayList.get(i).getDeviceName() + "삭제하시겠어요??");
                 builder.setPositiveButton(android.R.string.yes, (dialog, which) -> {
+
                     deviceArrayList.remove(i);
                     notifyDataSetChanged();
                     dialog.dismiss();
