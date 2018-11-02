@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.activity.IActivityBaseSetting;
+import com.dreamwalker.diabetesfoodypilot.activity.accessory.foodtray.realtime.RealTimeActivity;
 import com.dreamwalker.diabetesfoodypilot.adapter.accessory.scan.DeviceItemClickListener;
 import com.dreamwalker.diabetesfoodypilot.adapter.accessory.scan.DeviceScanAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.model.accessory.Device;
@@ -52,7 +53,6 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
 
     @BindView(R.id.tool_bar)
     Toolbar toolbar;
-
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.waveHeader)
@@ -416,7 +416,9 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
                 builder.setTitle("알림..");
                 builder.setMessage(deviceName + "의 엑세서리를 통해 실시간 데이터를 확인합니다.");
                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-
+                    Intent intent = new Intent(TrayScanActivity.this, RealTimeActivity.class);
+                    intent.putExtra(IntentConst.REAL_TIME_SCAN_PAGE, deviceAddress);
+                    startActivity(intent);
                 });
                 builder.show();
                 break;

@@ -64,9 +64,16 @@
             android:name=".activity.accessory.foodtray.TrayScanActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Profile" />
-        <activity android:name=".activity.UserDeviceActivity"
+        <activity
+            android:name=".activity.UserDeviceActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".activity.accessory.foodtray.realtime.RealTimeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Profile"></activity>
+
+        <service android:name=".service.foodtray.RealTimeBluetoothLeService"/>
     </application>
 
 </manifest>
