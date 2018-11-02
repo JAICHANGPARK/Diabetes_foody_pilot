@@ -96,13 +96,12 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
                 realTimeList.add(RealTime("반찬B", "배추김치", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
                 realTimeList.add(RealTime("반찬C", "샐러드", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
                 realTimeList.add(RealTime("반찬D", "제육볶음", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
-//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
-//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
-//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
-//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
                 realTimeAdapter.notifyDataSetChanged()
                 count++
+
+                dataSet = LineDataSet(entries, "Label")
+                val lineData = LineData(dataSet)
+                line_chart.data = lineData
                 line_chart.invalidate() // refresh
 //                textView.append(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA) + "\n")
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA))
@@ -125,7 +124,7 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
                     override fun onAnimationCancel(animation: Animator?) {
                         toast("onAnimationCancel ")
                         animation_layout.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
+                        data_layout.visibility = View.VISIBLE
                     }
 
                     override fun onAnimationStart(animation: Animator?) {
@@ -164,23 +163,18 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
         }
         initSetting()
 
-        animation_layout.visibility = View.VISIBLE
-        recyclerView.visibility = View.GONE
-
-        entries = ArrayList()
-        dataSet = LineDataSet(entries, "Label")
-        val lineData = LineData(dataSet)
-        line_chart.data = lineData
-        line_chart.invalidate() // refresh
-
-        realTimeList = ArrayList()
-        realTimeAdapter = RealTimeAdapter(this, realTimeList);
-
         with(recyclerView) {
             setHasFixedSize(true)
             layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
             adapter = realTimeAdapter
         }
+
+        animation_layout.visibility = View.VISIBLE
+        data_layout.visibility = View.GONE
+
+        entries = ArrayList()
+        realTimeList = ArrayList()
+        realTimeAdapter = RealTimeAdapter(this, realTimeList)
 
         mDeviceAddress = intent.getStringExtra(IntentConst.REAL_TIME_SCAN_PAGE)
         toast(mDeviceAddress)

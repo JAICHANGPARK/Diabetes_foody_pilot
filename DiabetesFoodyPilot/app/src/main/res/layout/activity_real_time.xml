@@ -29,9 +29,9 @@
 
     <LinearLayout
         android:id="@+id/animation_layout"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <com.airbnb.lottie.LottieAnimationView
@@ -45,37 +45,42 @@
 
         <TextView
             android:id="@+id/animation_text_view"
-            android:gravity="center"
-            android:layout_margin="8dp"
-            android:text="암호화 인증과정 처리중"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="암호화 인증과정 처리중" />
 
     </LinearLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:fillViewport="true"
+        android:id="@+id/data_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/line_chart"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-        </com.github.mikephil.charting.charts.LineChart>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/line_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/recyclerView">
+
+            </com.github.mikephil.charting.charts.LineChart>
+        </RelativeLayout>
+
 
     </android.support.v4.widget.NestedScrollView>
-
-
-
 
 
 </android.support.design.widget.CoordinatorLayout>

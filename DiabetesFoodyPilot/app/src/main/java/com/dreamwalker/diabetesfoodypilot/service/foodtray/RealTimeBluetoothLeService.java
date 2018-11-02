@@ -393,7 +393,8 @@ public class RealTimeBluetoothLeService extends Service {
                     }
                 }
             }
-            intent.putExtra(EXTRA_DATA, values + "g");
+//            intent.putExtra(EXTRA_DATA, values + "g");
+            intent.putExtra(EXTRA_DATA, values);
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
