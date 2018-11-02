@@ -87,22 +87,29 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices())
 //                textView.append("서비스 특성 탐색 완료" + "\n")
             } else if (RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE == action) {
-                val value = intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)
-                entries.add(Entry(count.toFloat(), value.toFloat()))
-                realTimeList.clear()
-                realTimeList.add(RealTime("밥", "쌀밥", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                realTimeList.add(RealTime("국", "된장국", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                realTimeList.add(RealTime("반찬A", "감자조림", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                realTimeList.add(RealTime("반찬B", "배추김치", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                realTimeList.add(RealTime("반찬C", "샐러드", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                realTimeList.add(RealTime("반찬D", "제육볶음", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                realTimeAdapter.notifyDataSetChanged()
-                count++
+                val values = intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)
 
-                dataSet = LineDataSet(entries, "Label")
-                val lineData = LineData(dataSet)
-                line_chart.data = lineData
-                line_chart.invalidate() // refresh
+
+
+                if (values != null){
+
+                    realTimeList.clear()
+                    realTimeList.add(RealTime("밥", "쌀밥", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeList.add(RealTime("국", "된장국", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeList.add(RealTime("반찬A", "감자조림", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeList.add(RealTime("반찬B", "배추김치", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeList.add(RealTime("반찬C", "샐러드", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeList.add(RealTime("반찬D", "제육볶음", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeAdapter.notifyDataSetChanged()
+
+                    entries.add(Entry(count.toFloat(), values.toFloat()))
+                    dataSet = LineDataSet(entries, "Label")
+                    val lineData = LineData(dataSet)
+                    line_chart.data = lineData
+                    line_chart.invalidate() // refresh
+                    count++
+                }
+
 //                textView.append(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA) + "\n")
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA))
             } else if (RealTimeBluetoothLeService.ACTION_REAL_TIME_START_PHASE == action) {
@@ -161,7 +168,14 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
             builder.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
             builder.show()
         }
+
         initSetting()
+        mDeviceAddress = intent.getStringExtra(IntentConst.REAL_TIME_SCAN_PAGE)
+
+        entries = ArrayList()
+        realTimeList = ArrayList()
+        realTimeAdapter = RealTimeAdapter(this, realTimeList)
+
 
         with(recyclerView) {
             setHasFixedSize(true)
@@ -172,12 +186,8 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
         animation_layout.visibility = View.VISIBLE
         data_layout.visibility = View.GONE
 
-        entries = ArrayList()
-        realTimeList = ArrayList()
-        realTimeAdapter = RealTimeAdapter(this, realTimeList)
 
-        mDeviceAddress = intent.getStringExtra(IntentConst.REAL_TIME_SCAN_PAGE)
-        toast(mDeviceAddress)
+//        toast(mDeviceAddress)
         checkPermission()
         checkBLESupport()
         val checkBluetoothEnableFlag = checkBluetoothEnable()

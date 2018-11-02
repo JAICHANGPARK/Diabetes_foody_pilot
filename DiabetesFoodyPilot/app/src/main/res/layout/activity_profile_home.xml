@@ -114,6 +114,46 @@
                 android:gravity="start|center"
                 android:text="섭식 정보 동기화" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_subscriptions_black_24dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="다이어리"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:background="@color/divider" />
+
+            <Button
+                android:id="@+id/voice_memo_button"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
+                android:gravity="start|center"
+                android:text="음성 메모" />
+
 
             <Space
                 android:layout_width="match_parent"

@@ -2,7 +2,7 @@ package com.dreamwalker.diabetesfoodypilot.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -213,12 +213,21 @@ public class HomeActivity extends AppCompatActivity {
             public void onCentreButtonClick() {
                 Log.d("onCentreButtonClick ", "onCentreButtonClick");
                 spaceNavigationView.shouldShowFullBadgeText(true);
-                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+                builder.setTitle("기록하기");
+                builder.setMessage("음성 메모하시겠어요? 기록버튼을 길게 누르면 식단기록이 가능합니다.");
+                builder.setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
-                    }
-                }).show();
+                });
+                builder.setNegativeButton(android.R.string.no, (dialog, which) -> {});
+                builder.setNeutralButton("섭식기록하기", ((dialog, which) -> {}));
+                builder.show();
+//                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                }).show();
             }
 
             @Override
@@ -237,7 +246,7 @@ public class HomeActivity extends AppCompatActivity {
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                     case 3:
-                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(HomeActivity.this, ProfileHomeActivity.class));
                         finish();
                         break;
@@ -259,7 +268,7 @@ public class HomeActivity extends AppCompatActivity {
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         break;
                     case 3:
-                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(HomeActivity.this, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show();
 //                        startActivity(new Intent(HomeActivity.this, DBSearchActivity.class));
                         startActivity(new Intent(HomeActivity.this, ProfileHomeActivity.class));
                         finish();
