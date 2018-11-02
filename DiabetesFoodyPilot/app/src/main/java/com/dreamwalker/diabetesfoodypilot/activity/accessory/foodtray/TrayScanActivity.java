@@ -408,7 +408,7 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
                 builder.setTitle("알림..");
                 builder.setMessage(deviceName + "의 엑세서리를 통해 데이터를 동기화 합니다.");
                 builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                   
+
                 });
                 builder.show();
                 break;
