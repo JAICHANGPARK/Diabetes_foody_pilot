@@ -2,12 +2,15 @@
 - Start Date : 20180801_food input
 - Update : 2018. 11. 01
 
+
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
+
 1. 당뇨 병 환자를 위한 식이요법 관리 파일럿 모바일 애플리케이션
 
 
 
 
-<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/app_image/icons_sq/playstore/icon.png" width="180">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/app_image/icons_sq/playstore/icon.png" width="180">[![forthebadge](https://forthebadge.com/images/badges/built-for-android.svg)](https://www.android.com/)
 
 <img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/app_image/mockup-images/mockup.png" >
 
