@@ -34,6 +34,7 @@ import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.activity.IActivityBaseSetting;
 import com.dreamwalker.diabetesfoodypilot.adapter.accessory.scan.DeviceItemClickListener;
 import com.dreamwalker.diabetesfoodypilot.adapter.accessory.scan.DeviceScanAdapterV2;
+import com.dreamwalker.diabetesfoodypilot.model.accessory.Device;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
+import io.paperdb.Paper;
 import sha256.com.dreamwalker.multiwaveview.MultiWaveHeader;
 
 public class TrayScanActivity extends AppCompatActivity implements IActivityBaseSetting, DeviceItemClickListener {
@@ -129,14 +131,19 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
         bindView();
         initToasty();
         initWaveView();
+        initPaper();
     }
 
-    private void initWaveView(){
+    private void initWaveView() {
         multiWaveHeader.setScaleY(-1f);
     }
 
     private void initToasty() {
         Toasty.Config.getInstance().apply();
+    }
+
+    private void initPaper() {
+        Paper.init(this);
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -241,7 +248,6 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
             super.onScanFailed(errorCode);
         }
     };
-
 
 
     // New BTLE Discovery use startScan (List<ScanFilter> filters,
@@ -377,11 +383,15 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
         Log.e(TAG, "onItemClick: " + position);
         String deviceAddress = bleDeviceList.get(position).getAddress();
         String deviceName = bleDeviceList.get(position).getName();
-
+        ArrayList<Device> userDeviceList = new ArrayList<>();
+        userDeviceList.add(new Device(deviceName, deviceAddress));
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Check");
         builder.setMessage(deviceName + "의 엑세서리를 등록합니다.");
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+
+            Paper.book("user").write("device", userDeviceList);
+            finish();
 
 //            Intent intent = new Intent(this, LoadTestActivity.class);
 //            intent.putExtra(IntentConst.FITNESS_LOAD_TEST_DEVICE_ADDRESS, deviceAddress);

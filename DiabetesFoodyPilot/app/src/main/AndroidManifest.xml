@@ -4,10 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -38,7 +37,6 @@
 
         <activity
             android:name=".activity.HomeActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionbar" />
         <activity
             android:name=".activity.DBSearchActivity"
@@ -62,7 +60,11 @@
             android:name=".activity.appinfo.FeedbackActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Profile" />
-        <activity android:name=".activity.accessory.foodtray.TrayScanActivity"
+        <activity
+            android:name=".activity.accessory.foodtray.TrayScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile" />
+        <activity android:name=".activity.UserDeviceActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Profile"></activity>
     </application>

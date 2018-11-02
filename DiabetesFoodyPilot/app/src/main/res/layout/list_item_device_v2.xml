@@ -23,32 +23,32 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:weightSum="4"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
 
             <TextView
                 android:id="@+id/device_name"
-                android:layout_weight="2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
+                android:layout_weight="2"
                 android:fontFamily="@font/noto_sans"
                 android:text="device name"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/device_rssi"
-                android:layout_weight="2"
                 android:layout_width="0dp"
-                android:gravity="end"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
+                android:layout_weight="2"
                 android:fontFamily="@font/noto_sans"
+                android:gravity="end|center"
                 android:text="rssi"
-                android:textStyle="bold"
-                android:textSize="18sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

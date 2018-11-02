@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
+import io.paperdb.Paper;
 
 public class SettingActivity extends AppCompatActivity implements IActivityBaseSetting{
 
@@ -36,9 +37,14 @@ public class SettingActivity extends AppCompatActivity implements IActivityBaseS
         ButterKnife.bind(this);
     }
 
+    private void initPaper(){
+        Paper.init(this);
+    }
+
     @Override
     public void initSetting() {
         bindView();
+        initPaper();
         initToasty();
     }
 
@@ -56,6 +62,20 @@ public class SettingActivity extends AppCompatActivity implements IActivityBaseS
     public void onClickedManagementButton(){
         Toasty.warning(this, "준비중..", Toast.LENGTH_SHORT).show();
     }
+
+    @OnClick(R.id.my_device_button)
+    public void onClickedMyDeviceButton(){
+        if (Paper.book("user").read("device") == null){
+            Toasty.error(this, "등록된 액세서리가 없습니다.", Toast.LENGTH_SHORT).show();
+        }else {
+            startActivity(new Intent(SettingActivity.this, UserDeviceActivity.class));
+        }
+
+
+
+    }
+
+
 
     @OnClick(R.id.home)
     public void onClickedHomeButton(){

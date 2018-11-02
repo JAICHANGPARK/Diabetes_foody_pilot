@@ -5,7 +5,7 @@
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.ProfileHomeActivity">
+    tools:context=".activity.UserDeviceActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_add_contacts"
@@ -18,13 +18,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:id="@+id/home"
+                style="@style/ClickableImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_back_black_24dp" />
+
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_below="@id/home"
                 android:background="@color/default_background"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:title="프로필"
+                app:title="My Accesary"
                 app:titleTextAppearance="@style/Toolbar.TitleText"
                 app:titleTextColor="@color/black" />
 
@@ -51,7 +63,6 @@
         android:layout_height="match_parent"
         android:layout_margin="8dp"
         android:scrollbars="none"
-        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -75,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="내 액세서리"
+                    android:text="지능형 식판"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -84,88 +95,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="4dp"
-                android:background="@color/divider" />
-
-            <Button
-                android:id="@+id/my_device_button"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:gravity="start|center"
-                android:text="연결된 장비 확인" />
-
-
-            <Button
-                android:id="@+id/db_management_button"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:gravity="start|center"
-                android:text="실시간 정보 확인" />
-
-            <Button
-                android:id="@+id/db_sync_button"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:gravity="start|center"
-                android:text="섭식 정보 동기화" />
+                android:background="@color/dark_gray" />
 
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="16dp" />
+                android:layout_height="24dp" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
 
-            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/ic_settings_black_24dp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Setting"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="4dp"
-                android:background="@color/divider" />
-
-            <Button
-                android:id="@+id/about_app_button"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_keyboard_arrow_right_black_24dp"
-                android:gravity="start|center"
-                android:text="설정으로" />
-
+            </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
+
+
+
     </android.support.v4.widget.NestedScrollView>
 
-    <com.dreamwalker.spacebottomnav.SpaceNavigationView
-        android:id="@+id/space"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        app:centre_part_linear="false"
-        app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />
 
 
 
