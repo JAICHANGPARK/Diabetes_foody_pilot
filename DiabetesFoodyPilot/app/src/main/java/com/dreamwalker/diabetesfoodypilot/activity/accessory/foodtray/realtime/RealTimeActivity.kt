@@ -2,6 +2,7 @@ package com.dreamwalker.diabetesfoodypilot.activity.accessory.foodtray.realtime
 
 import a01.lab.dialogflow.com.dreamwalker.dialogflow_lab.consts.IntentConst
 import android.Manifest
+import android.animation.Animator
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
@@ -11,13 +12,20 @@ import android.os.Bundle
 import android.os.IBinder
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import butterknife.ButterKnife
 import com.dreamwalker.diabetesfoodypilot.R
 import com.dreamwalker.diabetesfoodypilot.activity.IActivityBaseSetting
+import com.dreamwalker.diabetesfoodypilot.adapter.accessory.realtime.RealTimeAdapter
+import com.dreamwalker.diabetesfoodypilot.model.accessory.RealTime
 import com.dreamwalker.diabetesfoodypilot.service.foodtray.RealTimeBluetoothLeService
+import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_real_time.*
 import org.jetbrains.anko.toast
 import java.security.MessageDigest
 import java.util.logging.Logger
@@ -30,9 +38,12 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
     lateinit var mDeviceAddress: String
     private var mBluetoothLeService: RealTimeBluetoothLeService? = null
     private var mBluetoothAdapter: BluetoothAdapter? = null
-    lateinit var bluetoothManager: BluetoothManager
+    private lateinit var bluetoothManager: BluetoothManager
 
     private var mConnected = false
+
+    lateinit var realTimeAdapter: RealTimeAdapter
+    lateinit var realTimeList: ArrayList<RealTime>
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
@@ -53,24 +64,76 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
     private val mGattUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            if (RealTimeBluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+            if (RealTimeBluetoothLeService.ACTION_GATT_CONNECTED == action) {
                 mConnected = true
 //                textView.append("연결됨" + "\n")
 //                updateConnectionState(R.string.connected)
                 invalidateOptionsMenu()
-            } else if (RealTimeBluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+            } else if (RealTimeBluetoothLeService.ACTION_GATT_DISCONNECTED == action) {
                 mConnected = false
 //                textView.append("연결 해제"+ "\n")
 //                updateConnectionState(R.string.disconnected)
                 invalidateOptionsMenu()
 //                clearUI()
-            } else if (RealTimeBluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+            } else if (RealTimeBluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED == action) {
                 // Show all the supported services and characteristics on the user interface.
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices())
 //                textView.append("서비스 특성 탐색 완료" + "\n")
-            } else if (RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+            } else if (RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE == action) {
+                realTimeList.clear()
+                realTimeList.add(RealTime("밥", "쌀밥", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                realTimeList.add(RealTime("국", "된장국", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                realTimeList.add(RealTime("반찬A", "감자조림", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                realTimeList.add(RealTime("반찬B", "배추김치", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                realTimeList.add(RealTime("반찬C", "샐러드", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                realTimeList.add(RealTime("반찬D", "제육볶음", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
+//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
+//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
+//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
+//                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
+                realTimeAdapter.notifyDataSetChanged()
 //                textView.append(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA) + "\n")
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA))
+            } else if (RealTimeBluetoothLeService.ACTION_REAL_TIME_START_PHASE == action) {
+//                Toast.makeText(applicationContext, "인증 시작 ", Toast.LENGTH_SHORT).show()
+            } else if (RealTimeBluetoothLeService.ACTION_REAL_TIME_FIRST_PHASE == action) {
+//                Toast.makeText(applicationContext, "암호화 인증 완료 ", Toast.LENGTH_SHORT).show()
+            } else if (RealTimeBluetoothLeService.ACTION_REAL_TIME_SECOND_PHASE == action) {
+//                Toast.makeText(applicationContext, "시간 동기화 완료 ", Toast.LENGTH_SHORT).show()
+            } else if (RealTimeBluetoothLeService.ACTION_REAL_TIME_FINAL_PHASE == action) {
+                toast("모든 인증 처리 완료 ")
+                animation_view.setAnimation(R.raw.process_complete)
+                animation_view.repeatCount = 0
+                animation_view.playAnimation()
+                val listener = object : Animator.AnimatorListener {
+                    override fun onAnimationRepeat(animation: Animator?) {
+                        toast("onAnimationRepeat ")
+                    }
+
+                    override fun onAnimationCancel(animation: Animator?) {
+                        toast("onAnimationCancel ")
+                        animation_layout.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
+                    }
+
+                    override fun onAnimationStart(animation: Animator?) {
+                        toast("onAnimationStart ")
+                        val msg = "인증 완료! 최적화 중... \n 잠시만 기다려주세요"
+                        animation_text_view.text = msg
+
+                    }
+
+                    override fun onAnimationEnd(animation: Animator?) {
+                        toast("완료 모두 완료 ")
+                        animation_view.cancelAnimation()
+                    }
+
+                }
+
+                animation_view.addAnimatorListener(listener)
+//                Toasty.success(context, "모든 인증 처리 완료 ", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "모든 인증 처리 완료 ", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -79,6 +142,28 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_real_time)
+        setSupportActionBar(tool_bar)
+        tool_bar.setNavigationOnClickListener {
+            val builder = AlertDialog.Builder(this@RealTimeActivity)
+            builder.setTitle("알림")
+            builder.setMessage("장비(지능형 식판) 검색을 종료하시겠어요?")
+            builder.setPositiveButton(android.R.string.yes) { _, _ -> finish() }
+            builder.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
+            builder.show()
+        }
+        initSetting()
+
+        animation_layout.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+
+        realTimeList = ArrayList()
+        realTimeAdapter = RealTimeAdapter(this, realTimeList);
+
+        with(recyclerView) {
+            setHasFixedSize(true)
+            layoutManager = GridLayoutManager(this.context, 2, GridLayoutManager.VERTICAL, false)
+            adapter = realTimeAdapter
+        }
 
         mDeviceAddress = intent.getStringExtra(IntentConst.REAL_TIME_SCAN_PAGE)
         toast(mDeviceAddress)
@@ -102,7 +187,12 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
     }
 
     override fun initSetting() {
-        bindView()
+//        bindView()
+        initToasty()
+    }
+
+    fun initToasty() {
+        Toasty.Config.getInstance().apply();
     }
 
     fun sha256(input: String) = hashString("SHA-256", input)
@@ -155,6 +245,11 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
         intentFilter.addAction(RealTimeBluetoothLeService.ACTION_GATT_DISCONNECTED)
         intentFilter.addAction(RealTimeBluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED)
         intentFilter.addAction(RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE)
+
+        intentFilter.addAction(RealTimeBluetoothLeService.ACTION_REAL_TIME_START_PHASE)
+        intentFilter.addAction(RealTimeBluetoothLeService.ACTION_REAL_TIME_FIRST_PHASE)
+        intentFilter.addAction(RealTimeBluetoothLeService.ACTION_REAL_TIME_SECOND_PHASE)
+        intentFilter.addAction(RealTimeBluetoothLeService.ACTION_REAL_TIME_FINAL_PHASE)
         return intentFilter
     }
 

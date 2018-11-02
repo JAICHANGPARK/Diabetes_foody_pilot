@@ -39,11 +39,9 @@ public class SampleGattAttributes {
     public final static UUID BLE_CHAR_GLUCOSE_RACP		= UUID.fromString("00002A52-0000-1000-8000-00805f9b34fb");
     public final static UUID BLE_CHAR_CUSTOM_TIME	    = UUID.fromString("0000FFF1-0000-1000-8000-00805f9b34fb");
 
-
-
-    public final static UUID BLE_CHAR_CUSTOM	    = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb");
-    public final static UUID BLE_CHAR_CUSTOM_TRAY	    = UUID.fromString("0000ffe2-0000-1000-8000-00805f9b34fb");
-    public final static UUID BLE_CHAR_CUSTOM_REALTIME	    = UUID.fromString("0000ffe3-0000-1000-8000-00805f9b34fb");
+    public final static UUID BLE_CHAR_CUSTOM	    = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"); // 쓰기 , 보내는 특성
+    public final static UUID BLE_CHAR_CUSTOM_TRAY	    = UUID.fromString("0000ffe2-0000-1000-8000-00805f9b34fb"); // 노티
+    public final static UUID BLE_CHAR_CUSTOM_REALTIME	    = UUID.fromString("0000ffe3-0000-1000-8000-00805f9b34fb"); // 노티
 
     //Descriptor
     public final static UUID BLE_DESCRIPTOR_DESCRIPTOR	= UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");

@@ -381,9 +381,8 @@ public class TrayScanActivity extends AppCompatActivity implements IActivityBase
     protected void onPause() {
         scanLeDevice(false);
         bleDeviceList.clear();
-
+        adapter.notifyDataSetChanged();
         super.onPause();
-
     }
 
     @Override

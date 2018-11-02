@@ -57,10 +57,15 @@ public class RealTimeBluetoothLeService extends Service {
     public final static String ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA";
 
+    public final static String ACTION_SERVICE_START_SIGNAL = "com.example.bluetooth.le.ACTION_SERVICE_START_SIGNAL";
     public final static String ACTION_SERVICE_SCAN_DONE = "com.example.bluetooth.le.ACTION_SERVICE_SCAN_DONE";
     public final static String ACTION_FIRST_PHASE_DONE = "com.example.bluetooth.le.ACTION_FIRST_PHASE_DONE";
     public final static String ACTION_SECOND_PHASE_DONE = "com.example.bluetooth.le.ACTION_SECOND_PHASE_DONE";
 
+    public final static String ACTION_REAL_TIME_START_PHASE = "com.example.bluetooth.le.ACTION_REAL_TIME_START_PHASE"; // 인증 시작
+    public final static String ACTION_REAL_TIME_FIRST_PHASE = "com.example.bluetooth.le.ACTION_REAL_TIME_FIRST_PHASE"; // 암호화 인증처리
+    public final static String ACTION_REAL_TIME_SECOND_PHASE = "com.example.bluetooth.le.ACTION_REAL_TIME_SECOND_PHASE"; // 날짜 인증
+    public final static String ACTION_REAL_TIME_FINAL_PHASE = "com.example.bluetooth.le.ACTION_REAL_TIME_FINAL_PHASE"; // a모든 인증 완료 처리
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -74,7 +79,7 @@ public class RealTimeBluetoothLeService extends Service {
 
 
     BluetoothGattCharacteristic mHeartRateMeasurementCharacteristic;
-    BluetoothGattCharacteristic mIndoorBikeCharacteristic;
+    BluetoothGattCharacteristic mRealtimeWriteCharacteristic;  // 쓰기 위한 특성
     BluetoothGattCharacteristic mTreadmillCharacteristic;
     BluetoothGattCharacteristic mRealtimeCharacteristic;
 
@@ -92,23 +97,35 @@ public class RealTimeBluetoothLeService extends Service {
             final String action = intent.getAction();
 
             switch (action) {
-                case ACTION_SERVICE_SCAN_DONE:
-                    Log.e(TAG, "onReceive: " + "서비스 스캔 끝 : 동기화 시작 ");
-//                    if (mDateTimeSyncCharacteristic != null) {
-//                        firstPhaseCheckerFlag = syncDateTimeToDevice(mDateTimeSyncCharacteristic);
-//                        Log.e(TAG, "onReceive: ACTION_SERVICE_SCAN_DONE --> " + firstPhaseCheckerFlag);
-//                    }
-
+                case ACTION_SERVICE_START_SIGNAL:
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (mIndoorBikeCharacteristic != null) {
-                                firstPhaseCheckerFlag = syncDateTimeToDevice(mIndoorBikeCharacteristic);
+                            if (mRealtimeWriteCharacteristic != null) {
+                                firstPhaseCheckerFlag = startRealTimeSignal(mRealtimeWriteCharacteristic);
+                                Log.e(TAG, "onReceive: ACTION_SERVICE_START_SIGNAL --> " + firstPhaseCheckerFlag);
+//
+//                                if (firstPhaseCheckerFlag) {
+//                                    broadcastUpdate(ACTION_REAL_TIME_START_PHASE);
+//                                }
+                            }
+                        }
+                    }, 2000);
+
+                    break;
+                case ACTION_SERVICE_SCAN_DONE:
+                    Log.e(TAG, "onReceive: " + "서비스 스캔 끝 : 동기화 시작 --> 장비 인증 시작");
+//
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mRealtimeWriteCharacteristic != null) {
+                                firstPhaseCheckerFlag = deviceAuth(mRealtimeWriteCharacteristic);
                                 Log.e(TAG, "onReceive: ACTION_SERVICE_SCAN_DONE --> " + firstPhaseCheckerFlag);
 
-                                if (firstPhaseCheckerFlag) {
-                                    broadcastUpdate(ACTION_FIRST_PHASE_DONE);
-                                }
+//                                if (firstPhaseCheckerFlag) {
+//                                    broadcastUpdate(ACTION_REAL_TIME_FIRST_PHASE);
+//                                }
                             }
 
                         }
@@ -118,31 +135,30 @@ public class RealTimeBluetoothLeService extends Service {
                     break;
 
                 case ACTION_FIRST_PHASE_DONE:
-                    Log.e(TAG, "onReceive: " + "디바이스 인증 시작 ");
+                    Log.e(TAG, "onReceive: " + "날짜 시간 동기화 시작 ");
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if (mIndoorBikeCharacteristic != null) {
-                                secondPhaseCheckerFlag = deviceAuth(mIndoorBikeCharacteristic);
-                                Log.e(TAG, "onReceive: ACTION_SERVICE_SCAN_DONE --> " + secondPhaseCheckerFlag);
+                            if (mRealtimeWriteCharacteristic != null) {
+                                secondPhaseCheckerFlag = syncDateTimeToDevice(mRealtimeWriteCharacteristic);
+                                Log.e(TAG, "onReceive: ACTION_FIRST_PHASE_DONE --> " + secondPhaseCheckerFlag);
 
-                                if (secondPhaseCheckerFlag) {
-//                                    broadcastUpdate(ACTION_FIRST_PHASE_DONE);
-                                }
+//                                if (secondPhaseCheckerFlag) {
+//                                    broadcastUpdate(ACTION_REAL_TIME_SECOND_PHASE);
+//                                }
                             }
 
                         }
                     }, 2000);
 
 
-
                     Log.e(TAG, "onReceive: " + "디바이스 인증 완료 ");
                     break;
 
                 case ACTION_SECOND_PHASE_DONE:
+                    broadcastUpdate(ACTION_REAL_TIME_FINAL_PHASE);
                     Log.e(TAG, "onReceive: " + "데이터 동기화 시작  ");
-
                     break;
 
             }
@@ -181,13 +197,13 @@ public class RealTimeBluetoothLeService extends Service {
 
                     if (SampleGattAttributes.BLE_SERVICE_CUSTOM.equals(service.getUuid())) {
 
-                        mIndoorBikeCharacteristic = service.getCharacteristic(SampleGattAttributes.BLE_CHAR_CUSTOM);
+                        mRealtimeWriteCharacteristic = service.getCharacteristic(SampleGattAttributes.BLE_CHAR_CUSTOM);
                         mTreadmillCharacteristic = service.getCharacteristic(SampleGattAttributes.BLE_CHAR_CUSTOM_TRAY);
                         mRealtimeCharacteristic = service.getCharacteristic(SampleGattAttributes.BLE_CHAR_CUSTOM_REALTIME);
-                        Log.e(TAG, "onServicesDiscovered: bike" + mIndoorBikeCharacteristic.getUuid().toString());
+                        Log.e(TAG, "onServicesDiscovered: bike" + mRealtimeWriteCharacteristic.getUuid().toString());
                         Log.e(TAG, "onServicesDiscovered: tread" + mTreadmillCharacteristic.getUuid().toString());
                         Log.e(TAG, "onServicesDiscovered: real time" + mRealtimeCharacteristic.getUuid().toString());
-                        if (mIndoorBikeCharacteristic != null) {
+                        if (mRealtimeWriteCharacteristic != null) {
                             Log.e(TAG, "onServicesDiscovered: " + "mIndoorBikeCharacteristic set");
                         }
                         if (mTreadmillCharacteristic != null) {
@@ -233,16 +249,13 @@ public class RealTimeBluetoothLeService extends Service {
 //                    broadcastUpdate(ACTION_SERVICE_SCAN_DONE);
 //                    dataResultDescriptor = false; // TODO: 2018-09-05 콜백이 다시 발생하면 다시 시간 동기화를 진행하기때문에 플레그를 끈다.
                     dataResultDescriptor = false;
-
                     realTimeDescriptor = enableRealtimeNotification(gatt);
 
                 }
 
                 if (realTimeDescriptor) {
-
                     Log.e(TAG, "onDescriptorWrite: " + "------- realTimeDescriptor Descriptor Write Done");
-                    broadcastUpdate(ACTION_SERVICE_SCAN_DONE);
-
+                    broadcastUpdate(ACTION_SERVICE_START_SIGNAL);
                     realTimeDescriptor = false; // TODO: 2018-09-05 콜백이 다시 발생하면 다시 시간 동기화를 진행하기때문에 플레그를 끈다.
                 }
 
@@ -318,7 +331,7 @@ public class RealTimeBluetoothLeService extends Service {
                     final int sideA = (data[4] << 8) & 0xff00 | (data[5] & 0x00ff);
                     sideAs = String.valueOf(sideA);
 
-                    final int sideB= (data[6] << 8) & 0xff00 | (data[7] & 0x00ff);
+                    final int sideB = (data[6] << 8) & 0xff00 | (data[7] & 0x00ff);
 //                    floatVal = (float) intVal / 100;
                     sideBs = String.valueOf(sideB);
 
@@ -328,19 +341,17 @@ public class RealTimeBluetoothLeService extends Service {
                     final int sideD = (data[10] << 8) & 0xff00 | (data[11] & 0x00ff);
 //                    floatVal = (float) intVal / 100;
                     sideDs = String.valueOf(sideD);
-
-
                 }
 
             }
 
             intent.putExtra(EXTRA_DATA,
                     "Rice:" + values + "g, "
-                    + "soup:" + soups + "g, "
-                    + "sideA:" + sideAs + "g, "
-                    + "sideB:" + sideBs + "g, "
-                    + "sideC:" + sideCs + "g, "
-                    + "sideD:" + sideDs + "g ");
+                            + "soup:" + soups + "g, "
+                            + "sideA:" + sideAs + "g, "
+                            + "sideB:" + sideBs + "g, "
+                            + "sideC:" + sideCs + "g, "
+                            + "sideD:" + sideDs + "g ");
 
         } else if (SampleGattAttributes.BLE_CHAR_CUSTOM_REALTIME.equals(characteristic.getUuid())) {
 
@@ -348,28 +359,42 @@ public class RealTimeBluetoothLeService extends Service {
 
             String values = null;
             if (data != null && data.length > 0) {
-
-                for (byte byteChar : data) {
-                    Log.e(TAG, "broadcastUpdate: --> " + byteChar);
+                if (data[0] == 0x02 && data[1] == 0x10 && data[2] == 0x03) {
+                    Log.e(TAG, "broadcastUpdate: " + "1차 인증 성공");
+//                    Toasty.success(getApplicationContext(), "1차 인증 성공", Toast.LENGTH_SHORT).show();
+                    broadcastUpdate(ACTION_SERVICE_SCAN_DONE);
                 }
-
-                if (data[0] == -1) {
-                    values = "0 ";
-                } else {
-                    float floatVal;
-                    final int intVal = (data[0] << 8) & 0xff00 | (data[1] & 0xff);
-                    floatVal = (float) intVal / 100;
-                    values = String.format("%.2f", floatVal);
+                if (data[0] == 0x02 && data[1] == 0x11 && data[2] == 0x03) {
+//                    Toasty.success(getApplicationContext(), "암호화 인증 성공", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "broadcastUpdate: " + "장비 암호화 인증 성공");
+                    broadcastUpdate(ACTION_FIRST_PHASE_DONE);
                 }
+                if (data[0] == 0x02 && data[1] == 0x21 && data[2] == 0x03) {
+                    Log.e(TAG, "broadcastUpdate: " + "장비 암호화 인증 실패");
+//                    broadcastUpdate(ACTION_FIRST_PHASE_DONE);
+                }
+                if (data[0] == 0x02 && data[1] == 0x12 && data[2] == 0x03) {
+                    Log.e(TAG, "broadcastUpdate: " + "모든 인증 완료 ");
+                    broadcastUpdate(ACTION_SECOND_PHASE_DONE);
+                }
+                else {
 
+                    for (byte byteChar : data) {
+                        Log.e(TAG, "broadcastUpdate: --> " + byteChar);
+                    }
 
+                    if (data[0] == -1) {
+                        values = "0 ";
+                    } else {
+                        float floatVal;
+                        final int intVal = (data[0] << 8) & 0xff00 | (data[1] & 0xff);
+                        floatVal = (float) intVal / 100;
+                        values = String.format("%.2f", floatVal);
+                    }
+                }
             }
-
             intent.putExtra(EXTRA_DATA, values + "g");
-
-        }
-
-        else {
+        } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
             if (data != null && data.length > 0) {
@@ -396,6 +421,7 @@ public class RealTimeBluetoothLeService extends Service {
 
     private static IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_SERVICE_START_SIGNAL);
         intentFilter.addAction(ACTION_SERVICE_SCAN_DONE);
         intentFilter.addAction(ACTION_FIRST_PHASE_DONE);
         intentFilter.addAction(ACTION_SECOND_PHASE_DONE);
@@ -558,6 +584,19 @@ public class RealTimeBluetoothLeService extends Service {
         return mBluetoothGatt.getServices();
     }
 
+    private boolean startRealTimeSignal(BluetoothGattCharacteristic characteristic) {
+        byte[] temp = new byte[4];
+
+        temp[0] = (byte) (0x02);
+        temp[1] = (byte) (0x07);
+        temp[2] = (byte) (0x70);
+        temp[3] = (byte) (0x03);
+
+        characteristic.setValue(temp);
+        return mBluetoothGatt.writeCharacteristic(characteristic);
+
+    }
+
 
     private boolean syncDateTimeToDevice(BluetoothGattCharacteristic characteristic) {
 
@@ -566,28 +605,8 @@ public class RealTimeBluetoothLeService extends Service {
         long times = cal.getTime().getTime() / 1000;
         Log.e(TAG, "syncDateTimeToDevice: 현재시간" + times);
 
-//        //현재 년도, 월, 일
-//        int year = cal.get(Calendar.YEAR);
-//        int month = cal.get(Calendar.MONTH) + 1;
-//        int date = cal.get(Calendar.DATE);
-//
-//        //현재 (시,분,초)
-//        int hour = cal.get(Calendar.HOUR_OF_DAY);
-//        int min = cal.get(Calendar.MINUTE);
-//        int sec = cal.get(Calendar.SECOND);
-//
-//        Log.e(TAG, "syncDateTimeToDevice: 현재시간" + year + month + date + hour + min + sec);
-
-//        temp[0] = (byte) ((year >> 8) & 0xff);
-//        temp[1] = (byte) (year & 0xff);
-//        temp[2] = (byte) (month & 0xff);
-//        temp[3] = (byte) (date & 0xff);
-//        temp[4] = (byte) (hour & 0xff);
-//        temp[5] = (byte) (min & 0xff);
-//        temp[6] = (byte) (sec & 0xff);
-
         temp[0] = (byte) (0x02);
-        temp[1] = (byte) (0x01);
+        temp[1] = (byte) (0x72);
         temp[2] = (byte) ((times >> 24) & 0xff);
         temp[3] = (byte) ((times >> 16) & 0xff);
         temp[4] = (byte) ((times >> 8) & 0xff);
@@ -600,12 +619,7 @@ public class RealTimeBluetoothLeService extends Service {
 
         }
 
-
-//        broadcastUpdate(ACTION_SECOND_PHASE_DONE);
-
-//        characteristic.setValue(new byte[temp.length]);
         characteristic.setValue(temp);
-
         return mBluetoothGatt.writeCharacteristic(characteristic);
 
     }
@@ -616,38 +630,9 @@ public class RealTimeBluetoothLeService extends Service {
         byte[] authBytes = sha256Bytes("smartfoodtray");
         byte[] sendBytes = new byte[20];
 
-//        Calendar cal = Calendar.getInstance(Locale.KOREA);
-//        long times = cal.getTime().getTime() / 1000;
-//        Log.e(TAG, "syncDateTimeToDevice: 현재시간" + times);
-
-//        //현재 년도, 월, 일
-//        int year = cal.get(Calendar.YEAR);
-//        int month = cal.get(Calendar.MONTH) + 1;
-//        int date = cal.get(Calendar.DATE);
-//
-//        //현재 (시,분,초)
-//        int hour = cal.get(Calendar.HOUR_OF_DAY);
-//        int min = cal.get(Calendar.MINUTE);
-//        int sec = cal.get(Calendar.SECOND);
-//
-//        Log.e(TAG, "syncDateTimeToDevice: 현재시간" + year + month + date + hour + min + sec);
-
-//        temp[0] = (byte) ((year >> 8) & 0xff);
-//        temp[1] = (byte) (year & 0xff);
-//        temp[2] = (byte) (month & 0xff);
-//        temp[3] = (byte) (date & 0xff);
-//        temp[4] = (byte) (hour & 0xff);
-//        temp[5] = (byte) (min & 0xff);
-//        temp[6] = (byte) (sec & 0xff);
-
-
-//        temp[0] = (byte) ((times >> 24) & 0xff);
-//        temp[1] = (byte) ((times >> 16) & 0xff);
-//        temp[2] = (byte) ((times >> 8) & 0xff);
-//        temp[3] = (byte) (times & 0xff);
 
         sendBytes[0] = 0x02;
-        sendBytes[1] = 0x02;
+        sendBytes[1] = 0x71;
 
         System.arraycopy(authBytes, 0, sendBytes, 2, 17);
 
@@ -658,10 +643,6 @@ public class RealTimeBluetoothLeService extends Service {
             Log.e(TAG, "deviceAuth: " + b);
         }
 
-
-//        broadcastUpdate(ACTION_SECOND_PHASE_DONE);
-
-//        characteristic.setValue(new byte[temp.length]);
         characteristic.setValue(sendBytes);
 
         return mBluetoothGatt.writeCharacteristic(characteristic);
@@ -691,7 +672,6 @@ public class RealTimeBluetoothLeService extends Service {
         boolean result = gatt.writeDescriptor(d);
         return result;
     }
-
 
 
     private byte[] sha256Bytes(String input) {
