@@ -1,9 +1,11 @@
 # Diabetes_foody_pilot
+
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
+
 - Start Date : 20180801_food input
 - Update : 2018. 11. 01
 
 
-[![Kotlin](https://img.shields.io/badge/kotlin-1.3.0-blue.svg)](http://kotlinlang.org)
 
 1. 당뇨 병 환자를 위한 식이요법 관리 파일럿 모바일 애플리케이션
 
