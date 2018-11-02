@@ -17,6 +17,25 @@
 
 
 
+## Release 1.0.2
+<div style="text-align: center"><table><tr>
+<td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-02-093511.png" width="180">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-02-093449.png" width="180">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-02-093430.png" width="180">
+</td>
+  
+  <td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-02-093414.png" width="180">
+</td>
+  
+  </tr>
+</table>
+</div>
 
 
 
