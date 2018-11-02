@@ -24,6 +24,9 @@ import com.dreamwalker.diabetesfoodypilot.activity.IActivityBaseSetting
 import com.dreamwalker.diabetesfoodypilot.adapter.accessory.realtime.RealTimeAdapter
 import com.dreamwalker.diabetesfoodypilot.model.accessory.RealTime
 import com.dreamwalker.diabetesfoodypilot.service.foodtray.RealTimeBluetoothLeService
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_real_time.*
 import org.jetbrains.anko.toast
@@ -44,6 +47,10 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 
     lateinit var realTimeAdapter: RealTimeAdapter
     lateinit var realTimeList: ArrayList<RealTime>
+    lateinit var entries: ArrayList<Entry>
+    lateinit var dataSet: LineDataSet
+    var count = 0
+
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
@@ -80,6 +87,8 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices())
 //                textView.append("서비스 특성 탐색 완료" + "\n")
             } else if (RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE == action) {
+                val value = intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)
+                entries.add(Entry(count.toFloat(), value.toFloat()))
                 realTimeList.clear()
                 realTimeList.add(RealTime("밥", "쌀밥", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
                 realTimeList.add(RealTime("국", "된장국", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
@@ -93,6 +102,8 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 //                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
 //                realTimeList.add(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA))
                 realTimeAdapter.notifyDataSetChanged()
+                count++
+                line_chart.invalidate() // refresh
 //                textView.append(intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA) + "\n")
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA))
             } else if (RealTimeBluetoothLeService.ACTION_REAL_TIME_START_PHASE == action) {
@@ -155,6 +166,12 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 
         animation_layout.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
+
+        entries = ArrayList()
+        dataSet = LineDataSet(entries, "Label")
+        val lineData = LineData(dataSet)
+        line_chart.data = lineData
+        line_chart.invalidate() // refresh
 
         realTimeList = ArrayList()
         realTimeAdapter = RealTimeAdapter(this, realTimeList);
