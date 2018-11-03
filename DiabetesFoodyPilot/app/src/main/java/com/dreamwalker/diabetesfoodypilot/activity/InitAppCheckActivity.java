@@ -306,6 +306,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
             Toast.makeText(this, "네트워크 연결 없음", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
             builder.setTitle("알림");
             builder.setMessage("인터넷 연결이 필요합니다.");
             builder.setPositiveButton(android.R.string.ok, (dialog, which) -> finish());

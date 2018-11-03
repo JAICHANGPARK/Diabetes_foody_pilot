@@ -92,7 +92,9 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
                 Log.d("onItemClick ", "" + itemIndex + " " + itemName);
                 switch (itemIndex) {
                     case 0:
-                        startActivity(new Intent(ProfileHomeActivity.this, HomeActivity.class));
+                        Intent intent = new Intent(ProfileHomeActivity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         finish();
                         break;
                     case 1:
@@ -117,7 +119,9 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
                 Log.d("onItemReselected ", "" + itemIndex + " " + itemName);
                 switch (itemIndex) {
                     case 0:
-                        startActivity(new Intent(ProfileHomeActivity.this, HomeActivity.class));
+                        Intent intent = new Intent(ProfileHomeActivity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         finish();
                         break;
                     case 1:

@@ -1,24 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.diary.VoiceDiaryActivity">
 
-    <devs.mulham.horizontalcalendar.HorizontalCalendarView
-
-        android:id="@+id/calendarView"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_add_contacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@color/white"
-        android:backgroundTint="@color/white"
-        app:colorBottomTextSelected="@color/black"
-        app:colorMiddleTextSelected="@color/black"
-        app:colorTopTextSelected="@color/black"
-        app:sizeBottomText="14sp"
-        app:sizeMiddleText="20sp"
-        app:textColorSelected="#FFFF" />
+        android:background="@color/default_background"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-</android.support.constraint.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/default_background"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="다이어리"
+                app:titleTextAppearance="@style/Toolbar.TitleText"
+                app:titleTextColor="@color/black" />
+
+            <devs.mulham.horizontalcalendar.HorizontalCalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/toolbar"
+                android:background="@color/default_background"
+                android:backgroundTint="@color/default_background"
+                app:colorBottomTextSelected="@color/black"
+                app:colorMiddleTextSelected="@color/black"
+                app:colorTopTextSelected="@color/black"
+                app:sizeBottomText="14sp"
+                app:sizeMiddleText="20sp"
+                app:textColorSelected="#FFFF" />
+
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+        android:layout_margin="8dp"
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--android:clickable="true"-->
+    <!--android:src="@drawable/ic_add_black_24dp"-->
+    <!--app:backgroundTint="@color/shopAccent"-->
+    <!--app:elevation="6dp"-->
+    <!--&lt;!&ndash;app:layout_anchor="@+id/bsm_recycler_view"&ndash;&gt;-->
+    <!--app:layout_anchorGravity="bottom|end"-->
+    <!--app:rippleColor="@color/shopAccent" />-->
+
+
+    <com.dreamwalker.spacebottomnav.SpaceNavigationView
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:centre_part_linear="false"
+        app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />
+
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+
+
