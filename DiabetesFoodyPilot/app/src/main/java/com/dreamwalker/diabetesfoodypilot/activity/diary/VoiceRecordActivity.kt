@@ -22,10 +22,19 @@ class VoiceRecordActivity : AppCompatActivity() {
 
     companion object {
         const val RECORD_AUDIO_REQUEST_CODE = 101
+
+        const val MORNING_DAY = R.id.button1
+        const val LUNCH_DAY = R.id.button2
+        const val DINNER_DAY = R.id.button3
+        const val SNACK_DAY = R.id.button4
+        const val ETC_DAY = R.id.button5
     }
+
+
 
     var realm: Realm? = null
     var listeningFlag: Boolean = false
+    var intakeTimeType : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +113,37 @@ class VoiceRecordActivity : AppCompatActivity() {
             } else {
                 Speech.getInstance().startListening(recognition_view, delegate)
             }
+        }
+
+        with(segmented3) {
+            setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    MORNING_DAY -> {
+                        intakeTimeType = "아침"
+//                        toast("아침 선택")
+                    }
+                    LUNCH_DAY -> {
+                        intakeTimeType = "점심"
+//                        toast("일주일간 데이터를 가져올게요")
+                    }
+                    DINNER_DAY -> {
+                        intakeTimeType = "저녁"
+//                        toast("한달간 데이터를 가져올게요")
+                    }
+
+                    SNACK_DAY -> {
+                        intakeTimeType = "간식"
+//                        toast("한달간 데이터를 가져올게요")
+                    }
+
+                    ETC_DAY -> {
+                        intakeTimeType = "기타"
+//                        toast("한달간 데이터를 가져올게요")
+                    }
+                }
+            }
+
+            check(MORNING_DAY)
         }
 
 
