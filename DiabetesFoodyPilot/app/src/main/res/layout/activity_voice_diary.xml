@@ -46,12 +46,17 @@
 
     </android.support.design.widget.AppBarLayout>
 
+
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
-        android:layout_margin="8dp"
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
 
     <!--<android.support.design.widget.FloatingActionButton-->
     <!--android:id="@+id/fab"-->
@@ -75,6 +80,14 @@
         android:layout_gravity="bottom"
         app:centre_part_linear="false"
         app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />
+    <!--<com.dreamwalker.spacebottomnav.SpaceNavigationView-->
+    <!--android:id="@+id/space"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--app:centre_part_linear="false"-->
+    <!--app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />-->
 
 
 </android.support.design.widget.CoordinatorLayout>

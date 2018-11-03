@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_voice_diary.*
 import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.logging.Logger
 
 open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
 
@@ -86,6 +87,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                 .datesNumberOnScreen(5)
                 .addEvents(predict)
                 .build()
+
         val listener = object : HorizontalCalendarListener() {
             override fun onDateSelected(date: Calendar?, position: Int) {
                 val selectDate = date?.time
@@ -103,13 +105,12 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
         horizontalCalendar.calendarListener = listener
 
         val result = realm!!.where(VoiceMemo::class.java).equalTo("rawDate", todayString).findAll()
-
         leadList1.addAll(result.filterNotNull())
         voiceMemoAdapter = VoiceDiaryAdapter(this@VoiceDiaryActivity, leadList1)
 
         with(recycler_view) {
-            layoutManager = LinearLayoutManager(applicationContext)
-            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@VoiceDiaryActivity, LinearLayoutManager.VERTICAL, false)
+//            setHasFixedSize(true)
             addItemDecoration(DefaultItemDecoration(ContextCompat.getColor(applicationContext, R.color.divider_color)))
             setSwipeItemClickListener(this@VoiceDiaryActivity)
             setSwipeMenuCreator(swipeMenuCreator)
@@ -177,12 +178,19 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
 
                 1 -> {
 
+                    val recordMemo =  leadList1[adapterPosition]?.memo
+                    val recordDate = leadList1[adapterPosition]?.date
                     val builder = AlertDialog.Builder(this@VoiceDiaryActivity)
                     builder.setTitle("경고")
-                    builder.setMessage("삭제하시겠어요?")
+                    builder.setMessage("$recordMemo / $recordDate  삭제하시겠어요? ")
                     builder.setPositiveButton(android.R.string.yes) { dialog, _ ->
-                        val result = realm?.where(VoiceMemo::class.java)?.equalTo("date", leadList1[adapterPosition]?.date)?.findFirst()
-                        result?.deleteFromRealm()
+
+                        val result = realm?.where(VoiceMemo::class.java)?.equalTo("date", leadList1[adapterPosition]?.date)?.findAll()
+                        realm?.executeTransaction{
+                            result?.deleteAllFromRealm()
+                        }
+
+                        leadList1.removeAt(adapterPosition)
                         voiceMemoAdapter.notifyDataSetChanged()
                         dialog.dismiss()
                     }
@@ -291,7 +299,31 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                 Toast.makeText(this@VoiceDiaryActivity, itemIndex.toString() + " " + itemName, Toast.LENGTH_SHORT).show()
             }
         })
+    }
 
+    override fun onRestart() {
+        leadList1.clear()
+        val defaultSelectedDate = Calendar.getInstance()
+        val todayDate = defaultSelectedDate.time
+        val todayString = simpleDateFormat.format(todayDate)
+        val result = realm!!.where(VoiceMemo::class.java).equalTo("rawDate", todayString).findAll()
+        leadList1.addAll(result.filterNotNull())
+        voiceMemoAdapter.notifyDataSetChanged()
+
+        Logger.getLogger(this@VoiceDiaryActivity::class.java.name).warning("onRestart")
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        Logger.getLogger(this@VoiceDiaryActivity::class.java.name).warning("onResume")
+        super.onResume()
+    }
+
+
+
+    override fun onStart() {
+        Logger.getLogger(this@VoiceDiaryActivity::class.java.name).warning("onStart")
+        super.onStart()
     }
 
 }
