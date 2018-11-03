@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.dreamwalker.diabetesfoodypilot.R;
+import com.dreamwalker.diabetesfoodypilot.activity.diary.VoiceRecordActivity;
 import com.dreamwalker.diabetesfoodypilot.adapter.HomeTestAdapter;
 import com.dreamwalker.diabetesfoodypilot.adapter.HomeTestAdapterV2;
 import com.dreamwalker.diabetesfoodypilot.database.food.FoodCard;
@@ -218,20 +219,25 @@ public class HomeActivity extends AppCompatActivity {
                 builder.setMessage("음성 메모하시겠어요? 기록버튼을 길게 누르면 식단기록이 가능합니다.");
 
                 builder.setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    dialog.dismiss();
+                    Intent intent = new Intent(HomeActivity.this,  VoiceRecordActivity.class);
+                    startActivity(intent);
+
 
                 });
 
                 builder.setNegativeButton(android.R.string.no, (dialog, which) -> {
+                    dialog.dismiss();
                     Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                     startActivity(intent);
-                    finish();
 
                 });
 
                 builder.setNeutralButton("섭식기록하기", ((dialog, which) -> {
+                    dialog.dismiss();
                     Intent intent = new Intent(HomeActivity.this, MainActivity.class);
                     startActivity(intent);
-                    finish();
+
                 }));
                 builder.show();
 //                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {

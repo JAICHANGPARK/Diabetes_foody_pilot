@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -71,9 +72,16 @@
         <activity
             android:name=".activity.accessory.foodtray.realtime.RealTimeActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".activity.diary.VoiceRecordActivity"
+            android:theme="@style/AppTheme.Profile" />
+        <activity android:name=".activity.diary.VoiceRecordActivityV2"
             android:theme="@style/AppTheme.Profile"></activity>
 
-        <service android:name=".service.foodtray.RealTimeBluetoothLeService"/>
+        <service android:name=".service.foodtray.RealTimeBluetoothLeService" />
+
+
     </application>
 
 </manifest>

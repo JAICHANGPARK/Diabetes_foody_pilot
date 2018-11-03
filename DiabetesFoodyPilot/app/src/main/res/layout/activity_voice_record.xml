@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.diary.VoiceRecordActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_add_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/default_background"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_margin="8dp"
+            android:background="@color/default_background"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="음성 메모"
+            app:titleTextAppearance="@style/Toolbar.TitleText"
+            app:titleTextColor="@color/black" />
+    </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_marginBottom="36dp"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <net.gotev.speech.ui.SpeechProgressView
+                android:id="@+id/recognition_view"
+                android:layout_width="150dp"
+                android:layout_height="150dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:src="@drawable/ic_settings_voice_white_24dp"
+        android:layout_gravity="bottom|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"/>
+    <!--<com.dreamwalker.spacebottomnav.SpaceNavigationView-->
+        <!--android:id="@+id/space"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--app:centre_part_linear="false"-->
+        <!--app:layout_behavior="com.dreamwalker.spacebottomnav.SpaceNavigationViewBehavior" />-->
+
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+
+
