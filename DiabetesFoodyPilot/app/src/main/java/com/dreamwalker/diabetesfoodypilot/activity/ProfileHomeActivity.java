@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.activity.accessory.foodtray.TrayScanActivity;
+import com.dreamwalker.diabetesfoodypilot.activity.diary.VoiceDiaryActivity;
 import com.dreamwalker.spacebottomnav.SpaceItem;
 import com.dreamwalker.spacebottomnav.SpaceNavigationView;
 import com.dreamwalker.spacebottomnav.SpaceOnClickListener;
@@ -187,6 +188,13 @@ public class ProfileHomeActivity extends AppCompatActivity implements IActivityB
         intent.putExtra(IntentConst.DEVICE_SCAN, IntentConst.SYNC_SCAN_PAGE_VALUE);
         startActivity(intent);
 
+    }
+
+    @OnClick(R.id.voice_memo_button)
+    public void onClickedVoiceMemoButton(){
+        Intent intent = new Intent(ProfileHomeActivity.this, VoiceDiaryActivity.class);
+//        intent.putExtra(IntentConst.DEVICE_SCAN, IntentConst.SYNC_SCAN_PAGE_VALUE);
+        startActivity(intent);
     }
 
 

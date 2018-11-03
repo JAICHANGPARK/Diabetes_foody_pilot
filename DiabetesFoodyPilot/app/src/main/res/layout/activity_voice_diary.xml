@@ -6,4 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".activity.diary.VoiceDiaryActivity">
 
+    <devs.mulham.horizontalcalendar.HorizontalCalendarView
+
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        app:colorBottomTextSelected="@color/black"
+        app:colorMiddleTextSelected="@color/black"
+        app:colorTopTextSelected="@color/black"
+        app:sizeBottomText="14sp"
+        app:sizeMiddleText="20sp"
+        app:textColorSelected="#FFFF" />
+
 </android.support.constraint.ConstraintLayout>
