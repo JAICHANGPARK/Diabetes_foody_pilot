@@ -216,11 +216,23 @@ public class HomeActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
                 builder.setTitle("기록하기");
                 builder.setMessage("음성 메모하시겠어요? 기록버튼을 길게 누르면 식단기록이 가능합니다.");
+
                 builder.setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
                 });
-                builder.setNegativeButton(android.R.string.no, (dialog, which) -> {});
-                builder.setNeutralButton("섭식기록하기", ((dialog, which) -> {}));
+
+                builder.setNegativeButton(android.R.string.no, (dialog, which) -> {
+                    Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                });
+
+                builder.setNeutralButton("섭식기록하기", ((dialog, which) -> {
+                    Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }));
                 builder.show();
 //                Snackbar.make(getWindow().getDecorView().getRootView(), "길게눌러 기록하기", Snackbar.LENGTH_SHORT).setAction(android.R.string.ok, new View.OnClickListener() {
 //                    @Override
