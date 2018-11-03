@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
@@ -44,7 +45,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
 
     lateinit var voiceMemoAdapter: VoiceDiaryAdapter
 
-
+    var leadList1: ArrayList<VoiceMemo?> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voice_diary)
@@ -102,7 +103,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
         horizontalCalendar.calendarListener = listener
 
         val result = realm!!.where(VoiceMemo::class.java).equalTo("rawDate", todayString).findAll()
-        var leadList1: ArrayList<VoiceMemo?> = ArrayList()
+
         leadList1.addAll(result.filterNotNull())
         voiceMemoAdapter = VoiceDiaryAdapter(this@VoiceDiaryActivity, leadList1)
 
@@ -115,7 +116,6 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
             setSwipeMenuItemClickListener(mMenuItemClickListener)
             adapter = voiceMemoAdapter
         }
-
 
 
     }
@@ -169,8 +169,36 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
         val menuPosition = menuBridge.position // 菜单在RecyclerView的Item中的Position。
 
         if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
+            when (menuPosition) {
+
+                0 -> {
+
+                }
+
+                1 -> {
+
+                    val builder = AlertDialog.Builder(this@VoiceDiaryActivity)
+                    builder.setTitle("경고")
+                    builder.setMessage("삭제하시겠어요?")
+                    builder.setPositiveButton(android.R.string.yes) { dialog, _ ->
+                        val result = realm?.where(VoiceMemo::class.java)?.equalTo("date", leadList1[adapterPosition]?.date)?.findFirst()
+                        result?.deleteFromRealm()
+                        voiceMemoAdapter.notifyDataSetChanged()
+                        dialog.dismiss()
+                    }
+
+                    builder.setNegativeButton(android.R.string.no) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    builder.show()
+
+                }
+            }
+
             Toast.makeText(this@VoiceDiaryActivity, "list第$adapterPosition; 右侧菜单第$menuPosition", Toast.LENGTH_SHORT).show()
+
         } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
+
             Toast.makeText(this@VoiceDiaryActivity, "list第$adapterPosition; 左侧菜单第$menuPosition", Toast.LENGTH_SHORT).show()
         }
     }
