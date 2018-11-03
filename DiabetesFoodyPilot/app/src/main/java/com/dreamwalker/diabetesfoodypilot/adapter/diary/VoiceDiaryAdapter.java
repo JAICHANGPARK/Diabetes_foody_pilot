@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.dreamwalker.diabetesfoodypilot.R;
 import com.dreamwalker.diabetesfoodypilot.database.diary.VoiceMemo;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 public class VoiceDiaryAdapter extends RecyclerView.Adapter<VoiceDiaryAdapter.VoiceDiaryViewHolder> {
@@ -32,7 +33,8 @@ public class VoiceDiaryAdapter extends RecyclerView.Adapter<VoiceDiaryAdapter.Vo
 
     @Override
     public void onBindViewHolder(@NonNull VoiceDiaryViewHolder voiceDiaryViewHolder, int i) {
-
+        voiceDiaryViewHolder.timeTextView.setText(DateFormat.getTimeInstance(DateFormat.SHORT).format(memoArrayList.get(i).getDate()));
+        voiceDiaryViewHolder.momoTextView.setText(memoArrayList.get(i).getMemo());
     }
 
     @Override

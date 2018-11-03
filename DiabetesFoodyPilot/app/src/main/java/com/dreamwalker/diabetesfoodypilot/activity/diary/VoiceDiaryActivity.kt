@@ -101,6 +101,11 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
         }
         horizontalCalendar.calendarListener = listener
 
+        val result = realm!!.where(VoiceMemo::class.java).equalTo("rawDate", todayString).findAll()
+        var leadList1: ArrayList<VoiceMemo?> = ArrayList()
+        leadList1.addAll(result.filterNotNull())
+        voiceMemoAdapter = VoiceDiaryAdapter(this@VoiceDiaryActivity, leadList1)
+
         with(recycler_view) {
             layoutManager = LinearLayoutManager(applicationContext)
             setHasFixedSize(true)
@@ -108,18 +113,16 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
             setSwipeItemClickListener(this@VoiceDiaryActivity)
             setSwipeMenuCreator(swipeMenuCreator)
             setSwipeMenuItemClickListener(mMenuItemClickListener)
+            adapter = voiceMemoAdapter
         }
 
-        val result = realm!!.where(VoiceMemo::class.java).equalTo("rawDate", todayString).findAll()
-        var leadList1: ArrayList<VoiceMemo?> = ArrayList()
-        leadList1.addAll(result.filterNotNull())
-        voiceMemoAdapter = VoiceDiaryAdapter(this@VoiceDiaryActivity, leadList1)
+
 
     }
 
     private val swipeMenuCreator = object : SwipeMenuCreator {
         override fun onCreateMenu(swipeLeftMenu: SwipeMenu, swipeRightMenu: SwipeMenu, viewType: Int) {
-            val width = 74
+            val width = resources.getDimensionPixelSize(R.dimen.dp_70)
             // 1. MATCH_PARENT 自适应高度，保持和Item一样高;
             // 2. 指定具体的高，比如80;
             // 3. WRAP_CONTENT，自身高度，不推荐;
@@ -133,7 +136,8 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
 
                 val addItem = SwipeMenuItem(this@VoiceDiaryActivity)
                         .setBackground(R.drawable.selector_green)
-                        .setText("添加")
+                        .setImage(R.drawable.ic_edit_white_24dp)
+                        .setText("수정")
                         .setTextColor(Color.WHITE)
                         .setWidth(width)
                         .setHeight(height)
@@ -143,7 +147,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                 val deleteItem = SwipeMenuItem(this@VoiceDiaryActivity)
                         .setBackground(R.drawable.selector_red)
                         .setImage(R.mipmap.ic_action_delete)
-                        .setText("删除")
+                        .setText("삭제")
                         .setTextColor(Color.WHITE)
                         .setWidth(width)
                         .setHeight(height)
