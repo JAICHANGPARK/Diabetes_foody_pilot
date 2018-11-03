@@ -30,7 +30,6 @@ import es.dmoral.toasty.Toasty
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.activity_voice_diary.*
-import org.jetbrains.anko.toast
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.logging.Logger
@@ -78,7 +77,6 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                     events.add(CalendarEvent(R.color.colorAccentProfile, "count"))
                 }
             }
-
             events
         }
 
@@ -89,12 +87,22 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                 .build()
 
         val listener = object : HorizontalCalendarListener() {
+
             override fun onDateSelected(date: Calendar?, position: Int) {
                 val selectDate = date?.time
                 val selectDateFormattString = simpleDateFormat.format(selectDate)
+                leadList1.clear()
 //                glucoseArrayList.clear()
                 val result = realm!!.where(VoiceMemo::class.java).equalTo("rawDate", selectDateFormattString).findAll().sort("datetime")
-//                glucoseArrayList.addAll(result)
+                leadList1.addAll(result)
+
+                if (result.size != 0) {
+                    processLayout(false)
+                } else {
+                    processLayout(true)
+                }
+
+                voiceMemoAdapter.notifyDataSetChanged()
 
 //                checkLayoutDisplay(glucoseArrayList)
 
@@ -108,6 +116,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
         leadList1.addAll(result.filterNotNull())
         voiceMemoAdapter = VoiceDiaryAdapter(this@VoiceDiaryActivity, leadList1)
 
+
         with(recycler_view) {
             layoutManager = LinearLayoutManager(this@VoiceDiaryActivity, LinearLayoutManager.VERTICAL, false)
 //            setHasFixedSize(true)
@@ -118,6 +127,21 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
             adapter = voiceMemoAdapter
         }
 
+        if (result.size != 0) {
+            processLayout(false)
+        } else {
+            processLayout(true)
+        }
+    }
+
+    private fun processLayout(trigger: Boolean) {
+        if (trigger) {
+            animation_layout.visibility = View.VISIBLE
+            recycler_view.visibility = View.GONE
+        } else {
+            animation_layout.visibility = View.GONE
+            recycler_view.visibility = View.VISIBLE
+        }
 
     }
 
@@ -173,12 +197,10 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
             when (menuPosition) {
 
                 0 -> {
-
                 }
-
                 1 -> {
 
-                    val recordMemo =  leadList1[adapterPosition]?.memo
+                    val recordMemo = leadList1[adapterPosition]?.memo
                     val recordDate = leadList1[adapterPosition]?.date
                     val builder = AlertDialog.Builder(this@VoiceDiaryActivity)
                     builder.setTitle("경고")
@@ -186,7 +208,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                     builder.setPositiveButton(android.R.string.yes) { dialog, _ ->
 
                         val result = realm?.where(VoiceMemo::class.java)?.equalTo("date", leadList1[adapterPosition]?.date)?.findAll()
-                        realm?.executeTransaction{
+                        realm?.executeTransaction {
                             result?.deleteAllFromRealm()
                         }
 
@@ -203,17 +225,18 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
                 }
             }
 
-            Toast.makeText(this@VoiceDiaryActivity, "list第$adapterPosition; 右侧菜单第$menuPosition", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@VoiceDiaryActivity, "list第$adapterPosition; 右侧菜单第$menuPosition", Toast.LENGTH_SHORT).show()
 
         } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
 
-            Toast.makeText(this@VoiceDiaryActivity, "list第$adapterPosition; 左侧菜单第$menuPosition", Toast.LENGTH_SHORT).show()
+//            Toast.makeText(this@VoiceDiaryActivity, "list第$adapterPosition; 左侧菜单第$menuPosition", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun onItemClick(itemView: View?, position: Int) {
-        toast("第" + position + "个")
+//        toast("第" + position + "个")
     }
+
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -296,7 +319,7 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
             }
 
             override fun onItemLongClick(itemIndex: Int, itemName: String) {
-                Toast.makeText(this@VoiceDiaryActivity, itemIndex.toString() + " " + itemName, Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@VoiceDiaryActivity, itemIndex.toString() + " " + itemName, Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -318,7 +341,6 @@ open class VoiceDiaryActivity : AppCompatActivity(), SwipeItemClickListener {
         Logger.getLogger(this@VoiceDiaryActivity::class.java.name).warning("onResume")
         super.onResume()
     }
-
 
 
     override fun onStart() {
