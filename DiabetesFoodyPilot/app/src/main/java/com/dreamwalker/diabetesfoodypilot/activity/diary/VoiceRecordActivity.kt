@@ -1,26 +1,22 @@
 package com.dreamwalker.diabetesfoodypilot.activity.diary
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuItem
 import com.dreamwalker.diabetesfoodypilot.R
-import com.dreamwalker.diabetesfoodypilot.activity.HomeActivity
-import com.dreamwalker.spacebottomnav.SpaceItem
-import com.dreamwalker.spacebottomnav.SpaceNavigationView
-import com.dreamwalker.spacebottomnav.SpaceOnClickListener
-import com.dreamwalker.spacebottomnav.SpaceOnLongClickListener
-import es.dmoral.toasty.Toasty
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.activity_voice_record.*
 import net.gotev.speech.Speech
+import net.gotev.speech.SpeechDelegate
 import org.jetbrains.anko.toast
+import java.util.*
 
 class VoiceRecordActivity : AppCompatActivity() {
 
@@ -29,9 +25,8 @@ class VoiceRecordActivity : AppCompatActivity() {
     }
 
     var realm: Realm? = null
+    var listeningFlag: Boolean = false
 
-
-    lateinit var spaceNavigationView: SpaceNavigationView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voice_record)
@@ -59,6 +54,57 @@ class VoiceRecordActivity : AppCompatActivity() {
                 ContextCompat.getColor(this, R.color.color5))
         val heights = intArrayOf(60, 76, 58, 80, 55)
         initSpeech(colors, heights)
+
+
+        val delegate = object : SpeechDelegate {
+            override fun onStartOfSpeech() {
+                toast("말해주세요")
+                listeningFlag = true;
+            }
+
+            override fun onSpeechPartialResults(results: MutableList<String>?) {
+                val str = StringBuilder()
+                if (results != null) {
+                    for (res in results) {
+                        str.append(res).append(" ")
+
+                    }
+
+                    Log.i("speech", "partial result: " + str.toString().trim { it <= ' ' })
+
+
+
+                }
+            }
+
+            override fun onSpeechRmsChanged(value: Float) {
+
+            }
+
+            override fun onSpeechResult(result: String?) {
+
+                listeningFlag = false
+
+                if (result != null && result.isNotEmpty()) {
+                    runOnUiThread {
+                        memo_edit_text.append(result)
+                    }
+
+                } else {
+                    toast("공백은 입력할 수 없습니다.")
+                }
+            }
+        }
+
+        Speech.getInstance().startListening(recognition_view, delegate)
+
+        floating_action_button.setOnClickListener {
+            if (listeningFlag) {
+                toast("듣고 있습니다. 말해주세요")
+            } else {
+                Speech.getInstance().startListening(recognition_view, delegate)
+            }
+        }
 
 
     }
@@ -105,67 +151,27 @@ class VoiceRecordActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun setSpaceNavigationView(sis: Bundle) {
-        spaceNavigationView.initWithSaveInstanceState(sis)
-        spaceNavigationView.setCentreButtonIcon(R.drawable.ic_add_white_24dp)
-        spaceNavigationView.addSpaceItem(SpaceItem("HOME", R.drawable.ic_home_white_24dp))
-        spaceNavigationView.addSpaceItem(SpaceItem("SEARCH", R.drawable.ic_search_white_24dp))
-        spaceNavigationView.addSpaceItem(SpaceItem("CHART", R.drawable.ic_bubble_chart_white_24dp))
-        spaceNavigationView.addSpaceItem(SpaceItem("PROFILE", R.drawable.ic_person_outline_white_24dp))
-        spaceNavigationView.shouldShowFullBadgeText(true)
-        spaceNavigationView.setCentreButtonIconColorFilterEnabled(false)
-        spaceNavigationView.showIconOnly()
-
-        spaceNavigationView.setSpaceOnClickListener(object : SpaceOnClickListener {
-            override fun onCentreButtonClick() {
-//                Log.d("onCentreButtonClick ", "onCentreButtonClick")
-//                spaceNavigationView.shouldShowFullBadgeText(true)
-
-            }
-
-            override fun onItemClick(itemIndex: Int, itemName: String) {
-
-                Log.d("onItemClick ", "$itemIndex $itemName")
-                when (itemIndex) {
-                    0 -> {
-                        startActivity(Intent(this@VoiceRecordActivity, HomeActivity::class.java))
-                        finish()
-                    }
-                    1 -> Toasty.warning(this@VoiceRecordActivity, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show()
-                    2 -> Toasty.warning(this@VoiceRecordActivity, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show()
-                    3 -> {
-                    }
-                }
-
-            }
-
-            override fun onItemReselected(itemIndex: Int, itemName: String) {
-                Log.d("onItemReselected ", "$itemIndex $itemName")
-                when (itemIndex) {
-                    0 -> {
-                        startActivity(Intent(this@VoiceRecordActivity, HomeActivity::class.java))
-                        finish()
-                    }
-                    1 -> Toasty.warning(this@VoiceRecordActivity, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show()
-                    2 -> Toasty.warning(this@VoiceRecordActivity, "공사중--업데이트 예정이에요", Toast.LENGTH_SHORT).show()
-                    3 -> {
-                    }
-                }
-            }
-        })
-
-        spaceNavigationView.setSpaceOnLongClickListener(object : SpaceOnLongClickListener {
-            override fun onCentreButtonLongClick() {
-
-            }
-
-            override fun onItemLongClick(itemIndex: Int, itemName: String) {
-                Toast.makeText(this@VoiceRecordActivity, itemIndex.toString() + " " + itemName, Toast.LENGTH_SHORT).show()
-            }
-        })
-
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        return super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.menu_voice_memo, menu)
+        return true
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.done -> {
+                val now = Calendar.getInstance()
+                val nowDate = Date()
+                toast(now.toString() + "\n" + nowDate.toString())
+
+
+
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
 
 //    private fun setSpaceNavigationView(sis: Bundle) {
 //        //TODO Anko 사랑해
