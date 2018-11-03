@@ -38,13 +38,13 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_start);
+
         ButterKnife.bind(this);
-        
         Paper.init(this);
 
-        if (Paper.book().read("firstRun") != null){
+        if (Paper.book().read("firstRun") != null) {
             boolean flag = Paper.book().read("firstRun");
-            if (flag){
+            if (flag) {
                 startActivity(new Intent(StartActivity.this, InitAppCheckActivity.class));
                 finish();
             }
@@ -85,7 +85,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btnFacebookLogin)
-    public void  onClickedStartButton(){
+    public void onClickedStartButton() {
         Log.e(TAG, "onClickedStartButton: ");
         Paper.book().write("firstRun", true);
         startActivity(new Intent(StartActivity.this, InitAppCheckActivity.class));
@@ -114,5 +114,5 @@ public class StartActivity extends AppCompatActivity {
         mediaPlayer = null;
     }
 
-  
+
 }

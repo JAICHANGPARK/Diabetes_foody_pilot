@@ -35,6 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
@@ -56,6 +57,7 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayout animationLinearLayout;
 
     Realm realm;
+    RealmConfiguration realmConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,9 @@ public class HomeActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: timestamp.getTime()" + timestamp.getTime());
 
         Realm.init(this);
-        realm = Realm.getDefaultInstance();
+        realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        realm = Realm.getInstance(realmConfiguration);
+//        realm = Realm.getDefaultInstance();
 
         RealmResults<FoodDock> result = realm.where(FoodDock.class).findAll();
         Log.e(TAG, "전제 데이터베이스 Size -->" + result.size());

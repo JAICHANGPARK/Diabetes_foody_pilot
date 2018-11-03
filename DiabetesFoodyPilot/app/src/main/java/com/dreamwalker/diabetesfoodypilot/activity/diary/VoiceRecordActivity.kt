@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.dreamwalker.diabetesfoodypilot.R
 import com.dreamwalker.diabetesfoodypilot.database.diary.VoiceMemo
 import io.realm.Realm
@@ -49,8 +50,8 @@ class VoiceRecordActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this@VoiceRecordActivity)
             builder.setTitle("알림")
             builder.setMessage("음성 메모를 종료하시겠어요?")
-            builder.setPositiveButton(android.R.string.yes) { dialog, which -> finish() }
-            builder.setNegativeButton(android.R.string.no) { dialog, which -> dialog.dismiss() }
+            builder.setPositiveButton(android.R.string.yes) { _, _ -> finish() }
+            builder.setNegativeButton(android.R.string.no) { dialog, _ -> dialog.dismiss() }
             builder.show()
         }
 
@@ -148,14 +149,24 @@ class VoiceRecordActivity : AppCompatActivity() {
 
 
     }
+    private fun processVoiceView(trigger:Boolean){
+        if(trigger){
+            linearLayout.visibility = View.VISIBLE
+        }else{
+            linearLayout.visibility = View.GONE
+        }
+
+    }
 
     private fun processFloatingActionButton(trigger: Boolean) {
         if (trigger) {
+            processVoiceView(trigger)
             floating_action_button.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_clear_black_24dp))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 floating_action_button.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimaryProfile, null))
             }
         } else {
+            processVoiceView(trigger)
             floating_action_button.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_settings_voice_white_24dp))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 floating_action_button.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccentProfile, null))
@@ -173,7 +184,7 @@ class VoiceRecordActivity : AppCompatActivity() {
     }
 
     fun initRealm() {
-        val realmConfig = RealmConfiguration.Builder().name("voice_diary.realm").build()
+        val realmConfig = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().name("voice_diary.realm").build()
         realm = Realm.getInstance(realmConfig)
     }
 

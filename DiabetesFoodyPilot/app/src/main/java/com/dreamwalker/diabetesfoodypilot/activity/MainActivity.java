@@ -77,6 +77,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import retrofit2.Call;
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //    BottomSheetBehavior bottomSheetBehaviorDateTime;
 
     Realm realm;
+    RealmConfiguration realmConfiguration;
 
     CartListAdapterV2 adapterV2;
     CartListAdapterV3 adapterV3;
@@ -147,6 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     ArrayList<MixedFood> mixedFoodArrayList = new ArrayList<>(10);
 
     RealmResults<MixedFoodItem> results;
+
 
     ArrayList<FoodTotal> resultArrayList = new ArrayList<>();
 
@@ -251,8 +254,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
     private void initRealm() {
         Realm.init(this);
-        realm = Realm.getDefaultInstance();
+//        realm = Realm.getDefaultInstance();
 
+        realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        realm = Realm.getInstance(realmConfiguration);
     }
 
     private void fetchFromRealm() {
@@ -703,7 +708,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 
                         realmList.addAll(resultList);
 
-                        realm = Realm.getDefaultInstance();
+                        //realm = Realm.getDefaultInstance();
 
                         realm.beginTransaction();
                         FoodDock foodDock = new FoodDock();

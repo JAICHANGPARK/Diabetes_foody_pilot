@@ -76,12 +76,13 @@
         <activity
             android:name=".activity.diary.VoiceRecordActivity"
             android:theme="@style/AppTheme.Profile" />
-        <activity android:name=".activity.diary.VoiceRecordActivityV2"
-            android:theme="@style/AppTheme.Profile"></activity>
+        <activity
+            android:name=".activity.diary.VoiceRecordActivityV2"
+            android:theme="@style/AppTheme.Profile" />
 
         <service android:name=".service.foodtray.RealTimeBluetoothLeService" />
 
-
+        <activity android:name=".activity.diary.VoiceDiaryActivity"></activity>
     </application>
 
 </manifest>

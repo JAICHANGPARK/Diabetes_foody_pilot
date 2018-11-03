@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.paperdb.Paper;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +53,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
     ArrayList<MixedFood> foodsList;
 
     Realm realm;
-
+    RealmConfiguration realmConfiguration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,8 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
         service = Common.getAppcheck();
         dbService = Common.getFoodDatabase();
-        realm = Realm.getDefaultInstance();
+        realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        realm = Realm.getInstance(realmConfiguration);
 
         foodsList = new ArrayList<>();
 
@@ -110,7 +112,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
                                     foodsList.addAll(response.body());
                                     Log.e(TAG, "onResponse: " + foodsList.size());
 
-                                    realm = Realm.getDefaultInstance();
+                                    //realm = Realm.getDefaultInstance();
 
                                     realm.executeTransactionAsync(new Realm.Transaction() {
                                         @Override
@@ -336,7 +338,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            realm = Realm.getDefaultInstance();
+            //realm = Realm.getDefaultInstance();
             for (int i = 0; i < foodsList.size(); i++) {
                 index = i;
                 String dbClass = foodsList.get(i).getDbClass();
