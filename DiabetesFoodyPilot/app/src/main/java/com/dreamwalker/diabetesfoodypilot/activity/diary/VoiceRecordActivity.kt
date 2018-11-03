@@ -2,20 +2,25 @@ package com.dreamwalker.diabetesfoodypilot.activity.diary
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.dreamwalker.diabetesfoodypilot.R
+import com.dreamwalker.diabetesfoodypilot.database.diary.VoiceMemo
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import kotlinx.android.synthetic.main.activity_voice_record.*
 import net.gotev.speech.Speech
 import net.gotev.speech.SpeechDelegate
 import org.jetbrains.anko.toast
+import java.text.SimpleDateFormat
 import java.util.*
 
 class VoiceRecordActivity : AppCompatActivity() {
@@ -31,20 +36,23 @@ class VoiceRecordActivity : AppCompatActivity() {
     }
 
 
-
     var realm: Realm? = null
     var listeningFlag: Boolean = false
-    var intakeTimeType : String? = null
+    var intakeTimeType: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voice_record)
         setSupportActionBar(toolbar)
 
-//        spaceNavigationView = findViewById(R.id.space)
-//        if (savedInstanceState != null) {
-//            setSpaceNavigationView(savedInstanceState)
-//        }
+        toolbar.setNavigationOnClickListener { _ ->
+            val builder = AlertDialog.Builder(this@VoiceRecordActivity)
+            builder.setTitle("알림")
+            builder.setMessage("음성 메모를 종료하시겠어요?")
+            builder.setPositiveButton(android.R.string.yes) { dialog, which -> finish() }
+            builder.setNegativeButton(android.R.string.no) { dialog, which -> dialog.dismiss() }
+            builder.show()
+        }
 
 
         //TODO 권한 값을 확인한다.
@@ -62,13 +70,14 @@ class VoiceRecordActivity : AppCompatActivity() {
                 ContextCompat.getColor(this, R.color.color4),
                 ContextCompat.getColor(this, R.color.color5))
         val heights = intArrayOf(60, 76, 58, 80, 55)
+
         initSpeech(colors, heights)
-
-
         val delegate = object : SpeechDelegate {
             override fun onStartOfSpeech() {
                 toast("말해주세요")
-                listeningFlag = true;
+                listeningFlag = true
+                processFloatingActionButton(true)
+
             }
 
             override fun onSpeechPartialResults(results: MutableList<String>?) {
@@ -76,29 +85,21 @@ class VoiceRecordActivity : AppCompatActivity() {
                 if (results != null) {
                     for (res in results) {
                         str.append(res).append(" ")
-
                     }
-
                     Log.i("speech", "partial result: " + str.toString().trim { it <= ' ' })
-
-
-
                 }
             }
 
             override fun onSpeechRmsChanged(value: Float) {
-
             }
 
             override fun onSpeechResult(result: String?) {
-
                 listeningFlag = false
-
+                processFloatingActionButton(false)
                 if (result != null && result.isNotEmpty()) {
                     runOnUiThread {
                         memo_edit_text.append(result)
                     }
-
                 } else {
                     toast("공백은 입력할 수 없습니다.")
                 }
@@ -142,8 +143,23 @@ class VoiceRecordActivity : AppCompatActivity() {
                     }
                 }
             }
+//            check(MORNING_DAY)
+        }
 
-            check(MORNING_DAY)
+
+    }
+
+    private fun processFloatingActionButton(trigger: Boolean) {
+        if (trigger) {
+            floating_action_button.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_clear_black_24dp))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                floating_action_button.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorPrimaryProfile, null))
+            }
+        } else {
+            floating_action_button.setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_settings_voice_white_24dp))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                floating_action_button.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccentProfile, null))
+            }
         }
 
 
@@ -202,61 +218,45 @@ class VoiceRecordActivity : AppCompatActivity() {
             R.id.done -> {
                 val now = Calendar.getInstance()
                 val nowDate = Date()
-                toast(now.toString() + "\n" + nowDate.toString())
+//                toast(now.toString() + "\n" + nowDate.toString())
+                if (intakeTimeType.isNullOrEmpty()) {
+                    toast("아침, 점심, 저녁등 유형을 선택해주세요.")
+                } else {
+//                    toast(nowDate.toString() + intakeTimeType)
+                    val userMemo = memo_edit_text.text.toString()
+                    if (userMemo.isNotEmpty()) {
+
+                        val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
+                        val outputTimeFormat = SimpleDateFormat("HH:mm:ss", Locale.KOREA)
+                        val outputDateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+                        val formattedDate = outputFormat.format(nowDate)
+                        val formattedTime = outputTimeFormat.format(nowDate)
+                        val formattedDateTime = outputDateTimeFormat.format(nowDate)
+
+                        realm?.executeTransaction {
+                            val voiceMemo = realm!!.createObject(VoiceMemo::class.java)
+                            voiceMemo.type = intakeTimeType
+                            voiceMemo.memo = userMemo
+                            voiceMemo.rawDate = formattedDate
+                            voiceMemo.rawTime = formattedTime
+                            voiceMemo.datetime = formattedDateTime
+                            voiceMemo.date = nowDate
+                        }
+
+                        toast("저장 완료")
+                        finish()
+                    }else{
+                        toast("메모를 입력해주세요")
+                    }
 
 
-
+                }
             }
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-
-//    private fun setSpaceNavigationView(sis: Bundle) {
-//        //TODO Anko 사랑해
-//        with(space) {
-//
-//            initWithSaveInstanceState(sis)
-//            setCentreButtonIcon(com.dreamwalker.diabetesfoodypilot.R.drawable.ic_settings_voice_white_24dp)
-//            addSpaceItem(SpaceItem("HOME", R.drawable.ic_home_white_24dp))
-//            addSpaceItem(SpaceItem("PROFILE", R.drawable.ic_person_outline_white_24dp));
-//
-//            shouldShowFullBadgeText(true)
-//            setCentreButtonIconColorFilterEnabled(false)
-//            showIconOnly()
-//            setSpaceOnClickListener(object : SpaceOnClickListener {
-//                override fun onItemClick(itemIndex: Int, itemName: String?) {
-//                    when(itemIndex){
-//                        0 -> finish()
-//                    }
-//                }
-//
-//                override fun onItemReselected(itemIndex: Int, itemName: String?) {
-//                    when(itemIndex){
-//                        0 -> finish()
-//                    }
-//                }
-//
-//                override fun onCentreButtonClick() {
-//                    Log.d("onCentreButtonClick ", "onCentreButtonClick")
-//                    shouldShowFullBadgeText(true)
-//                }
-//            })
-//
-//            setSpaceOnLongClickListener(
-//                    object : SpaceOnLongClickListener {
-//                        override fun onCentreButtonLongClick() {
-//
-//                        }
-//
-//                        override fun onItemLongClick(itemIndex: Int, itemName: String) {
-//                            Toast.makeText(this@VoiceRecordActivity, itemIndex.toString() + " " + itemName, Toast.LENGTH_SHORT).show()
-//                        }
-//                    })
-//        }
-//
-//    }
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
