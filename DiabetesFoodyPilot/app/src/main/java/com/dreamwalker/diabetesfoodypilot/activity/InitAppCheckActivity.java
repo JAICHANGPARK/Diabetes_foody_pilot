@@ -54,6 +54,7 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
     Realm realm;
     RealmConfiguration realmConfiguration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -338,6 +339,9 @@ public class InitAppCheckActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
+
+            realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+            realm = Realm.getInstance(realmConfiguration);
 
             //realm = Realm.getDefaultInstance();
             for (int i = 0; i < foodsList.size(); i++) {

@@ -722,7 +722,9 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
 //                        FoodDock foodItem = realm.createObject(FoodDock.class);
                         realm.commitTransaction();
 
-                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         finish();
 
 
@@ -903,7 +905,6 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     }
 
 
-
     // TODO: 2018-08-18 선택하지 않고 검색만 할 경우를 대비해야한다. - 박제창
     private int cartListPosition = 1000;
 
@@ -917,8 +918,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
     }
 
 
-
-    // TODO: 2018-08-18 검색 후 터치 리스터  
+    // TODO: 2018-08-18 검색 후 터치 리스터
     @Override
     public void onSearchItemClick(View v, int position) {
         if (cartListPosition != 1000) {
@@ -1014,7 +1014,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListrn
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         // TODO: 2018-08-19 사용자가 날짜를 변경하면 변경한 Date 값을 넣어야한다. - 박제창
         nowDate = cal.getTime();
-        Log.e(TAG, "onDateSet: " +  DateFormat.getDateFormat(this).format(cal.getTime()));
+        Log.e(TAG, "onDateSet: " + DateFormat.getDateFormat(this).format(cal.getTime()));
 //        mText.setText("Date set: " + DateFormat.getDateFormat(this).format(cal.getTime()));
 
     }
