@@ -20,21 +20,34 @@
 
 <a href='https://play.google.com/store/apps/details?id=com.dreamwalker.diabetesfoodypilot&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' width = 300/></a>
 
+## Release 1.0.4
+<div style="text-align: center"><table><tr>
+  <td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-03-224117.png" width="180">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-03-215124.png" width="180">
+</td>
+<td style="text-align: center">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/device-2018-11-03-230234.png" width="180">
+</td>
+ </tr>
+</table>
+</div>
 
 
 ## Release 1.0.3
 <div style="text-align: center"><table><tr>
   <td style="text-align: center">
-<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/device-2018-11-02-235151.png" width="180">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-02-235151.png" width="180">
 </td>
 <td style="text-align: center">
-<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/device-2018-11-03-171450.png" width="180">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-03-171450.png" width="180">
 </td>
 <td style="text-align: center">
-<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/device-2018-11-03-153524.png" width="180">
+<img src="https://github.com/JAICHANGPARK/Diabetes_foody_pilot/blob/master/DiabetesFoodyPilot/screenshot/device-2018-11-03-153524.png" width="180">
 </td>
-
-  </tr>
+ </tr>
 </table>
 </div>
 
