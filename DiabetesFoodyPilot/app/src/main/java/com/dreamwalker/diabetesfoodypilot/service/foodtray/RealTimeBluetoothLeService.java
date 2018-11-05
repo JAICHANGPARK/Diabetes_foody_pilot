@@ -389,7 +389,24 @@ public class RealTimeBluetoothLeService extends Service {
                         float floatVal;
                         final int intVal = (data[0] << 8) & 0xff00 | (data[1] & 0xff);
                         floatVal = (float) intVal / 100;
-                        values = String.format("%.2f", floatVal);
+                        values = String.format("%.1f", floatVal) + ",";
+                        final int intSoup = (data[2] << 8) & 0xff00 | (data[3] & 0xff);
+                        floatVal = (float) intSoup / 100;
+                        values += String.format("%.1f", floatVal)+ ",";
+                        final int intSideA = (data[4] << 8) & 0xff00 | (data[5] & 0xff);
+                        floatVal = (float) intSideA / 100;
+                        values += String.format("%.1f", floatVal)+ ",";
+                        final int intSideB = (data[6] << 8) & 0xff00 | (data[7] & 0xff);
+                        floatVal = (float) intSideB / 100;
+                        values += String.format("%.1f", floatVal)+ ",";
+                        final int intSideC = (data[8] << 8) & 0xff00 | (data[9] & 0xff);
+                        floatVal = (float) intSideC / 100;
+                        values += String.format("%.1f", floatVal)+ ",";
+                        final int intSideD = (data[10] << 8) & 0xff00 | (data[11] & 0xff);
+                        floatVal = (float) intSideD / 100;
+                        values += String.format("%.1f", floatVal);
+                        Log.e(TAG, "broadcastUpdate: " + values );
+
                     }
                 }
             }

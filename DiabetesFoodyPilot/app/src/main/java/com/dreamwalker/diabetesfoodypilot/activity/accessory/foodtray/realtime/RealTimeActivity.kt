@@ -88,6 +88,7 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 //                textView.append("서비스 특성 탐색 완료" + "\n")
             } else if (RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE == action) {
                 val values = intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)
+                val trimsValue = values.split(",")
 
 
 
