@@ -386,11 +386,14 @@ public class RealTimeBluetoothLeService extends Service {
                     float floatVal;
 
                     if (data[0] == -1) {
+
                         values = "0.0,";
+
                     } else {
                         final int intVal = (data[0] << 8) & 0xff00 | (data[1] & 0xff);
                         floatVal = (float) intVal / 100;
                         values = String.format("%.1f", floatVal) + ",";
+                        
                     }
 
                     if (data[2] == -1) {
