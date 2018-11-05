@@ -88,22 +88,19 @@ class RealTimeActivity : AppCompatActivity(), IActivityBaseSetting {
 //                textView.append("서비스 특성 탐색 완료" + "\n")
             } else if (RealTimeBluetoothLeService.ACTION_DATA_AVAILABLE == action) {
                 val values = intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)
-                val trimsValue = values.split(",")
-
-
 
                 if (values != null){
-
+                    val trimsValue = values.split(",")
                     realTimeList.clear()
-                    realTimeList.add(RealTime("밥", "쌀밥", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                    realTimeList.add(RealTime("국", "된장국", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                    realTimeList.add(RealTime("반찬A", "감자조림", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                    realTimeList.add(RealTime("반찬B", "배추김치", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                    realTimeList.add(RealTime("반찬C", "샐러드", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
-                    realTimeList.add(RealTime("반찬D", "제육볶음", intent.getStringExtra(RealTimeBluetoothLeService.EXTRA_DATA)))
+                    realTimeList.add(RealTime("밥", "쌀밥", trimsValue[0]))
+                    realTimeList.add(RealTime("국", "된장국", trimsValue[1]))
+                    realTimeList.add(RealTime("반찬A", "감자조림", trimsValue[2]))
+                    realTimeList.add(RealTime("반찬B", "배추김치", trimsValue[3]))
+                    realTimeList.add(RealTime("반찬C", "샐러드", trimsValue[4]))
+                    realTimeList.add(RealTime("반찬D", "제육볶음", trimsValue[5]))
                     realTimeAdapter.notifyDataSetChanged()
 
-                    entries.add(Entry(count.toFloat(), values.toFloat()))
+                    entries.add(Entry(count.toFloat(), trimsValue[0].toFloat()))
                     dataSet = LineDataSet(entries, "Label")
                     val lineData = LineData(dataSet)
                     line_chart.data = lineData

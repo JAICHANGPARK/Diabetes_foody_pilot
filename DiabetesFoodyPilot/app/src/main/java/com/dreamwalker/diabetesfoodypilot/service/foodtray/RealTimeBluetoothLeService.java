@@ -358,6 +358,7 @@ public class RealTimeBluetoothLeService extends Service {
             final byte[] data = characteristic.getValue();
 
             String values = null;
+
             if (data != null && data.length > 0) {
                 if (data[0] == 0x02 && data[1] == 0x10 && data[2] == 0x03) {
                     Log.e(TAG, "broadcastUpdate: " + "1차 인증 성공");
@@ -376,38 +377,66 @@ public class RealTimeBluetoothLeService extends Service {
                 if (data[0] == 0x02 && data[1] == 0x12 && data[2] == 0x03) {
                     Log.e(TAG, "broadcastUpdate: " + "모든 인증 완료 ");
                     broadcastUpdate(ACTION_SECOND_PHASE_DONE);
-                }
-                else {
+                } else {
 
                     for (byte byteChar : data) {
                         Log.e(TAG, "broadcastUpdate: --> " + byteChar);
                     }
 
+                    float floatVal;
+
                     if (data[0] == -1) {
-                        values = "0 ";
+                        values = "0.0,";
                     } else {
-                        float floatVal;
                         final int intVal = (data[0] << 8) & 0xff00 | (data[1] & 0xff);
                         floatVal = (float) intVal / 100;
                         values = String.format("%.1f", floatVal) + ",";
+                    }
+
+                    if (data[2] == -1) {
+                        values += "0.0,";
+                    } else {
                         final int intSoup = (data[2] << 8) & 0xff00 | (data[3] & 0xff);
                         floatVal = (float) intSoup / 100;
-                        values += String.format("%.1f", floatVal)+ ",";
+                        values += String.format("%.1f", floatVal) + ",";
+                    }
+
+                    if (data[4] == -1) {
+                        values += "0.0,";
+                    } else {
                         final int intSideA = (data[4] << 8) & 0xff00 | (data[5] & 0xff);
                         floatVal = (float) intSideA / 100;
-                        values += String.format("%.1f", floatVal)+ ",";
+                        values += String.format("%.1f", floatVal) + ",";
+                    }
+
+                    if (data[6] == -1) {
+                        values += "0.0,";
+                    } else {
                         final int intSideB = (data[6] << 8) & 0xff00 | (data[7] & 0xff);
                         floatVal = (float) intSideB / 100;
-                        values += String.format("%.1f", floatVal)+ ",";
+                        values += String.format("%.1f", floatVal) + ",";
+                    }
+
+                    if (data[8] == -1) {
+                        values += "0.0,";
+                    } else {
                         final int intSideC = (data[8] << 8) & 0xff00 | (data[9] & 0xff);
                         floatVal = (float) intSideC / 100;
-                        values += String.format("%.1f", floatVal)+ ",";
+                        values += String.format("%.1f", floatVal) + ",";
+                    }
+
+                    if (data[10] == -1) {
+                        values += "0.0,";
+                    } else {
                         final int intSideD = (data[10] << 8) & 0xff00 | (data[11] & 0xff);
                         floatVal = (float) intSideD / 100;
                         values += String.format("%.1f", floatVal);
-                        Log.e(TAG, "broadcastUpdate: " + values );
-
                     }
+
+
+                    Log.e(TAG, "broadcastUpdate: " + values);
+
+
                 }
             }
 //            intent.putExtra(EXTRA_DATA, values + "g");
